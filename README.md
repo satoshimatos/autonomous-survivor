@@ -2,6 +2,8 @@
 
 Top-down tank survivor prototype built in Godot. The current design target is a replayable bullet-heaven loop: escalating enemy pressure, randomized upgrade choices, simple readable shapes, and strong upgrade synergies that can become intentionally overpowered when the player builds well.
 
+GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
+
 ## Current Changelog
 
 ### 2026-05-30
@@ -26,6 +28,7 @@ Top-down tank survivor prototype built in Godot. The current design target is a 
   - Freeze Pulse periodically bursts around the player, damaging and nearly stopping enemies in a wide radius.
 - Changed ability selection into a randomized 3-choice roll from the full ability catalog so ability rewards vary more between runs.
 - Expanded headless validation to cover the randomized ability menu and all ability scenes.
+- Created the GitHub repository and initialized GitHub issues from the backlog.
 
 ## Backlog
 
