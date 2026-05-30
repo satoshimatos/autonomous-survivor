@@ -3,9 +3,22 @@ extends Control
 const AI_MENU_VIEW_DELAY: float = 0.5
 const AI_SELECTION_FLASH_DELAY: float = 0.5
 const AI_SELECTION_FLASH_COLOR: Color = Color(1.0, 0.95, 0.25, 1.0)
+const OPTION_COUNT: int = 3
 
 var player: CharacterBody2D
 var ai_pick_in_progress: bool = false
+var displayed_abilities: Array[Dictionary] = []
+
+var ability_catalog: Array[Dictionary] = [
+	{"label": "+1 PLACE LANDMINE", "method": "upgrade_landmine"},
+	{"label": "+1 CIRCULAR SAW", "method": "upgrade_circular_saw"},
+	{"label": "+ FOOTSOLDIER", "method": "upgrade_footsoldier"},
+	{"label": "+ SHOCK FIELD", "method": "upgrade_shock_field"},
+	{"label": "+ ARTILLERY", "method": "upgrade_artillery"},
+	{"label": "+ DRONE SWARM", "method": "upgrade_drone_swarm"},
+	{"label": "+ OIL SLICK", "method": "upgrade_oil_slick"},
+	{"label": "+ FREEZE PULSE", "method": "upgrade_freeze_pulse"},
+]
 
 @onready var ability_buttons: Array[Button] = [
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/LandmineButton,
@@ -16,33 +29,32 @@ var ai_pick_in_progress: bool = false
 ]
 
 
-func _on_landmine_button_pressed() -> void:
-	if player and player.has_method("upgrade_landmine"):
-		player.upgrade_landmine()
-	complete_selection()
+func _ready() -> void:
+	roll_ability_options()
 
 
-func _on_circular_saw_button_pressed() -> void:
-	if player and player.has_method("upgrade_circular_saw"):
-		player.upgrade_circular_saw()
-	complete_selection()
+func roll_ability_options() -> void:
+	var options := ability_catalog.duplicate()
+	options.shuffle()
+	displayed_abilities = options.slice(0, OPTION_COUNT)
+	
+	for i in range(ability_buttons.size()):
+		var button := ability_buttons[i]
+		if i < displayed_abilities.size():
+			button.visible = true
+			button.text = String(displayed_abilities[i].label)
+			button.disabled = false
+		else:
+			button.visible = false
 
 
-func _on_footsoldier_button_pressed() -> void:
-	if player and player.has_method("upgrade_footsoldier"):
-		player.upgrade_footsoldier()
-	complete_selection()
-
-
-func _on_shock_field_button_pressed() -> void:
-	if player and player.has_method("upgrade_shock_field"):
-		player.upgrade_shock_field()
-	complete_selection()
-
-
-func _on_artillery_button_pressed() -> void:
-	if player and player.has_method("upgrade_artillery"):
-		player.upgrade_artillery()
+func apply_ability(slot_index: int) -> void:
+	if slot_index >= displayed_abilities.size():
+		return
+	
+	var method_name := String(displayed_abilities[slot_index].method)
+	if player and player.has_method(method_name):
+		player.call(method_name)
 	complete_selection()
 
 
@@ -54,18 +66,11 @@ func complete_selection() -> void:
 
 
 func pick_random_ability() -> void:
-	if ai_pick_in_progress:
+	if displayed_abilities.is_empty() or ai_pick_in_progress:
 		return
 	
 	ai_pick_in_progress = true
-	var ability_methods: Array[String] = [
-		"_on_landmine_button_pressed",
-		"_on_circular_saw_button_pressed",
-		"_on_footsoldier_button_pressed",
-		"_on_shock_field_button_pressed",
-		"_on_artillery_button_pressed",
-	]
-	var slot_index: int = randi_range(0, ability_methods.size() - 1)
+	var slot_index: int = randi_range(0, displayed_abilities.size() - 1)
 	await get_tree().create_timer(AI_MENU_VIEW_DELAY, true, false, true).timeout
 	if not is_inside_tree():
 		return
@@ -73,7 +78,7 @@ func pick_random_ability() -> void:
 	await get_tree().create_timer(AI_SELECTION_FLASH_DELAY, true, false, true).timeout
 	if not is_inside_tree():
 		return
-	call(ability_methods[slot_index])
+	apply_ability(slot_index)
 
 
 func highlight_ai_selection(slot_index: int) -> void:
@@ -91,3 +96,23 @@ func highlight_ai_selection(slot_index: int) -> void:
 	selected_button.add_theme_stylebox_override("normal", selected_style)
 	selected_button.add_theme_stylebox_override("disabled", selected_style)
 	selected_button.text = "%s  [AI]" % selected_button.text
+
+
+func _on_landmine_button_pressed() -> void:
+	apply_ability(0)
+
+
+func _on_circular_saw_button_pressed() -> void:
+	apply_ability(1)
+
+
+func _on_footsoldier_button_pressed() -> void:
+	apply_ability(2)
+
+
+func _on_shock_field_button_pressed() -> void:
+	apply_ability(3)
+
+
+func _on_artillery_button_pressed() -> void:
+	apply_ability(4)

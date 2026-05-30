@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/abilities/drone_swarm.gd" id="1_drone"]
+
+[node name="DroneSwarm" type="Node2D" groups=["DroneSwarm"]]
+z_index = 4
+script = ExtResource("1_drone")

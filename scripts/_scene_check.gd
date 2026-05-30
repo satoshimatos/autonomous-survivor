@@ -11,6 +11,11 @@ func _init() -> void:
 		"res://scenes/enemies/boss_enemy.tscn",
 		"res://scenes/abilities/shock_field.tscn",
 		"res://scenes/abilities/artillery_beacon.tscn",
+		"res://scenes/abilities/drone_swarm.tscn",
+		"res://scenes/abilities/oil_slick.tscn",
+		"res://scenes/abilities/oil_slick_dispenser.tscn",
+		"res://scenes/abilities/freeze_pulse.tscn",
+		"res://scenes/ui/ability_menu.tscn",
 	]
 	
 	for scene_path in scene_paths:

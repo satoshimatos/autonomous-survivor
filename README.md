@@ -20,18 +20,23 @@ Top-down tank survivor prototype built in Godot. The current design target is a 
   - Artillery Beacon periodically targets dense enemy clusters near the player and calls in delayed splash strikes.
 - Expanded the ability menu from 3 to 5 options and updated the ability inventory readout.
 - Added headless validation coverage for the new ability scenes.
+- Added three more ability choices:
+  - Drone Swarm orbits the player and fires autonomous close-support shots.
+  - Oil Slick drops lingering puddles that damage and heavily slow enemies.
+  - Freeze Pulse periodically bursts around the player, damaging and nearly stopping enemies in a wide radius.
+- Changed ability selection into a randomized 3-choice roll from the full ability catalog so ability rewards vary more between runs.
+- Expanded headless validation to cover the randomized ability menu and all ability scenes.
 
 ## Backlog
 
 ### Next
 
 - Add GitHub repository `satoshimatos/autonomous-survivor`, push this project, and mirror this backlog into GitHub issues.
-- Add more ability choices for crowd control and area damage: drone pet, oil slick, and freeze pulse.
 - Add run modifiers so each run starts with a random rule twist, such as richer elites, faster EXP, low visibility, or double bosses.
+- Add tank archetypes with unique starts: scout, fortress, twin-cannon, engineer, and collector.
 
 ### Content
 
-- Add tank archetypes with unique starts: scout, fortress, twin-cannon, engineer, and collector.
 - Add elite enemy affixes using lightweight modifiers instead of many duplicate scenes.
 - Expand boss behaviors beyond stat profiles with minion calls, projectile rings, arena hazards, and phase changes.
 - Add unlock goals for tanks, abilities, and run modifiers.

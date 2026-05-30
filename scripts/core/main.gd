@@ -58,6 +58,9 @@ const CIRCULAR_SAW = preload("res://scenes/abilities/circular_saw.tscn")
 const FOOTSOLDIER = preload("res://scenes/abilities/footsoldier.tscn")
 const SHOCK_FIELD = preload("res://scenes/abilities/shock_field.tscn")
 const ARTILLERY_BEACON = preload("res://scenes/abilities/artillery_beacon.tscn")
+const DRONE_SWARM = preload("res://scenes/abilities/drone_swarm.tscn")
+const OIL_SLICK_DISPENSER = preload("res://scenes/abilities/oil_slick_dispenser.tscn")
+const FREEZE_PULSE = preload("res://scenes/abilities/freeze_pulse.tscn")
 const UPGRADE_MENU = preload("res://scenes/ui/upgrade.tscn")
 const ABILITY_MENU = preload("res://scenes/ui/ability_menu.tscn")
 
@@ -306,6 +309,9 @@ func warmup_runtime_scenes() -> void:
 		FOOTSOLDIER,
 		SHOCK_FIELD,
 		ARTILLERY_BEACON,
+		DRONE_SWARM,
+		OIL_SLICK_DISPENSER,
+		FREEZE_PULSE,
 		UPGRADE_MENU,
 		ABILITY_MENU,
 	]
@@ -329,6 +335,12 @@ func warmup_scene(warmup_root: Node, scene: PackedScene) -> void:
 	if instance.has_method("configure") and instance.scene_file_path.ends_with("shock_field.tscn"):
 		instance.configure(player, 1)
 	if instance.has_method("configure") and instance.scene_file_path.ends_with("artillery_beacon.tscn"):
+		instance.configure(player, 1)
+	if instance.has_method("configure") and instance.scene_file_path.ends_with("drone_swarm.tscn"):
+		instance.configure(player, 1)
+	if instance.has_method("configure") and instance.scene_file_path.ends_with("oil_slick_dispenser.tscn"):
+		instance.configure(player, 1)
+	if instance.has_method("configure") and instance.scene_file_path.ends_with("freeze_pulse.tscn"):
 		instance.configure(player, 1)
 	warmup_root.add_child(instance)
 	
@@ -982,6 +994,9 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Footsoldier", player.footsoldier_level),
 		format_upgrade_inventory_row("Shock Field", player.shock_field_level),
 		format_upgrade_inventory_row("Artillery", player.artillery_level),
+		format_upgrade_inventory_row("Drone Swarm", player.drone_swarm_level),
+		format_upgrade_inventory_row("Oil Slick", player.oil_slick_level),
+		format_upgrade_inventory_row("Freeze Pulse", player.freeze_pulse_level),
 	]
 	upgrade_inventory_label.text = "\n".join(rows)
 

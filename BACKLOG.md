@@ -19,10 +19,10 @@ Each autonomous run should:
 
 ### P1 - Replayability And Power Growth
 
-- Add 3 more active/passive abilities with clear survivor synergies: drone pet, oil slick, and freeze pulse.
 - Add tank archetype selection with at least 5 starts.
 - Add random run modifiers and deterministic run seed display.
 - Add unlock progression for tanks, abilities, modifiers, and challenge goals.
+- Add ability rarity, synergy tags, or weighted choices so late-game ability rolls can bias toward build-defining combos.
 
 ### P1 - Enemies And Bosses
 

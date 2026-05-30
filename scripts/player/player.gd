@@ -61,6 +61,12 @@ var shock_field_level: int = 0
 var shock_field: Node2D
 var artillery_level: int = 0
 var artillery_beacon: Node2D
+var drone_swarm_level: int = 0
+var drone_swarm: Node2D
+var oil_slick_level: int = 0
+var oil_slick_dispenser: Node2D
+var freeze_pulse_level: int = 0
+var freeze_pulse: Node2D
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
 const UPGRADE = preload("uid://gi785n7oy38v")
@@ -70,6 +76,9 @@ const CIRCULAR_SAW = preload("res://scenes/abilities/circular_saw.tscn")
 const FOOTSOLDIER = preload("res://scenes/abilities/footsoldier.tscn")
 const SHOCK_FIELD = preload("res://scenes/abilities/shock_field.tscn")
 const ARTILLERY_BEACON = preload("res://scenes/abilities/artillery_beacon.tscn")
+const DRONE_SWARM = preload("res://scenes/abilities/drone_swarm.tscn")
+const OIL_SLICK_DISPENSER = preload("res://scenes/abilities/oil_slick_dispenser.tscn")
+const FREEZE_PULSE = preload("res://scenes/abilities/freeze_pulse.tscn")
 const MUZZLE_BURST_INTERVAL: float = 0.15
 const REGEN_START_INTERVAL: float = 5.0
 const REGEN_INTERVAL_STEP: float = 1.0 / 3.0
@@ -418,6 +427,45 @@ func upgrade_artillery() -> void:
 		artillery_beacon.configure(self, artillery_level)
 
 
+func upgrade_drone_swarm() -> void:
+	drone_swarm_level += 1
+	if is_instance_valid(drone_swarm):
+		if drone_swarm.has_method("update_level"):
+			drone_swarm.update_level(drone_swarm_level)
+		return
+	
+	drone_swarm = DRONE_SWARM.instantiate()
+	add_child(drone_swarm)
+	if drone_swarm.has_method("configure"):
+		drone_swarm.configure(self, drone_swarm_level)
+
+
+func upgrade_oil_slick() -> void:
+	oil_slick_level += 1
+	if is_instance_valid(oil_slick_dispenser):
+		if oil_slick_dispenser.has_method("update_level"):
+			oil_slick_dispenser.update_level(oil_slick_level)
+		return
+	
+	oil_slick_dispenser = OIL_SLICK_DISPENSER.instantiate()
+	add_child(oil_slick_dispenser)
+	if oil_slick_dispenser.has_method("configure"):
+		oil_slick_dispenser.configure(self, oil_slick_level)
+
+
+func upgrade_freeze_pulse() -> void:
+	freeze_pulse_level += 1
+	if is_instance_valid(freeze_pulse):
+		if freeze_pulse.has_method("update_level"):
+			freeze_pulse.update_level(freeze_pulse_level)
+		return
+	
+	freeze_pulse = FREEZE_PULSE.instantiate()
+	add_child(freeze_pulse)
+	if freeze_pulse.has_method("configure"):
+		freeze_pulse.configure(self, freeze_pulse_level)
+
+
 func process_landmine_placement(delta: float) -> void:
 	if landmine_level <= 0 or is_dead:
 		return
@@ -698,6 +746,15 @@ func disable_combat_on_death() -> void:
 	if is_instance_valid(artillery_beacon):
 		artillery_beacon.queue_free()
 		artillery_beacon = null
+	if is_instance_valid(drone_swarm):
+		drone_swarm.queue_free()
+		drone_swarm = null
+	if is_instance_valid(oil_slick_dispenser):
+		oil_slick_dispenser.queue_free()
+		oil_slick_dispenser = null
+	if is_instance_valid(freeze_pulse):
+		freeze_pulse.queue_free()
+		freeze_pulse = null
 
 
 func clear_active_ability_nodes(nodes: Array[Node2D]) -> void:
