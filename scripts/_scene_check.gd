@@ -3,6 +3,7 @@ extends SceneTree
 
 func _init() -> void:
 	var scene_paths: Array[String] = [
+		"res://scenes/core/main_menu.tscn",
 		"res://scenes/core/main.tscn",
 		"res://scenes/player/player.tscn",
 		"res://scenes/enemies/enemy.tscn",

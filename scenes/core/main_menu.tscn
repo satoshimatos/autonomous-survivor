@@ -38,6 +38,25 @@ theme_override_font_sizes/font_size = 48
 text = "Survivor"
 horizontal_alignment = 1
 
+[node name="TankLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Select Tank"
+horizontal_alignment = 1
+
+[node name="TankSelector" type="OptionButton" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(360, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+
+[node name="TankSummaryLabel" type="Label" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(360, 54)
+layout_mode = 2
+theme_override_font_sizes/font_size = 16
+autowrap_mode = 3
+horizontal_alignment = 1
+vertical_alignment = 1
+
 [node name="PlayButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(220, 52)
 layout_mode = 2
@@ -50,5 +69,6 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Quit"
 
+[connection signal="item_selected" from="CenterContainer/VBoxContainer/TankSelector" to="." method="_on_tank_selector_item_selected"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

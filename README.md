@@ -29,14 +29,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Changed ability selection into a randomized 3-choice roll from the full ability catalog so ability rewards vary more between runs.
 - Expanded headless validation to cover the randomized ability menu and all ability scenes.
 - Created the GitHub repository and initialized GitHub issues from the backlog.
+- Added tank archetype selection on the main menu:
+  - Vanguard, Scout, Fortress, Twin Cannon, Engineer, and Collector.
+  - Archetypes modify starting stats, upgrades, abilities, tank tint, HUD stats, and defeat summary.
 
 ## Backlog
 
 ### Next
 
-- Add GitHub repository `satoshimatos/autonomous-survivor`, push this project, and mirror this backlog into GitHub issues.
 - Add run modifiers so each run starts with a random rule twist, such as richer elites, faster EXP, low visibility, or double bosses.
-- Add tank archetypes with unique starts: scout, fortress, twin-cannon, engineer, and collector.
+- Add ability rarity, synergy tags, or weighted choices so late-game ability rolls can bias toward build-defining combos.
 
 ### Content
 

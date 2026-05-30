@@ -32,9 +32,12 @@ Completed setup:
   - #7 Add object pools and effect budgets for performance
   - #8 Add run summary details and build telemetry
 
+Completed issues:
+
+- #1 Add tank archetype selection with unique starts
+
 ### P1 - Replayability And Power Growth
 
-- Add tank archetype selection with at least 5 starts.
 - Add random run modifiers and deterministic run seed display.
 - Add unlock progression for tanks, abilities, modifiers, and challenge goals.
 - Add ability rarity, synergy tags, or weighted choices so late-game ability rolls can bias toward build-defining combos.

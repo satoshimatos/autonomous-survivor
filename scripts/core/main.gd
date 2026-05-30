@@ -185,7 +185,12 @@ func _ready() -> void:
 		low_health_vignette.set_low_health_active(false)
 		get_tree().paused = true
 		%DefeatControl.visible = true
-		%ResultLabel.text = "Enemies Defeated: %s" % enemies_defeated
+		%ResultLabel.text = "Tank: %s\nTime: %s\nEnemies Defeated: %s\nBosses Defeated: %s" % [
+			player.selected_tank_name,
+			get_formatted_run_time(),
+			enemies_defeated,
+			bosses_defeated,
+		]
 	)
 
 
@@ -955,7 +960,8 @@ func update_stats_label() -> void:
 	
 	var exp_multiplier_percent := int(round((1.0 + float(player.exp_bonus_level) * 0.25) * 100.0))
 	var armor_percent := int(round(player.get_armor_damage_reduction() * 100.0)) if player.has_method("get_armor_damage_reduction") else 0
-	stats_label.text = "Damage: %.1f\nDPS: %.1f / %.1f HP\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
+	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
+		player.selected_tank_name,
 		player.attack_damage,
 		player_dps,
 		get_average_spawn_enemy_hp(),
@@ -1006,10 +1012,14 @@ func format_upgrade_inventory_row(label: String, quantity: int) -> String:
 
 
 func update_run_timer_label() -> void:
+	run_timer_label.text = get_formatted_run_time()
+
+
+func get_formatted_run_time() -> String:
 	var total_seconds: int = int(floor(run_time))
 	var minutes: int = int(float(total_seconds) / 60.0)
 	var seconds: int = total_seconds % 60
-	run_timer_label.text = "%02d:%02d" % [minutes, seconds]
+	return "%02d:%02d" % [minutes, seconds]
 
 
 func _on_restart_button_pressed() -> void:

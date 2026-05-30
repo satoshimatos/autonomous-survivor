@@ -15,6 +15,10 @@ run/main_scene="res://scenes/core/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 config/icon="res://icon.svg"
 
+[autoload]
+
+RunConfig="*res://scripts/core/run_config.gd"
+
 [display]
 
 window/size/mode=3

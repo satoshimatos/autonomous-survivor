@@ -39,6 +39,8 @@ var armor_level: int = 0
 var magnet_level: int = 0
 var cannon_level: int = 0
 var barbed_wire_cooldowns := {}
+var selected_tank_id: String = "vanguard"
+var selected_tank_name: String = "Vanguard"
 
 var level: int = 1
 var current_exp: int = 0
@@ -111,6 +113,7 @@ var is_dead: bool = false
 
 func _ready() -> void:
 	setup_smoke_particles()
+	apply_selected_tank_archetype()
 	health = max_health
 	exp_changed.emit(current_exp, get_required_exp(), level)
 
@@ -425,6 +428,53 @@ func upgrade_artillery() -> void:
 	main.add_child(artillery_beacon)
 	if artillery_beacon.has_method("configure"):
 		artillery_beacon.configure(self, artillery_level)
+
+
+func apply_selected_tank_archetype() -> void:
+	var tank: Dictionary = get_run_config().get_selected_tank()
+	selected_tank_id = String(tank.get("id", selected_tank_id))
+	selected_tank_name = String(tank.get("name", selected_tank_name))
+	speed *= float(tank.get("speed_multiplier", 1.0))
+	max_health = max(1, max_health + int(tank.get("health_bonus", 0)))
+	attack_damage *= float(tank.get("damage_multiplier", 1.0))
+	fire_interval *= float(tank.get("fire_interval_multiplier", 1.0))
+	
+	speed_level += int(tank.get("speed_level", 0))
+	damage_level += int(tank.get("damage_level", 0))
+	fire_rate_level += int(tank.get("fire_rate_level", 0))
+	armor_level += int(tank.get("armor_level", 0))
+	magnet_level += int(tank.get("magnet_level", 0))
+	cannon_level += int(tank.get("cannon_level", 0))
+	exp_bonus_level += int(tank.get("exp_bonus_level", 0))
+	
+	var tint: Color = tank.get("color", Color.WHITE) as Color
+	tank_base.modulate = tint
+	tank_cannon.modulate = tint
+	
+	apply_starting_ability_levels(tank)
+
+
+func get_run_config() -> Node:
+	return get_node("/root/RunConfig")
+
+
+func apply_starting_ability_levels(tank: Dictionary) -> void:
+	for i in range(int(tank.get("landmine_level", 0))):
+		upgrade_landmine()
+	for i in range(int(tank.get("circular_saw_level", 0))):
+		upgrade_circular_saw()
+	for i in range(int(tank.get("footsoldier_level", 0))):
+		upgrade_footsoldier()
+	for i in range(int(tank.get("shock_field_level", 0))):
+		upgrade_shock_field()
+	for i in range(int(tank.get("artillery_level", 0))):
+		upgrade_artillery()
+	for i in range(int(tank.get("drone_swarm_level", 0))):
+		upgrade_drone_swarm()
+	for i in range(int(tank.get("oil_slick_level", 0))):
+		upgrade_oil_slick()
+	for i in range(int(tank.get("freeze_pulse_level", 0))):
+		upgrade_freeze_pulse()
 
 
 func upgrade_drone_swarm() -> void:
