@@ -32,19 +32,22 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Added tank archetype selection on the main menu:
   - Vanguard, Scout, Fortress, Twin Cannon, Engineer, and Collector.
   - Archetypes modify starting stats, upgrades, abilities, tank tint, HUD stats, and defeat summary.
+- Added deterministic run seeds and randomized run modifiers:
+  - Each run rolls a seed and 2-3 modifiers from a reusable modifier catalog.
+  - Modifiers affect spawn pressure, EXP value, boss cadence/rewards, supply drops, enemy scaling, weapon tempo, and salvage drops.
+  - Defeat summary now shows the seed and active modifier names.
 
 ## Backlog
 
 ### Next
 
-- Add run modifiers so each run starts with a random rule twist, such as richer elites, faster EXP, low visibility, or double bosses.
 - Add ability rarity, synergy tags, or weighted choices so late-game ability rolls can bias toward build-defining combos.
+- Add unlock progression for tanks, abilities, and run modifiers.
 
 ### Content
 
 - Add elite enemy affixes using lightweight modifiers instead of many duplicate scenes.
 - Expand boss behaviors beyond stat profiles with minion calls, projectile rings, arena hazards, and phase changes.
-- Add unlock goals for tanks, abilities, and run modifiers.
 
 ### Systems
 

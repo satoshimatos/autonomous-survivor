@@ -437,7 +437,7 @@ func apply_selected_tank_archetype() -> void:
 	speed *= float(tank.get("speed_multiplier", 1.0))
 	max_health = max(1, max_health + int(tank.get("health_bonus", 0)))
 	attack_damage *= float(tank.get("damage_multiplier", 1.0))
-	fire_interval *= float(tank.get("fire_interval_multiplier", 1.0))
+	fire_interval *= float(tank.get("fire_interval_multiplier", 1.0)) * float(get_run_config().get_modifier_multiplier("player_fire_interval_multiplier"))
 	
 	speed_level += int(tank.get("speed_level", 0))
 	damage_level += int(tank.get("damage_level", 0))

@@ -1,6 +1,8 @@
 extends Node
 
 var selected_tank_id: String = "vanguard"
+var run_seed_text: String = ""
+var active_run_modifiers: Array[Dictionary] = []
 
 var tank_archetypes: Array[Dictionary] = [
 	{
@@ -66,6 +68,52 @@ var tank_archetypes: Array[Dictionary] = [
 	},
 ]
 
+var run_modifier_catalog: Array[Dictionary] = [
+	{
+		"id": "swarm_opening",
+		"name": "Swarm Opening",
+		"summary": "More early pressure, but weaker small enemies.",
+		"spawn_interval_multiplier": 0.72,
+		"enemy_health_growth_multiplier": 0.92,
+	},
+	{
+		"id": "rich_crystals",
+		"name": "Rich Crystals",
+		"summary": "More EXP value, but enemy damage ramps harder.",
+		"exp_value_multiplier": 1.28,
+		"enemy_damage_growth_multiplier": 1.2,
+	},
+	{
+		"id": "supply_rain",
+		"name": "Supply Rain",
+		"summary": "Supply boxes are more common during the run.",
+		"supply_box_interval_multiplier": 0.72,
+		"supply_box_chance_multiplier": 2.4,
+	},
+	{
+		"id": "boss_contract",
+		"name": "Boss Contract",
+		"summary": "Bosses arrive far more often and drop richer rewards.",
+		"boss_spawn_interval_multiplier": 0.55,
+		"boss_exp_multiplier": 1.45,
+	},
+	{
+		"id": "unstable_engine",
+		"name": "Unstable Engine",
+		"summary": "Faster weapon tempo, faster enemy speed scaling.",
+		"player_fire_interval_multiplier": 0.88,
+		"enemy_speed_growth_multiplier": 1.25,
+	},
+	{
+		"id": "salvage_field",
+		"name": "Salvage Field",
+		"summary": "More wrench and dynamite drops, but less supply support.",
+		"wrench_drop_multiplier": 1.75,
+		"dynamite_drop_multiplier": 2.0,
+		"supply_box_chance_multiplier": 0.65,
+	},
+]
+
 
 func get_selected_tank() -> Dictionary:
 	return get_tank_by_id(selected_tank_id)
@@ -80,3 +128,59 @@ func get_tank_by_id(tank_id: String) -> Dictionary:
 
 func set_selected_tank(tank_id: String) -> void:
 	selected_tank_id = get_tank_by_id(tank_id).id
+
+
+func start_new_run() -> void:
+	run_seed_text = generate_run_seed()
+	active_run_modifiers = roll_run_modifiers(run_seed_text)
+
+
+func ensure_run_ready() -> void:
+	if run_seed_text == "":
+		start_new_run()
+
+
+func generate_run_seed() -> String:
+	var rng := RandomNumberGenerator.new()
+	rng.randomize()
+	var alphabet := "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
+	var seed_parts: Array[String] = []
+	for i in range(8):
+		seed_parts.append(alphabet[rng.randi_range(0, alphabet.length() - 1)])
+	return "".join(seed_parts)
+
+
+func roll_run_modifiers(seed_text: String) -> Array[Dictionary]:
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash(seed_text)
+	var available_modifiers := run_modifier_catalog.duplicate()
+	var modifier_count := rng.randi_range(2, 3)
+	var modifiers: Array[Dictionary] = []
+	for i in range(modifier_count):
+		if available_modifiers.is_empty():
+			break
+		var index := rng.randi_range(0, available_modifiers.size() - 1)
+		modifiers.append(available_modifiers[index])
+		available_modifiers.remove_at(index)
+	return modifiers
+
+
+func get_active_modifier_names() -> Array[String]:
+	var names: Array[String] = []
+	for modifier in active_run_modifiers:
+		names.append(String(modifier.name))
+	return names
+
+
+func get_active_modifier_summary() -> String:
+	var names := get_active_modifier_names()
+	if names.is_empty():
+		return "None"
+	return ", ".join(names)
+
+
+func get_modifier_multiplier(key: String, default_value: float = 1.0) -> float:
+	var multiplier := default_value
+	for modifier in active_run_modifiers:
+		multiplier *= float(modifier.get(key, 1.0))
+	return multiplier

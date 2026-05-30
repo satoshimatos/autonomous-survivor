@@ -9,6 +9,7 @@ func _ready() -> void:
 
 
 func _on_play_button_pressed() -> void:
+	get_run_config().start_new_run()
 	get_tree().change_scene_to_file("res://scenes/core/main.tscn")
 
 

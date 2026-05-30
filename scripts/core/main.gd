@@ -34,6 +34,18 @@ var is_startup_loading: bool = true
 var player_damage_events: Array[Dictionary] = []
 var player_dps: float = 0.0
 var low_health_upgrade_timer: float = 0.0
+var run_seed_text: String = ""
+var run_modifier_summary: String = ""
+var enemy_speed_growth_multiplier: float = 1.0
+var enemy_health_growth_multiplier: float = 1.0
+var enemy_damage_growth_multiplier: float = 1.0
+var exp_value_multiplier: float = 1.0
+var boss_exp_multiplier: float = 1.0
+var boss_spawn_interval: float = 420.0
+var supply_box_spawn_interval: float = 15.0
+var supply_box_spawn_chance: float = 0.05
+var wrench_drop_chance: float = 0.05
+var dynamite_drop_chance: float = 0.001
 
 const ENEMY = preload("uid://kxdifr4760x4")
 const BROWN_ENEMY = preload("res://scenes/enemies/brown_enemy.tscn")
@@ -162,6 +174,7 @@ const DEBUG_TIME_SCALES: Array[float] = [1.0, 2.0, 4.0, 8.0]
 
 
 func _ready() -> void:
+	configure_run_seed_and_modifiers()
 	set_debug_time_scale_index(0)
 	is_startup_loading = true
 	loading_overlay.visible = true
@@ -185,13 +198,39 @@ func _ready() -> void:
 		low_health_vignette.set_low_health_active(false)
 		get_tree().paused = true
 		%DefeatControl.visible = true
-		%ResultLabel.text = "Tank: %s\nTime: %s\nEnemies Defeated: %s\nBosses Defeated: %s" % [
+		%ResultLabel.text = "Tank: %s\nSeed: %s\nModifiers: %s\nTime: %s\nEnemies Defeated: %s\nBosses Defeated: %s" % [
 			player.selected_tank_name,
+			run_seed_text,
+			run_modifier_summary,
 			get_formatted_run_time(),
 			enemies_defeated,
 			bosses_defeated,
 		]
 	)
+
+
+func configure_run_seed_and_modifiers() -> void:
+	var run_config = get_run_config()
+	run_config.ensure_run_ready()
+	run_seed_text = String(run_config.run_seed_text)
+	run_modifier_summary = String(run_config.get_active_modifier_summary())
+	seed(hash(run_seed_text))
+	
+	enemy_speed_growth_multiplier = float(run_config.get_modifier_multiplier("enemy_speed_growth_multiplier"))
+	enemy_health_growth_multiplier = float(run_config.get_modifier_multiplier("enemy_health_growth_multiplier"))
+	enemy_damage_growth_multiplier = float(run_config.get_modifier_multiplier("enemy_damage_growth_multiplier"))
+	exp_value_multiplier = float(run_config.get_modifier_multiplier("exp_value_multiplier"))
+	boss_exp_multiplier = float(run_config.get_modifier_multiplier("boss_exp_multiplier"))
+	boss_spawn_interval = BOSS_SPAWN_INTERVAL * float(run_config.get_modifier_multiplier("boss_spawn_interval_multiplier"))
+	supply_box_spawn_interval = SUPPLY_BOX_SPAWN_INTERVAL * float(run_config.get_modifier_multiplier("supply_box_interval_multiplier"))
+	supply_box_spawn_chance = clamp(SUPPLY_BOX_SPAWN_CHANCE * float(run_config.get_modifier_multiplier("supply_box_chance_multiplier")), 0.0, 1.0)
+	wrench_drop_chance = clamp(WRENCH_DROP_CHANCE * float(run_config.get_modifier_multiplier("wrench_drop_multiplier")), 0.0, 1.0)
+	dynamite_drop_chance = clamp(DYNAMITE_DROP_CHANCE * float(run_config.get_modifier_multiplier("dynamite_drop_multiplier")), 0.0, 1.0)
+	spawn_interval *= float(run_config.get_modifier_multiplier("spawn_interval_multiplier"))
+
+
+func get_run_config() -> Node:
+	return get_node("/root/RunConfig")
 
 
 func setup_pickup_pools() -> void:
@@ -242,33 +281,33 @@ func _process(delta: float) -> void:
 	
 	while enemy_speed_scale_timer >= 10.0:
 		enemy_speed_scale_timer -= 10.0
-		enemy_speed_scale *= 1.01
+		enemy_speed_scale *= 1.0 + 0.01 * enemy_speed_growth_multiplier
 		update_exp_orb_drop_chances()
 		
 		for enemy in get_tree().get_nodes_in_group("Enemy"):
 			if enemy.has_method("apply_speed_multiplier"):
-				enemy.apply_speed_multiplier(1.01)
+				enemy.apply_speed_multiplier(1.0 + 0.01 * enemy_speed_growth_multiplier)
 	
 	while enemy_health_scale_timer >= ENEMY_HEALTH_SCALE_INTERVAL:
 		enemy_health_scale_timer -= ENEMY_HEALTH_SCALE_INTERVAL
-		enemy_health_bonus_step += ENEMY_HEALTH_BONUS_STEP
+		enemy_health_bonus_step += ENEMY_HEALTH_BONUS_STEP * enemy_health_growth_multiplier
 		enemy_health_bonus_total += enemy_health_bonus_step
 		apply_enemy_health_bonus_to_active_enemies()
 	
 	while enemy_damage_scale_timer >= ENEMY_DAMAGE_SCALE_INTERVAL:
 		enemy_damage_scale_timer -= ENEMY_DAMAGE_SCALE_INTERVAL
-		enemy_damage_multiplier *= ENEMY_DAMAGE_MULTIPLIER_STEP
+		enemy_damage_multiplier *= 1.0 + ((ENEMY_DAMAGE_MULTIPLIER_STEP - 1.0) * enemy_damage_growth_multiplier)
 	
 	if magnet_spawn_timer >= MAGNET_SPAWN_INTERVAL:
 		magnet_spawn_timer -= MAGNET_SPAWN_INTERVAL
 		try_spawn_magnet_pickup()
 	
-	if supply_box_spawn_timer >= SUPPLY_BOX_SPAWN_INTERVAL:
-		supply_box_spawn_timer -= SUPPLY_BOX_SPAWN_INTERVAL
+	if supply_box_spawn_timer >= supply_box_spawn_interval:
+		supply_box_spawn_timer -= supply_box_spawn_interval
 		try_spawn_supply_box()
 	
-	if boss_spawn_timer >= BOSS_SPAWN_INTERVAL:
-		boss_spawn_timer -= BOSS_SPAWN_INTERVAL
+	if boss_spawn_timer >= boss_spawn_interval:
+		boss_spawn_timer -= boss_spawn_interval
 		try_spawn_boss()
 	
 	if spawn_timer >= spawn_interval:
@@ -598,6 +637,7 @@ func _on_enemy_defeated(enemy_position: Vector2, exp_drop_count: int = 1, exp_dr
 func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
 	enemies_defeated += 1
 	bosses_defeated += 1
+	exp_drop_count = int(ceil(float(exp_drop_count) * boss_exp_multiplier))
 	var mass_damage_active := dynamite_blast_active or splash_blast_active
 	
 	spawn_boss_death_burst.call_deferred(enemy_position)
@@ -615,8 +655,8 @@ func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_dr
 func queue_exp_drops(enemy_position: Vector2, drop_count: int, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
 	for i in range(drop_count):
 		queued_exp_drops.append({
-			"position": get_exp_drop_position(enemy_position, i, drop_count),
-			"min_tier": exp_drop_min_tier
+		"position": get_exp_drop_position(enemy_position, i, drop_count),
+		"min_tier": exp_drop_min_tier
 		})
 
 
@@ -653,7 +693,7 @@ func _spawn_exp_orb(drop_data: Dictionary) -> void:
 	var exp_orb = EXP_ORB.instantiate()
 	add_child(exp_orb)
 	exp_orb.global_position = enemy_position
-	exp_orb.configure(orb_data.value, orb_data.radius, orb_data.texture, orb_data.get("visual_scale", 1.0))
+	exp_orb.configure(int(ceil(float(orb_data.value) * exp_value_multiplier)), orb_data.radius, orb_data.texture, orb_data.get("visual_scale", 1.0))
 	
 	if magnet_effect_timer > 0.0:
 		exp_orb.set_magnet_active(true, player)
@@ -772,7 +812,7 @@ func try_drop_dynamite(enemy_position: Vector2) -> void:
 	if dynamite_pickup_pool == null or dynamite_pickup_pool.is_active:
 		return
 	
-	if randf() > DYNAMITE_DROP_CHANCE:
+	if randf() > dynamite_drop_chance:
 		return
 	
 	if not is_position_in_arena(enemy_position):
@@ -782,7 +822,7 @@ func try_drop_dynamite(enemy_position: Vector2) -> void:
 
 
 func try_drop_wrench(enemy_position: Vector2) -> void:
-	if randf() > WRENCH_DROP_CHANCE:
+	if randf() > wrench_drop_chance:
 		return
 	
 	if not is_position_in_arena(enemy_position):
@@ -892,7 +932,7 @@ func try_spawn_magnet_pickup() -> void:
 
 
 func try_spawn_supply_box() -> void:
-	if randf() > SUPPLY_BOX_SPAWN_CHANCE:
+	if randf() > supply_box_spawn_chance:
 		return
 	
 	var spawn_position := get_offscreen_arena_spawn_point()
