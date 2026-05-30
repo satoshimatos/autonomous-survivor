@@ -1,0 +1,29 @@
+[gd_scene load_steps=4 format=3 uid="uid://bkslemqb5h4g1"]
+
+[ext_resource type="Script" uid="uid://cpt0st36ctk1d" path="res://scripts/projectiles/projectile.gd" id="1_c8fcr"]
+[ext_resource type="Texture2D" path="res://assets/projectiles/tank_projectile.png" id="2_projectile"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_c8fcr"]
+radius = 6.0
+
+[node name="Projectile" type="Area2D" unique_id=1393655032 groups=["Projectile"]]
+z_index = 1
+collision_layer = 0
+collision_mask = 4
+script = ExtResource("1_c8fcr")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1243850468]
+shape = SubResource("CircleShape2D_c8fcr")
+
+[node name="ProjectileSprite" type="Sprite2D" parent="." unique_id=1799975754]
+position = Vector2(0, 28)
+scale = Vector2(0.55, 0.55)
+texture = ExtResource("2_projectile")
+
+[node name="Timer" type="Timer" parent="." unique_id=1248883996]
+wait_time = 2.0
+one_shot = true
+autostart = true
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]
+[connection signal="timeout" from="Timer" to="." method="_on_timer_timeout"]

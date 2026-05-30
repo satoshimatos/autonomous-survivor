@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/effects/splash_area.gd" id="1_nplhh"]
+
+[node name="SplashArea" type="Node2D"]
+z_index = 1
+script = ExtResource("1_nplhh")

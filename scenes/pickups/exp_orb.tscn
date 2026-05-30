@@ -1,0 +1,21 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/pickups/exp_orb.gd" id="1_6pcij"]
+[ext_resource type="Texture2D" path="res://assets/exp/exp_crystal_green.png" id="2_green"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_6pcij"]
+radius = 5.0
+
+[node name="ExpOrb" type="Area2D" groups=["ExpOrb"]]
+z_index = 1
+collision_layer = 8
+collision_mask = 2
+script = ExtResource("1_6pcij")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_6pcij")
+
+[node name="CrystalSprite" type="Sprite2D" parent="."]
+texture = ExtResource("2_green")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

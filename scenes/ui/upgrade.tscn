@@ -1,0 +1,87 @@
+[gd_scene load_steps=3 format=3 uid="uid://gi785n7oy38v"]
+
+[ext_resource type="Script" uid="uid://iu77xywqfe56" path="res://scripts/ui/upgrade.gd" id="1_xsw34"]
+[ext_resource type="Texture2D" uid="uid://di2kwmajc3aiq" path="res://assets/ui/panels/menu_panel_nine_patch.png" id="2_panel"]
+
+[node name="UpgradeMenu" type="Control" unique_id=1331108234]
+process_mode = 3
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_xsw34")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=228085556]
+
+[node name="ColorRect" type="NinePatchRect" parent="CanvasLayer" unique_id=2656234]
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -210.0
+offset_top = -250.0
+offset_right = 210.0
+offset_bottom = 250.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(0.56, 1, 0.63, 1)
+texture = ExtResource("2_panel")
+patch_margin_left = 72
+patch_margin_top = 72
+patch_margin_right = 72
+patch_margin_bottom = 72
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="Label" type="Label" parent="CanvasLayer/ColorRect" unique_id=1031346127]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_bottom = 59.0
+grow_horizontal = 2
+theme_override_font_sizes/font_size = 32
+text = "Select an Upgrade"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="MarginContainer" type="MarginContainer" parent="CanvasLayer/ColorRect" unique_id=1397968889]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = 102.0
+offset_bottom = -61.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 64
+theme_override_constants/margin_right = 64
+
+[node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ColorRect/MarginContainer" unique_id=2088481364]
+layout_mode = 2
+theme_override_constants/separation = 32
+alignment = 1
+
+[node name="OptionButton1" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer" unique_id=1880267085]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "OPTION 1"
+
+[node name="OptionButton2" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer" unique_id=773109829]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "OPTION 2"
+
+[node name="OptionButton3" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer" unique_id=1005646685]
+custom_minimum_size = Vector2(0, 64)
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "OPTION 3"
+
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton1" to="." method="_on_option_button_1_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton2" to="." method="_on_option_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton3" to="." method="_on_option_button_3_pressed"]

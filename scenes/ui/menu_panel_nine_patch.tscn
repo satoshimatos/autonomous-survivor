@@ -1,0 +1,15 @@
+[gd_scene format=3 uid="uid://b2144rwptanc1"]
+
+[ext_resource type="Texture2D" uid="uid://di2kwmajc3aiq" path="res://assets/ui/panels/menu_panel_nine_patch.png" id="1_panel"]
+
+[node name="MenuPanelNinePatch" type="NinePatchRect" unique_id=2064379816]
+custom_minimum_size = Vector2(360, 260)
+offset_right = 360.0
+offset_bottom = 260.0
+texture = ExtResource("1_panel")
+patch_margin_left = 72
+patch_margin_top = 72
+patch_margin_right = 72
+patch_margin_bottom = 72
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2

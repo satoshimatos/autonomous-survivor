@@ -1,0 +1,28 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/enemies/enemy.gd" id="1_shielded"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_shielded"]
+radius = 20.0
+
+[sub_resource type="SphereMesh" id="SphereMesh_shielded"]
+radius = 20.0
+height = 40.0
+
+[node name="ShieldedEnemy" type="Area2D" groups=["Enemy"]]
+z_index = 1
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_shielded")
+base_speed = 25.0
+health = 40
+contact_damage = 3
+exp_drop_count = 3
+exp_drop_min_tier = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_shielded")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="."]
+modulate = Color(0.72, 0.72, 0.68, 1)
+mesh = SubResource("SphereMesh_shielded")

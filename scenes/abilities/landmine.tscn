@@ -1,0 +1,22 @@
+[gd_scene format=3 uid="uid://jily4ppa45tr"]
+
+[ext_resource type="Script" uid="uid://qmpqa7ejgcer" path="res://scripts/abilities/landmine.gd" id="1_landmine"]
+[ext_resource type="Texture2D" uid="uid://dqwg4wfs6sf12" path="res://assets/abilities/landmine.png" id="2_landmine"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_landmine"]
+radius = 17.5
+
+[node name="Landmine" type="Area2D" unique_id=552449839]
+z_index = 0
+collision_layer = 128
+collision_mask = 4
+script = ExtResource("1_landmine")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1677530931]
+shape = SubResource("CircleShape2D_landmine")
+
+[node name="PickupSprite" type="Sprite2D" parent="." unique_id=776729729]
+scale = Vector2(0.5, 0.5)
+texture = ExtResource("2_landmine")
+
+[connection signal="area_entered" from="." to="." method="_on_area_entered"]

@@ -1,0 +1,22 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/pickups/dynamite_pickup.gd" id="1_nmk78"]
+[ext_resource type="Texture2D" path="res://assets/pickups/dynamite_pickup_sprite.png" id="2_dynamite"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_nmk78"]
+size = Vector2(24, 24)
+
+[node name="DynamitePickup" type="Area2D" groups=["DynamitePickup"]]
+z_index = 1
+collision_layer = 32
+collision_mask = 2
+script = ExtResource("1_nmk78")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_nmk78")
+
+[node name="PickupSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.375, 0.375)
+texture = ExtResource("2_dynamite")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]

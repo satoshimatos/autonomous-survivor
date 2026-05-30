@@ -1,0 +1,81 @@
+[gd_scene format=3 uid="uid://dje8ls2ip5ui5"]
+
+[ext_resource type="Script" uid="uid://cnxqxlna4y18y" path="res://scripts/enemies/boss_enemy.gd" id="1_boss"]
+[ext_resource type="Script" uid="uid://bbq4m5x4d84rq" path="res://scripts/enemies/state_machine.gd" id="2_state_machine"]
+[ext_resource type="Script" uid="uid://c56fa4fi310sf" path="res://scripts/states/chase_state.gd" id="3_chase"]
+[ext_resource type="Script" uid="uid://b612al6i45ogm" path="res://scripts/ui/status_bar.gd" id="4_status_bar"]
+[ext_resource type="Script" uid="uid://qde5v47alhhp" path="res://scripts/states/charge_state.gd" id="5_charge"]
+[ext_resource type="Script" uid="uid://cvgm6r3vh85a4" path="res://scripts/states/dash_state.gd" id="6_dash"]
+[ext_resource type="Script" uid="uid://bx8b5mfbqvm0v" path="res://scripts/states/idle_state.gd" id="7_idle"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_boss"]
+size = Vector2(128, 128)
+
+[sub_resource type="QuadMesh" id="QuadMesh_boss"]
+size = Vector2(128, 128)
+
+[node name="BossEnemy" type="Area2D" unique_id=400060093 groups=["Boss", "Enemy"]]
+z_index = 1
+collision_layer = 4
+collision_mask = 2
+script = ExtResource("1_boss")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1533632136]
+shape = SubResource("RectangleShape2D_boss")
+
+[node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=1344292290]
+modulate = Color(0.5, 0.05, 0.62, 1)
+mesh = SubResource("QuadMesh_boss")
+
+[node name="TelegraphLine" type="Line2D" parent="." unique_id=1653022875]
+visible = false
+z_index = -1
+width = 34.0
+default_color = Color(1, 0, 0, 0.72)
+begin_cap_mode = 2
+end_cap_mode = 2
+
+[node name="HealthBar" type="Control" parent="." unique_id=498331086]
+z_index = 5
+layout_mode = 3
+anchors_preset = 0
+offset_left = -58.0
+offset_top = -84.0
+offset_right = 58.0
+offset_bottom = -68.0
+script = ExtResource("4_status_bar")
+fill_full_color = Color(0.9, 0.04, 0.07, 1)
+corner_radius = 5
+
+[node name="Label" type="Label" parent="HealthBar" unique_id=1710417467]
+visible = false
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 8
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="StateMachine" type="Node" parent="." unique_id=1419055951]
+script = ExtResource("2_state_machine")
+
+[node name="ChaseState" type="Node" parent="StateMachine" unique_id=1045708920]
+script = ExtResource("3_chase")
+use_duration = true
+max_duration = 3.0
+next_state_name = "ChargeState"
+
+[node name="ChargeState" type="Node" parent="StateMachine" unique_id=1197398495]
+script = ExtResource("5_charge")
+duration = 2.0
+
+[node name="DashState" type="Node" parent="StateMachine" unique_id=2059838811]
+script = ExtResource("6_dash")
+duration = 1.0
+
+[node name="IdleState" type="Node" parent="StateMachine" unique_id=41433343]
+script = ExtResource("7_idle")
+max_duration = 1.5

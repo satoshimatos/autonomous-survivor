@@ -1,0 +1,516 @@
+[gd_scene format=3 uid="uid://u7loalh4ltis"]
+
+[ext_resource type="Script" uid="uid://l1n40e7plnon" path="res://scripts/core/main.gd" id="1_0wfyh"]
+[ext_resource type="PackedScene" uid="uid://db7gd8hjmu5dt" path="res://scenes/player/player.tscn" id="1_o5qli"]
+[ext_resource type="Script" uid="uid://d32a3kac6udre" path="res://scripts/ui/floor_details.gd" id="3_wm82h"]
+[ext_resource type="Script" uid="uid://rcsiups5plb2" path="res://scripts/ui/magnet_indicator.gd" id="4_m99x8"]
+[ext_resource type="Script" uid="uid://cjo461r7u4rvg" path="res://scripts/effects/damage_number_pool.gd" id="5_m2b0t"]
+[ext_resource type="Script" uid="uid://co1aw411j2p46" path="res://scripts/ui/low_health_vignette.gd" id="6_wysh3"]
+[ext_resource type="Script" uid="uid://b612al6i45ogm" path="res://scripts/ui/status_bar.gd" id="7_m8b2t"]
+
+[sub_resource type="QuadMesh" id="QuadMesh_sgp6g"]
+size = Vector2(1728, 1128)
+
+[sub_resource type="QuadMesh" id="QuadMesh_o5qli"]
+size = Vector2(1408, 808)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_0wfyh"]
+size = Vector2(64, 936)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sugp2"]
+size = Vector2(1536, 64)
+
+[node name="Main" type="Node2D" unique_id=78506109]
+process_mode = 3
+script = ExtResource("1_0wfyh")
+
+[node name="BoundsMesh" type="MeshInstance2D" parent="." unique_id=2025702318]
+modulate = Color(0.32544088, 0.3254409, 0.32544088, 1)
+position = Vector2(577.5, 324.5)
+scale = Vector2(0.8327546, 0.7420212)
+mesh = SubResource("QuadMesh_sgp6g")
+
+[node name="ArenaMesh" type="MeshInstance2D" parent="." unique_id=177240365]
+modulate = Color(0.5330367, 0.5330367, 0.5330367, 1)
+z_index = -1
+position = Vector2(576, 324)
+mesh = SubResource("QuadMesh_o5qli")
+
+[node name="FloorDetails" type="Node2D" parent="." unique_id=1047719930]
+script = ExtResource("3_wm82h")
+area_size = Vector2(1408, 808)
+
+[node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1671463928]
+position = Vector2(576, 324)
+collision_mask = 2
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=582180136]
+position = Vector2(752, 0)
+shape = SubResource("RectangleShape2D_0wfyh")
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=630935335]
+position = Vector2(-752, 0)
+shape = SubResource("RectangleShape2D_0wfyh")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=367885094]
+position = Vector2(0, 452)
+shape = SubResource("RectangleShape2D_sugp2")
+
+[node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D" unique_id=1943130208]
+position = Vector2(0, -452)
+shape = SubResource("RectangleShape2D_sugp2")
+
+[node name="Player" parent="." unique_id=992026406 instance=ExtResource("1_o5qli")]
+position = Vector2(576, 324)
+
+[node name="DamageNumberPool" type="Node2D" parent="." unique_id=687850145]
+script = ExtResource("5_m2b0t")
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1655309931]
+
+[node name="MagnetIndicator" type="Control" parent="CanvasLayer" unique_id=1368073775]
+z_index = 4
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("4_m99x8")
+
+[node name="LowHealthVignette" type="ColorRect" parent="CanvasLayer" unique_id=223002438]
+z_index = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("6_wysh3")
+
+[node name="DynamiteFlash" type="ColorRect" parent="CanvasLayer" unique_id=1377902980]
+z_index = 6
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(1, 1, 1, 0)
+
+[node name="LoadingOverlay" type="Control" parent="CanvasLayer"]
+process_mode = 3
+z_index = 100
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/LoadingOverlay"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/LoadingOverlay"]
+layout_mode = 1
+anchors_preset = 10
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -174.0
+offset_top = -52.0
+offset_right = -24.0
+offset_bottom = -16.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_font_sizes/font_size = 24
+text = "loading"
+horizontal_alignment = 2
+vertical_alignment = 1
+
+[node name="PauseOverlay" type="Control" parent="CanvasLayer" unique_id=851696406]
+process_mode = 3
+visible = false
+z_index = 4
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/PauseOverlay" unique_id=1826377960]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.22)
+
+[node name="Label" type="Label" parent="CanvasLayer/PauseOverlay" unique_id=1802782952]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -98.0
+offset_top = -38.0
+offset_right = 98.0
+offset_bottom = 38.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 48
+text = "PAUSED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DefeatControl" type="Control" parent="CanvasLayer" unique_id=1601369116]
+unique_name_in_owner = true
+process_mode = 3
+visible = false
+z_index = 5
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/DefeatControl" unique_id=683425668]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+color = Color(0, 0, 0, 0.2509804)
+
+[node name="DefeatLabel" type="Label" parent="CanvasLayer/DefeatControl" unique_id=1065720864]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -173.0
+offset_top = -161.0
+offset_right = 173.0
+offset_bottom = -29.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(1, 0, 0, 1)
+theme_override_font_sizes/font_size = 96
+text = "DEFEAT"
+
+[node name="ResultLabel" type="Label" parent="CanvasLayer/DefeatControl" unique_id=2049240300]
+unique_name_in_owner = true
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -20.0
+offset_top = -11.0
+offset_right = 20.0
+offset_bottom = 12.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 32
+text = "Enemies Defeated: 0"
+
+[node name="RestartButton" type="Button" parent="CanvasLayer/DefeatControl" unique_id=688214637]
+custom_minimum_size = Vector2(128, 48)
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -64.0
+offset_top = 61.0
+offset_right = 64.0
+offset_bottom = 109.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_font_sizes/font_size = 24
+text = "RESTART"
+
+[node name="RunTimerLabel" type="Label" parent="CanvasLayer" unique_id=118838062]
+z_index = 2
+offset_left = 516.0
+offset_top = 15.0
+offset_right = 636.0
+offset_bottom = 60.0
+theme_override_font_sizes/font_size = 32
+text = "00:00"
+horizontal_alignment = 1
+
+[node name="HPBar" type="Control" parent="CanvasLayer" unique_id=189356021]
+z_index = 2
+layout_mode = 3
+anchors_preset = 0
+offset_left = 16.0
+offset_top = 16.0
+offset_right = 286.0
+offset_bottom = 52.0
+script = ExtResource("7_m8b2t")
+fill_full_color = Color(0.1, 0.95, 0.18, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/HPBar" unique_id=1814711927]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.92, 1, 0.9, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.85)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "HP 10/10"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="PauseButton" type="Button" parent="CanvasLayer" unique_id=1440158218]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 88.0
+offset_right = 122.0
+offset_bottom = 128.0
+theme_override_font_sizes/font_size = 20
+text = "PAUSE"
+
+[node name="DebugDynamiteButton" type="Button" parent="CanvasLayer" unique_id=405154647]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 136.0
+offset_right = 156.0
+offset_bottom = 164.0
+theme_override_font_sizes/font_size = 13
+text = "SPAWN DYNAMITE"
+
+[node name="DebugBossButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 168.0
+offset_right = 156.0
+offset_bottom = 196.0
+theme_override_font_sizes/font_size = 13
+text = "SPAWN BOSS"
+
+[node name="DebugGreenSupplyButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 200.0
+offset_right = 156.0
+offset_bottom = 228.0
+theme_override_font_sizes/font_size = 13
+text = "SPAWN GREEN BOX"
+
+[node name="DebugBlueSupplyButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 232.0
+offset_right = 156.0
+offset_bottom = 260.0
+theme_override_font_sizes/font_size = 13
+text = "SPAWN BLUE BOX"
+
+[node name="DebugAllAiButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 264.0
+offset_right = 156.0
+offset_bottom = 292.0
+theme_override_font_sizes/font_size = 13
+text = "ALL AI: OFF"
+
+[node name="DebugAutoMoveButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 296.0
+offset_right = 156.0
+offset_bottom = 324.0
+theme_override_font_sizes/font_size = 13
+text = "AI MOVE: OFF"
+
+[node name="DebugEnemyAvoidanceButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 328.0
+offset_right = 156.0
+offset_bottom = 356.0
+theme_override_font_sizes/font_size = 13
+text = "AI AVOID: OFF"
+
+[node name="DebugExpSeekButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 360.0
+offset_right = 156.0
+offset_bottom = 388.0
+theme_override_font_sizes/font_size = 13
+text = "AI EXP: OFF"
+
+[node name="DebugWrenchSeekButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 392.0
+offset_right = 156.0
+offset_bottom = 420.0
+theme_override_font_sizes/font_size = 13
+text = "AI WRENCH: OFF"
+
+[node name="DebugPowerupSeekButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 424.0
+offset_right = 156.0
+offset_bottom = 452.0
+theme_override_font_sizes/font_size = 13
+text = "AI POWER: OFF"
+
+[node name="DebugSupplySeekButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 456.0
+offset_right = 156.0
+offset_bottom = 484.0
+theme_override_font_sizes/font_size = 13
+text = "AI BOX: OFF"
+
+[node name="DebugUpgradePickButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 488.0
+offset_right = 156.0
+offset_bottom = 516.0
+theme_override_font_sizes/font_size = 13
+text = "AI PICK: OFF"
+
+[node name="DebugTimeScaleButton" type="Button" parent="CanvasLayer"]
+process_mode = 3
+z_index = 7
+offset_left = 16.0
+offset_top = 520.0
+offset_right = 156.0
+offset_bottom = 548.0
+theme_override_font_sizes/font_size = 13
+text = "SPEED: 1x"
+
+[node name="StatsLabel" type="Label" parent="CanvasLayer" unique_id=1055227557]
+z_index = 2
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -292.0
+offset_top = 72.0
+offset_right = -16.0
+offset_bottom = 206.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.92, 0.98, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/line_spacing = -2
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "Damage: 10.0
+Splash Radius: 0 px
+Move Speed: 115
+Fire Rate: 1.000s
+Regen: 0.000 HP/s
+EXP Mult: 100%"
+horizontal_alignment = 2
+
+[node name="UpgradeInventoryLabel" type="Label" parent="CanvasLayer"]
+z_index = 2
+anchors_preset = 3
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -292.0
+offset_top = 212.0
+offset_right = -16.0
+offset_bottom = 508.0
+grow_horizontal = 0
+theme_override_colors/font_color = Color(0.92, 0.98, 1, 1)
+theme_override_colors/font_shadow_color = Color(0, 0, 0, 0.9)
+theme_override_constants/line_spacing = -2
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 14
+text = "Upgrades"
+horizontal_alignment = 2
+
+[node name="ExpBar" type="Control" parent="CanvasLayer" unique_id=2050302320]
+z_index = 2
+layout_mode = 3
+anchors_preset = 7
+anchor_left = 0.5
+anchor_top = 1.0
+anchor_right = 0.5
+anchor_bottom = 1.0
+offset_left = -500.0
+offset_top = -40.0
+offset_right = 500.0
+offset_bottom = -10.0
+grow_horizontal = 2
+grow_vertical = 0
+script = ExtResource("7_m8b2t")
+fill_empty_color = Color(1, 0.48, 0.02, 1)
+fill_full_color = Color(1, 0.94, 0.04, 1)
+
+[node name="Label" type="Label" parent="CanvasLayer/ExpBar" unique_id=1910605943]
+z_index = 1
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_colors/font_color = Color(0.05, 0.05, 0.05, 1)
+theme_override_colors/font_shadow_color = Color(1, 1, 0.65, 0.55)
+theme_override_constants/shadow_offset_x = 1
+theme_override_constants/shadow_offset_y = 1
+theme_override_font_sizes/font_size = 18
+text = "Level 1  0/7"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[connection signal="pressed" from="CanvasLayer/DefeatControl/RestartButton" to="." method="_on_restart_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/PauseButton" to="." method="_on_pause_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugDynamiteButton" to="." method="_on_debug_dynamite_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugBossButton" to="." method="_on_debug_boss_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugGreenSupplyButton" to="." method="_on_debug_green_supply_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugBlueSupplyButton" to="." method="_on_debug_blue_supply_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugTimeScaleButton" to="." method="_on_debug_time_scale_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugAllAiButton" to="." method="_on_debug_all_ai_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugAutoMoveButton" to="." method="_on_debug_auto_move_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugEnemyAvoidanceButton" to="." method="_on_debug_enemy_avoidance_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugExpSeekButton" to="." method="_on_debug_exp_seek_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugWrenchSeekButton" to="." method="_on_debug_wrench_seek_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugPowerupSeekButton" to="." method="_on_debug_powerup_seek_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugSupplySeekButton" to="." method="_on_debug_supply_seek_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/DebugUpgradePickButton" to="." method="_on_debug_upgrade_pick_button_pressed"]

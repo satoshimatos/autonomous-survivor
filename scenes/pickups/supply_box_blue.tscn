@@ -1,0 +1,23 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/pickups/supply_box_pickup.gd" id="1_supply"]
+[ext_resource type="Texture2D" path="res://assets/pickups/supply_box_blue.png" id="2_texture"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_supply"]
+size = Vector2(52, 52)
+
+[node name="SupplyBoxBlue" type="Area2D" groups=["SupplyBoxPickup"]]
+z_index = 2
+collision_layer = 128
+collision_mask = 2
+script = ExtResource("1_supply")
+grants_ability = true
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("RectangleShape2D_supply")
+
+[node name="PickupSprite" type="Sprite2D" parent="."]
+scale = Vector2(0.27, 0.27)
+texture = ExtResource("2_texture")
+
+[connection signal="body_entered" from="." to="." method="_on_body_entered"]
