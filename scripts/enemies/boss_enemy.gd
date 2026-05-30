@@ -22,6 +22,8 @@ var max_health: int = 1000
 var variant_color: Color = Color.WHITE
 var variant_scale: float = 1.0
 var pulse_timer: float = 0.0
+var slow_timer: float = 0.0
+var slow_multiplier: float = 1.0
 
 @onready var mesh_instance: MeshInstance2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -43,6 +45,7 @@ func _ready() -> void:
 
 func _process(delta: float) -> void:
 	pulse_timer += delta
+	update_status_effects(delta)
 	update_behavior_effect(delta)
 	update_hit_flash(delta)
 	state_machine.update(delta)
@@ -76,12 +79,34 @@ func apply_variant_visuals() -> void:
 		collision_shape.scale = Vector2.ONE * variant_scale
 
 
+func apply_slow(duration: float, multiplier: float) -> void:
+	slow_timer = max(slow_timer, duration)
+	slow_multiplier = min(slow_multiplier, clamp(multiplier, 0.05, 1.0))
+	if is_node_ready():
+		mesh_instance.modulate = base_modulate.lerp(Color(0.35, 0.85, 1.0, 1.0), 0.35)
+
+
+func update_status_effects(delta: float) -> void:
+	if slow_timer <= 0.0:
+		return
+	
+	slow_timer = max(slow_timer - delta, 0.0)
+	if slow_timer <= 0.0:
+		slow_multiplier = 1.0
+		if hit_flash_timer <= 0.0:
+			mesh_instance.modulate = base_modulate
+
+
+func get_status_speed_multiplier() -> float:
+	return slow_multiplier if slow_timer > 0.0 else 1.0
+
+
 func update_behavior_effect(delta: float) -> void:
 	match boss_behavior:
 		"bulwark":
 			mesh_instance.rotation += delta * 0.35
 		"sprinter":
-			speed = base_speed * (1.0 + max(0.0, sin(pulse_timer * 2.5)) * 0.75)
+			speed = base_speed * (1.0 + max(0.0, sin(pulse_timer * 2.5)) * 0.75) * get_status_speed_multiplier()
 		"crusher":
 			mesh_instance.scale = Vector2.ONE * variant_scale * (1.0 + sin(pulse_timer * 6.0) * 0.035)
 		"wraith":

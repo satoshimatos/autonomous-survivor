@@ -11,6 +11,8 @@ var ai_pick_in_progress: bool = false
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/LandmineButton,
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/CircularSawButton,
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/FootsoldierButton,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/ShockFieldButton,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/ArtilleryButton,
 ]
 
 
@@ -32,6 +34,18 @@ func _on_footsoldier_button_pressed() -> void:
 	complete_selection()
 
 
+func _on_shock_field_button_pressed() -> void:
+	if player and player.has_method("upgrade_shock_field"):
+		player.upgrade_shock_field()
+	complete_selection()
+
+
+func _on_artillery_button_pressed() -> void:
+	if player and player.has_method("upgrade_artillery"):
+		player.upgrade_artillery()
+	complete_selection()
+
+
 func complete_selection() -> void:
 	if player and player.has_method("complete_ability_selection"):
 		player.complete_ability_selection()
@@ -48,6 +62,8 @@ func pick_random_ability() -> void:
 		"_on_landmine_button_pressed",
 		"_on_circular_saw_button_pressed",
 		"_on_footsoldier_button_pressed",
+		"_on_shock_field_button_pressed",
+		"_on_artillery_button_pressed",
 	]
 	var slot_index: int = randi_range(0, ability_methods.size() - 1)
 	await get_tree().create_timer(AI_MENU_VIEW_DELAY, true, false, true).timeout

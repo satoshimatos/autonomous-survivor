@@ -15,13 +15,18 @@ Top-down tank survivor prototype built in Godot. The current design target is a 
   - Cannon adds extra spread shots per volley.
 - Updated HUD stats and upgrade inventory to show cannon count, armor, magnet, and cannon upgrade levels.
 - Created this README as the durable changelog and project overview for autonomous runs.
+- Added two new ability choices:
+  - Shock Field adds a scaling electric aura that damages and slows nearby enemies.
+  - Artillery Beacon periodically targets dense enemy clusters near the player and calls in delayed splash strikes.
+- Expanded the ability menu from 3 to 5 options and updated the ability inventory readout.
+- Added headless validation coverage for the new ability scenes.
 
 ## Backlog
 
 ### Next
 
 - Add GitHub repository `satoshimatos/autonomous-survivor`, push this project, and mirror this backlog into GitHub issues.
-- Add more ability choices for crowd control and area damage: shock field, drone pet, artillery beacon, oil slick, and freeze pulse.
+- Add more ability choices for crowd control and area damage: drone pet, oil slick, and freeze pulse.
 - Add run modifiers so each run starts with a random rule twist, such as richer elites, faster EXP, low visibility, or double bosses.
 
 ### Content

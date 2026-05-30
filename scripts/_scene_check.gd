@@ -9,6 +9,8 @@ func _init() -> void:
 		"res://scenes/enemies/brown_enemy.tscn",
 		"res://scenes/enemies/shielded_enemy.tscn",
 		"res://scenes/enemies/boss_enemy.tscn",
+		"res://scenes/abilities/shock_field.tscn",
+		"res://scenes/abilities/artillery_beacon.tscn",
 	]
 	
 	for scene_path in scene_paths:

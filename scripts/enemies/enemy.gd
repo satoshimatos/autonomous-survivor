@@ -21,6 +21,8 @@ var variant_color: Color = Color.WHITE
 var variant_scale: float = 1.0
 var movement_seed: float = 0.0
 var movement_timer: float = 0.0
+var slow_timer: float = 0.0
+var slow_multiplier: float = 1.0
 
 @onready var mesh_instance: MeshInstance2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -38,10 +40,11 @@ func _ready() -> void:
 
 
 func _process(delta: float) -> void:
+	update_status_effects(delta)
 	update_hit_flash(delta)
 	
 	if player:
-		position += get_movement_vector(delta) * speed * delta
+		position += get_movement_vector(delta) * speed * get_status_speed_multiplier() * delta
 	
 	var bodies = get_overlapping_bodies()
 	if bodies.size() > 0:
@@ -101,6 +104,28 @@ func get_movement_vector(delta: float) -> Vector2:
 			return direction * 0.72
 		_:
 			return direction
+
+
+func apply_slow(duration: float, multiplier: float) -> void:
+	slow_timer = max(slow_timer, duration)
+	slow_multiplier = min(slow_multiplier, clamp(multiplier, 0.05, 1.0))
+	if is_node_ready():
+		mesh_instance.modulate = base_modulate.lerp(Color(0.35, 0.85, 1.0, 1.0), 0.45)
+
+
+func update_status_effects(delta: float) -> void:
+	if slow_timer <= 0.0:
+		return
+	
+	slow_timer = max(slow_timer - delta, 0.0)
+	if slow_timer <= 0.0:
+		slow_multiplier = 1.0
+		if hit_flash_timer <= 0.0:
+			mesh_instance.modulate = base_modulate
+
+
+func get_status_speed_multiplier() -> float:
+	return slow_multiplier if slow_timer > 0.0 else 1.0
 
 
 func hit(damage: float = 10.0, show_number: bool = true) -> int:

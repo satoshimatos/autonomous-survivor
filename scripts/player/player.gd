@@ -57,6 +57,10 @@ var circular_saws: Array[Node2D] = []
 var circular_saw_orbit_angle: float = 0.0
 var footsoldier_level: int = 0
 var footsoldiers: Array[Node2D] = []
+var shock_field_level: int = 0
+var shock_field: Node2D
+var artillery_level: int = 0
+var artillery_beacon: Node2D
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
 const UPGRADE = preload("uid://gi785n7oy38v")
@@ -64,6 +68,8 @@ const ABILITY_MENU = preload("res://scenes/ui/ability_menu.tscn")
 const LANDMINE = preload("res://scenes/abilities/landmine.tscn")
 const CIRCULAR_SAW = preload("res://scenes/abilities/circular_saw.tscn")
 const FOOTSOLDIER = preload("res://scenes/abilities/footsoldier.tscn")
+const SHOCK_FIELD = preload("res://scenes/abilities/shock_field.tscn")
+const ARTILLERY_BEACON = preload("res://scenes/abilities/artillery_beacon.tscn")
 const MUZZLE_BURST_INTERVAL: float = 0.15
 const REGEN_START_INTERVAL: float = 5.0
 const REGEN_INTERVAL_STEP: float = 1.0 / 3.0
@@ -382,6 +388,36 @@ func update_footsoldier_count() -> void:
 			footsoldier.configure(self, i, footsoldiers.size())
 
 
+func upgrade_shock_field() -> void:
+	shock_field_level += 1
+	if is_instance_valid(shock_field):
+		if shock_field.has_method("update_level"):
+			shock_field.update_level(shock_field_level)
+		return
+	
+	shock_field = SHOCK_FIELD.instantiate()
+	add_child(shock_field)
+	if shock_field.has_method("configure"):
+		shock_field.configure(self, shock_field_level)
+
+
+func upgrade_artillery() -> void:
+	artillery_level += 1
+	if is_instance_valid(artillery_beacon):
+		if artillery_beacon.has_method("update_level"):
+			artillery_beacon.update_level(artillery_level)
+		return
+	
+	var main := get_tree().current_scene
+	if main == null:
+		return
+	
+	artillery_beacon = ARTILLERY_BEACON.instantiate()
+	main.add_child(artillery_beacon)
+	if artillery_beacon.has_method("configure"):
+		artillery_beacon.configure(self, artillery_level)
+
+
 func process_landmine_placement(delta: float) -> void:
 	if landmine_level <= 0 or is_dead:
 		return
@@ -656,6 +692,12 @@ func disable_combat_on_death() -> void:
 	clear_active_ability_nodes(active_landmines)
 	clear_active_ability_nodes(circular_saws)
 	clear_active_ability_nodes(footsoldiers)
+	if is_instance_valid(shock_field):
+		shock_field.queue_free()
+		shock_field = null
+	if is_instance_valid(artillery_beacon):
+		artillery_beacon.queue_free()
+		artillery_beacon = null
 
 
 func clear_active_ability_nodes(nodes: Array[Node2D]) -> void:

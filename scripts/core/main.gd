@@ -56,6 +56,8 @@ const PROJECTILE = preload("res://scenes/projectiles/projectile.tscn")
 const LANDMINE = preload("res://scenes/abilities/landmine.tscn")
 const CIRCULAR_SAW = preload("res://scenes/abilities/circular_saw.tscn")
 const FOOTSOLDIER = preload("res://scenes/abilities/footsoldier.tscn")
+const SHOCK_FIELD = preload("res://scenes/abilities/shock_field.tscn")
+const ARTILLERY_BEACON = preload("res://scenes/abilities/artillery_beacon.tscn")
 const UPGRADE_MENU = preload("res://scenes/ui/upgrade.tscn")
 const ABILITY_MENU = preload("res://scenes/ui/ability_menu.tscn")
 
@@ -302,6 +304,8 @@ func warmup_runtime_scenes() -> void:
 		LANDMINE,
 		CIRCULAR_SAW,
 		FOOTSOLDIER,
+		SHOCK_FIELD,
+		ARTILLERY_BEACON,
 		UPGRADE_MENU,
 		ABILITY_MENU,
 	]
@@ -322,6 +326,10 @@ func warmup_scene(warmup_root: Node, scene: PackedScene) -> void:
 		instance.player = player
 	if instance.has_method("configure") and instance.scene_file_path.ends_with("footsoldier.tscn"):
 		instance.configure(player, 0, 1)
+	if instance.has_method("configure") and instance.scene_file_path.ends_with("shock_field.tscn"):
+		instance.configure(player, 1)
+	if instance.has_method("configure") and instance.scene_file_path.ends_with("artillery_beacon.tscn"):
+		instance.configure(player, 1)
 	warmup_root.add_child(instance)
 	
 	if instance.has_method("configure") and instance.scene_file_path.ends_with("exp_orb.tscn"):
@@ -972,6 +980,8 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Landmine", player.landmine_level),
 		format_upgrade_inventory_row("Circular Saw", player.circular_saw_level),
 		format_upgrade_inventory_row("Footsoldier", player.footsoldier_level),
+		format_upgrade_inventory_row("Shock Field", player.shock_field_level),
+		format_upgrade_inventory_row("Artillery", player.artillery_level),
 	]
 	upgrade_inventory_label.text = "\n".join(rows)
 
