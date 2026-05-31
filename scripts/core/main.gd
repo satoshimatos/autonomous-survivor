@@ -626,8 +626,8 @@ func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_
 
 func spawn_projectile(config: Dictionary, spawn_position: Vector2) -> Node:
 	var projectile := acquire_projectile()
-	projectile.launch(config)
 	projectile.global_position = spawn_position
+	projectile.launch(config)
 	return projectile
 
 
@@ -646,10 +646,14 @@ func recycle_projectile(projectile: Node) -> void:
 	if projectile == null or not is_instance_valid(projectile):
 		return
 	if projectile_pool.size() >= PROJECTILE_POOL_LIMIT:
+		if projectile.has_method("prepare_for_pool"):
+			projectile.prepare_for_pool()
 		projectile.queue_free()
 		return
 	if projectile.get_parent() != self:
 		projectile.reparent(self)
+	if projectile.has_method("prepare_for_pool"):
+		projectile.prepare_for_pool()
 	projectile_pool.append(projectile)
 
 

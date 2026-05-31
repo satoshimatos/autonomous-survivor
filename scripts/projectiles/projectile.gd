@@ -1,6 +1,7 @@
 extends Area2D
 
 const COLLISION_RADIUS: float = 6.0
+const POOLED_POSITION: Vector2 = Vector2(-100000.0, -100000.0)
 
 var speed: float = 500.0
 var direction: Vector2
@@ -17,12 +18,13 @@ var default_projectile_texture: Texture2D
 var is_active: bool = true
 
 @onready var projectile_sprite: Sprite2D = $ProjectileSprite
+@onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var lifetime_timer: Timer = $Timer
 
 
 func _ready() -> void:
 	default_projectile_texture = projectile_sprite.texture
-	reset_for_launch()
+	prepare_for_pool()
 
 
 func launch(config: Dictionary) -> void:
@@ -44,6 +46,8 @@ func reset_for_launch() -> void:
 	process_mode = Node.PROCESS_MODE_INHERIT
 	monitoring = true
 	monitorable = true
+	if collision_shape:
+		collision_shape.disabled = false
 	hit_enemies.clear()
 	piercing_hp = max_piercing_hp
 	fade_in_age = 0.0
@@ -77,10 +81,14 @@ func update_fade_in(delta: float) -> void:
 
 
 func _on_area_entered(area: Area2D) -> void:
+	if not is_active:
+		return
 	hit_enemy(area, global_position)
 
 
 func hit_enemy(area: Area2D, hit_position: Vector2) -> void:
+	if not is_active:
+		return
 	if not area.is_in_group("Enemy"):
 		return
 	if hit_enemies.has(area):
@@ -152,18 +160,26 @@ func _on_timer_timeout() -> void:
 func release() -> void:
 	if not is_active:
 		return
-	is_active = false
-	visible = false
-	monitoring = false
-	monitorable = false
-	if lifetime_timer:
-		lifetime_timer.stop()
-	hit_enemies.clear()
 	var main := get_tree().current_scene
 	if main and main.has_method("recycle_projectile"):
 		main.recycle_projectile(self)
 	else:
+		prepare_for_pool()
 		queue_free()
+
+
+func prepare_for_pool() -> void:
+	is_active = false
+	visible = false
+	process_mode = Node.PROCESS_MODE_DISABLED
+	monitoring = false
+	monitorable = false
+	if collision_shape:
+		collision_shape.disabled = true
+	if lifetime_timer:
+		lifetime_timer.stop()
+	hit_enemies.clear()
+	global_position = POOLED_POSITION
 
 
 func spawn_splash(splash_damage: float) -> void:

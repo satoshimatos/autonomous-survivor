@@ -33,6 +33,19 @@ func _init() -> void:
 			quit(1)
 			return
 		
+		if scene_path == "res://scenes/enemies/boss_enemy.tscn":
+			instance.configure_variant({
+				"phase_thresholds": [0.65, 0.32],
+				"ability_modules": [
+					{"type": "hazard_ring", "cooldown": 7.2},
+					{"type": "minion_call", "cooldown": 11.0},
+				],
+			})
+			if instance.phase_thresholds.size() != 2 or instance.ability_modules.size() != 2:
+				push_error("Boss variant config did not preserve typed arrays.")
+				quit(1)
+				return
+		
 		instance.queue_free()
 	
 	print("Scene check passed.")

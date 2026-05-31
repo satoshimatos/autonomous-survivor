@@ -102,6 +102,9 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Added a navigable game compendium:
   - `docs/GAME_COMPENDIUM.md` documents current mechanics, tanks, upgrades, abilities, evolutions, enemies, bosses, events, modifiers, unlocks, pickups, scaling, and performance budgets.
   - README now links to the compendium from the top navigation section.
+- Fixed boss variant and projectile cleanup issues:
+  - Boss phase thresholds and ability modules now convert incoming config data into typed arrays before assignment.
+  - Pooled player projectiles now launch after being placed, and recycled shots are hidden, disabled, and moved out of play before returning to the pool.
 
 ## Backlog
 

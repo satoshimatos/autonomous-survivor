@@ -67,8 +67,8 @@ func configure_variant(config: Dictionary) -> void:
 	exp_drop_count = int(config.get("exp_drop_count", exp_drop_count))
 	exp_drop_min_tier = int(config.get("exp_drop_min_tier", exp_drop_min_tier))
 	boss_behavior = String(config.get("behavior", boss_behavior))
-	ability_modules = (config.get("ability_modules", []) as Array).duplicate(true)
-	phase_thresholds = (config.get("phase_thresholds", []) as Array).duplicate()
+	ability_modules = get_typed_ability_modules(config.get("ability_modules", []))
+	phase_thresholds = get_typed_phase_thresholds(config.get("phase_thresholds", []))
 	reset_ability_timers()
 	variant_color = config.get("color", Color.WHITE) as Color
 	variant_scale = float(config.get("scale", 1.0))
@@ -85,6 +85,29 @@ func reset_ability_timers() -> void:
 	for module in ability_modules:
 		var initial_delay := float(module.get("initial_delay", module.get("cooldown", 4.0)))
 		ability_timers.append(initial_delay)
+
+
+func get_typed_ability_modules(raw_modules: Variant) -> Array[Dictionary]:
+	var typed_modules: Array[Dictionary] = []
+	if not (raw_modules is Array):
+		return typed_modules
+	
+	for module in raw_modules:
+		if module is Dictionary:
+			typed_modules.append((module as Dictionary).duplicate(true))
+	
+	return typed_modules
+
+
+func get_typed_phase_thresholds(raw_thresholds: Variant) -> Array[float]:
+	var typed_thresholds: Array[float] = []
+	if not (raw_thresholds is Array):
+		return typed_thresholds
+	
+	for threshold in raw_thresholds:
+		typed_thresholds.append(float(threshold))
+	
+	return typed_thresholds
 
 
 func apply_variant_visuals() -> void:
