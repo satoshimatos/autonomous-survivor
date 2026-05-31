@@ -51,12 +51,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Boss configs can now declare timed ability modules and health-based phase thresholds.
   - Bulwark can summon bounded minion waves, Crusher can create warning telegraph hazard rings, and Wraith can target the player with hazards while calling support.
   - Boss phase transitions increase pressure and trigger a simple burst effect without replacing the shared state-machine movement.
+- Added performance pooling and effect budgets:
+  - Tank and footsoldier shots now use a reusable projectile pool instead of constant projectile allocation/free churn.
+  - Particle bursts now recycle through a pool and respect an active burst budget.
+  - Damage numbers, splash areas, particle bursts, and boss hazards now have explicit runtime budgets to keep dense fights bounded.
 
 ## Backlog
 
 ### Next
 
-- Add object pools and effect budgets for performance.
+- Add run summary details and build telemetry.
 
 ### Content
 
@@ -65,7 +69,6 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 ### Systems
 
 - Keep enemy, boss, upgrade, and ability definitions data-driven so tuning does not require scene duplication.
-- Add object pools for projectiles, ability effects, and common enemies as counts rise.
 - Add deterministic run seeds and show the seed on the defeat screen.
 - Add balancing telemetry for run time, chosen upgrades, enemy kills, boss kills, damage dealt, and damage taken.
 

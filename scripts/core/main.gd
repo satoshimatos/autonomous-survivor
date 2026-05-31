@@ -26,6 +26,8 @@ var queued_exp_drops: Array[Dictionary] = []
 var magnet_pickup_pool
 var dynamite_pickup_pool
 var wrench_pickup_pool: Array[Node] = []
+var projectile_pool: Array[Node] = []
+var particle_burst_pool: Array[Node] = []
 var is_player_paused: bool = false
 var enemies_defeated: int = 0
 var bosses_defeated: int = 0
@@ -36,6 +38,7 @@ var player_dps: float = 0.0
 var low_health_upgrade_timer: float = 0.0
 var run_seed_text: String = ""
 var run_modifier_summary: String = ""
+var damage_numbers_this_frame: int = 0
 var enemy_speed_growth_multiplier: float = 1.0
 var enemy_health_growth_multiplier: float = 1.0
 var enemy_damage_growth_multiplier: float = 1.0
@@ -132,6 +135,12 @@ const PURPLE_ORB_START_TIME: float = 300.0
 const VIOLET_ORB_START_TIME: float = 600.0
 const EXP_DROPS_PER_FRAME: int = 20
 const MAX_ACTIVE_EXP_ORBS: int = 100
+const PROJECTILE_POOL_LIMIT: int = 220
+const PARTICLE_BURST_POOL_LIMIT: int = 48
+const MAX_DAMAGE_NUMBERS_PER_FRAME: int = 18
+const MAX_ACTIVE_PARTICLE_BURSTS: int = 36
+const MAX_ACTIVE_SPLASH_AREAS: int = 24
+const MAX_ACTIVE_BOSS_HAZARDS: int = 18
 const MASS_SPLASH_ENEMY_THRESHOLD: int = 12
 const VISIBILITY_CULL_MARGIN: float = 160.0
 const VISIBILITY_CULL_GROUPS: Array[String] = [
@@ -282,6 +291,7 @@ func _process(delta: float) -> void:
 	if get_tree().paused:
 		return
 	
+	damage_numbers_this_frame = 0
 	cancel_ai_on_manual_movement_input()
 	low_health_vignette.set_low_health_active(player.health > 0 and player.get_health_ratio() <= 0.4)
 	dynamite_flash.color.a = move_toward(dynamite_flash.color.a, 0.0, 7.0 * delta)
@@ -447,6 +457,35 @@ func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_
 	return enemy
 
 
+func spawn_projectile(config: Dictionary, spawn_position: Vector2) -> Node:
+	var projectile := acquire_projectile()
+	projectile.launch(config)
+	projectile.global_position = spawn_position
+	return projectile
+
+
+func acquire_projectile() -> Node:
+	while not projectile_pool.is_empty():
+		var projectile = projectile_pool.pop_back()
+		if is_instance_valid(projectile):
+			return projectile
+	
+	var projectile = PROJECTILE.instantiate()
+	add_child(projectile)
+	return projectile
+
+
+func recycle_projectile(projectile: Node) -> void:
+	if projectile == null or not is_instance_valid(projectile):
+		return
+	if projectile_pool.size() >= PROJECTILE_POOL_LIMIT:
+		projectile.queue_free()
+		return
+	if projectile.get_parent() != self:
+		projectile.reparent(self)
+	projectile_pool.append(projectile)
+
+
 func get_boss_spawn_point() -> Vector2:
 	var arena_rect: Rect2 = get_arena_rect().grow(-BOSS_ARENA_INSET)
 	if arena_rect.size.x <= 0.0 or arena_rect.size.y <= 0.0:
@@ -594,8 +633,11 @@ func spawn_targeted_boss_hazard(module: Dictionary, phase_index: int) -> void:
 
 
 func spawn_boss_hazard(hazard_position: Vector2, radius: float, damage: int) -> void:
+	if get_tree().get_nodes_in_group("BossHazard").size() >= MAX_ACTIVE_BOSS_HAZARDS:
+		return
 	var hazard = BOSS_HAZARD.instantiate()
 	add_child(hazard)
+	hazard.add_to_group("BossHazard")
 	hazard.global_position = clamp_position_to_arena(hazard_position)
 	hazard.configure(radius, 0.85, 0.42, damage)
 
@@ -1109,13 +1151,40 @@ func spawn_exp_pickup_burst() -> void:
 
 
 func spawn_particle_burst(parent: Node, burst_position: Vector2, count: int, color: Color, speed: float, duration: float, size_range: Vector2, shrink: bool) -> void:
-	var burst = PARTICLE_BURST.instantiate()
-	parent.add_child(burst)
+	if get_tree().get_nodes_in_group("ParticleBurst").size() >= MAX_ACTIVE_PARTICLE_BURSTS:
+		return
+	var burst = acquire_particle_burst(parent)
+	burst.add_to_group("ParticleBurst")
 	burst.global_position = burst_position
 	burst.configure(count, color, speed, duration, size_range, shrink)
 
 
+func acquire_particle_burst(parent: Node) -> Node:
+	while not particle_burst_pool.is_empty():
+		var burst = particle_burst_pool.pop_back()
+		if is_instance_valid(burst):
+			if burst.get_parent() != parent:
+				burst.reparent(parent)
+			return burst
+	
+	var burst = PARTICLE_BURST.instantiate()
+	parent.add_child(burst)
+	return burst
+
+
+func recycle_particle_burst(burst: Node) -> void:
+	if burst == null or not is_instance_valid(burst):
+		return
+	if particle_burst_pool.size() >= PARTICLE_BURST_POOL_LIMIT:
+		burst.queue_free()
+		return
+	particle_burst_pool.append(burst)
+
+
 func show_damage_number(world_position: Vector2, damage: int) -> void:
+	if damage_numbers_this_frame >= MAX_DAMAGE_NUMBERS_PER_FRAME:
+		return
+	damage_numbers_this_frame += 1
 	damage_number_pool.show_damage(world_position, damage)
 
 
@@ -1126,8 +1195,11 @@ func show_healing_popup(world_position: Vector2, healed_amount: int) -> void:
 
 
 func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: float, enemies: Array[Area2D]) -> void:
+	if get_tree().get_nodes_in_group("SplashArea").size() >= MAX_ACTIVE_SPLASH_AREAS:
+		return
 	var splash = SPLASH_AREA.instantiate()
 	add_child(splash)
+	splash.add_to_group("SplashArea")
 	splash.global_position = splash_position
 	var is_mass_splash := enemies.size() >= MASS_SPLASH_ENEMY_THRESHOLD
 	splash_blast_active = is_mass_splash

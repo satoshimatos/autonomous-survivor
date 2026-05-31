@@ -208,16 +208,23 @@ func fire_at_current_target() -> void:
 	if direction.is_zero_approx():
 		return
 	
-	var projectile = PROJECTILE.instantiate()
-	projectile.direction = direction
-	projectile.damage = floor(player.attack_damage * 0.3125)
-	projectile.splash_radius = 0.0
-	projectile.max_piercing_hp = 1
-	projectile.projectile_scale = 1.0 / 3.0
-	projectile.projectile_texture = SOLDIER_PROJECTILE_TEXTURE
-	projectile.fade_in_duration = 0.08
-	get_tree().current_scene.add_child(projectile)
-	projectile.global_position = global_position + direction * 14.0
+	var projectile_config := {
+		"direction": direction,
+		"damage": floor(player.attack_damage * 0.3125),
+		"splash_radius": 0.0,
+		"max_piercing_hp": 1,
+		"projectile_scale": 1.0 / 3.0,
+		"projectile_texture": SOLDIER_PROJECTILE_TEXTURE,
+		"fade_in_duration": 0.08,
+	}
+	var main := get_tree().current_scene
+	if main and main.has_method("spawn_projectile"):
+		main.spawn_projectile(projectile_config, global_position + direction * 14.0)
+	else:
+		var projectile = PROJECTILE.instantiate()
+		get_tree().current_scene.add_child(projectile)
+		projectile.launch(projectile_config)
+		projectile.global_position = global_position + direction * 14.0
 	spawn_muzzle_burst()
 	burst_shots_remaining -= 1
 

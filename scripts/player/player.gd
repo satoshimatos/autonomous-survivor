@@ -696,14 +696,21 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 	var middle_index := float(projectile_count - 1) / 2.0
 	for i in range(projectile_count):
 		var direction := target_direction.rotated((float(i) - middle_index) * spread_radians).normalized()
-		var proj = PROJECTILE.instantiate()
-		proj.direction = direction
-		proj.damage = attack_damage
-		proj.splash_radius = get_splash_radius()
-		proj.max_piercing_hp = get_projectile_hp()
-		proj.fade_in_duration = 0.08
-		get_tree().current_scene.add_child(proj)
-		proj.global_position = global_position + direction * 32.0
+		var projectile_config := {
+			"direction": direction,
+			"damage": attack_damage,
+			"splash_radius": get_splash_radius(),
+			"max_piercing_hp": get_projectile_hp(),
+			"fade_in_duration": 0.08,
+		}
+		var main := get_tree().current_scene
+		if main and main.has_method("spawn_projectile"):
+			main.spawn_projectile(projectile_config, global_position + direction * 32.0)
+		else:
+			var proj = PROJECTILE.instantiate()
+			get_tree().current_scene.add_child(proj)
+			proj.launch(projectile_config)
+			proj.global_position = global_position + direction * 32.0
 
 
 func get_armor_damage_reduction() -> float:

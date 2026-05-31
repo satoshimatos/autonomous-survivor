@@ -7,6 +7,7 @@ var lifetime: float = 0.5
 var age: float = 0.0
 var shrink: bool = false
 var particle_color: Color = Color.RED
+var is_active: bool = true
 
 
 func _ready() -> void:
@@ -14,6 +15,10 @@ func _ready() -> void:
 
 
 func configure(count: int, color: Color, speed: float, duration: float, size_range: Vector2, should_shrink: bool) -> void:
+	is_active = true
+	visible = true
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	age = 0.0
 	particle_color = color
 	lifetime = duration
 	shrink = should_shrink
@@ -29,15 +34,32 @@ func configure(count: int, color: Color, speed: float, duration: float, size_ran
 
 
 func _process(delta: float) -> void:
+	if not is_active:
+		return
+	
 	age += delta
 	
 	for i in range(particle_positions.size()):
 		particle_positions[i] += particle_velocities[i] * delta
 	
 	if age >= lifetime:
-		queue_free()
+		release()
+		return
+	queue_redraw()
+
+
+func release() -> void:
+	if not is_active:
+		return
+	is_active = false
+	visible = false
+	if is_in_group("ParticleBurst"):
+		remove_from_group("ParticleBurst")
+	var main := get_tree().current_scene
+	if main and main.has_method("recycle_particle_burst"):
+		main.recycle_particle_burst(self)
 	else:
-		queue_redraw()
+		queue_free()
 
 
 func _draw() -> void:

@@ -40,6 +40,7 @@ Completed issues:
 - #4 Add ability rarity, synergy tags, and weighted ability choices
 - #5 Add elite enemy affixes using lightweight modifiers
 - #6 Expand boss behaviors with phases and hazards
+- #7 Add object pools and effect budgets for performance
 
 ### P1 - Replayability And Power Growth
 
@@ -51,8 +52,6 @@ Completed issues:
 
 ### P2 - Performance
 
-- Pool projectiles and frequently spawned enemies.
-- Add effect budgets for damage numbers, splash visuals, and particle bursts.
 - Add spawn director caps based on active enemy count and frame pressure.
 
 ### P2 - UI And Feedback

@@ -13,25 +13,57 @@ var projectile_scale: float = 1.0
 var projectile_texture: Texture2D
 var fade_in_duration: float = 0.0
 var fade_in_age: float = 0.0
+var default_projectile_texture: Texture2D
+var is_active: bool = true
 
 @onready var projectile_sprite: Sprite2D = $ProjectileSprite
+@onready var lifetime_timer: Timer = $Timer
 
 
 func _ready() -> void:
+	default_projectile_texture = projectile_sprite.texture
+	reset_for_launch()
+
+
+func launch(config: Dictionary) -> void:
+	direction = config.get("direction", Vector2.RIGHT) as Vector2
+	if direction.is_zero_approx():
+		direction = Vector2.RIGHT
+	damage = float(config.get("damage", 10.0))
+	splash_radius = float(config.get("splash_radius", 0.0))
+	max_piercing_hp = int(config.get("max_piercing_hp", 1))
+	projectile_scale = float(config.get("projectile_scale", 1.0))
+	projectile_texture = config.get("projectile_texture", null) as Texture2D
+	fade_in_duration = float(config.get("fade_in_duration", 0.0))
+	reset_for_launch()
+
+
+func reset_for_launch() -> void:
+	is_active = true
+	visible = true
+	process_mode = Node.PROCESS_MODE_INHERIT
+	monitoring = true
+	monitorable = true
+	hit_enemies.clear()
 	piercing_hp = max_piercing_hp
+	fade_in_age = 0.0
 	scale = Vector2.ONE * projectile_scale
 	rotation = direction.angle() + PI / 2.0
-	if projectile_texture:
-		projectile_sprite.texture = projectile_texture
+	modulate = Color.WHITE
+	projectile_sprite.texture = projectile_texture if projectile_texture else default_projectile_texture
 	if fade_in_duration > 0.0:
 		modulate.a = 0.0
+	if lifetime_timer:
+		lifetime_timer.start()
 
 
 func _process(delta: float) -> void:
+	if not is_active:
+		return
 	var previous_position: Vector2 = global_position
 	var next_position: Vector2 = global_position + direction * speed * delta
 	check_swept_enemy_hits(previous_position, next_position)
-	if not is_queued_for_deletion():
+	if is_active and not is_queued_for_deletion():
 		global_position = next_position
 	update_fade_in(delta)
 
@@ -67,7 +99,7 @@ func hit_enemy(area: Area2D, hit_position: Vector2) -> void:
 		record_player_damage(actual_damage)
 	
 	if is_final_hit:
-		queue_free()
+		release()
 
 
 func check_swept_enemy_hits(start_position: Vector2, end_position: Vector2) -> void:
@@ -99,7 +131,7 @@ func check_swept_enemy_hits(start_position: Vector2, end_position: Vector2) -> v
 			return
 		
 		hit_enemy(closest_enemy, closest_hit_position)
-		if is_queued_for_deletion():
+		if not is_active or is_queued_for_deletion():
 			return
 
 
@@ -114,7 +146,24 @@ func get_segment_closest_point(start_position: Vector2, end_position: Vector2, p
 
 
 func _on_timer_timeout() -> void:
-	queue_free()
+	release()
+
+
+func release() -> void:
+	if not is_active:
+		return
+	is_active = false
+	visible = false
+	monitoring = false
+	monitorable = false
+	if lifetime_timer:
+		lifetime_timer.stop()
+	hit_enemies.clear()
+	var main := get_tree().current_scene
+	if main and main.has_method("recycle_projectile"):
+		main.recycle_projectile(self)
+	else:
+		queue_free()
 
 
 func spawn_splash(splash_damage: float) -> void:
