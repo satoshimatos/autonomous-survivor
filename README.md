@@ -59,12 +59,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Runtime now tracks total damage dealt, damage taken, elite kills, boss kills, and top build choices.
   - The defeat screen now shows a compact run report with tank, level, seed, modifiers, survival time, kill counts, damage totals, DPS, build highlights, and unlocks.
   - The defeat report layout was widened and tightened so the extra tuning data remains readable.
+- Added spawn director pressure caps:
+  - Regular enemy spawns now respect a time-scaling active enemy cap instead of growing unbounded.
+  - Boss spawns reserve pressure space, while boss minion waves and splitting elites use pressure-scaled caps.
+  - The HUD and defeat report now show active pressure and skipped spawn counts for tuning.
 
 ## Backlog
 
 ### Next
 
-- Add spawn director caps based on active pressure. See issue #9.
+- Improve upgrade cards with clearer synergy tags. See issue #10.
 
 ### Content
 

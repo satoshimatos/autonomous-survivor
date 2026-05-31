@@ -32,6 +32,7 @@ var is_player_paused: bool = false
 var enemies_defeated: int = 0
 var bosses_defeated: int = 0
 var elites_defeated: int = 0
+var spawn_skips_from_pressure: int = 0
 var total_damage_dealt: int = 0
 var total_damage_taken: int = 0
 var debug_time_scale_index: int = 0
@@ -145,6 +146,12 @@ const MAX_ACTIVE_PARTICLE_BURSTS: int = 36
 const MAX_ACTIVE_SPLASH_AREAS: int = 24
 const MAX_ACTIVE_BOSS_HAZARDS: int = 18
 const MASS_SPLASH_ENEMY_THRESHOLD: int = 12
+const BASE_ACTIVE_ENEMY_CAP: int = 85
+const MAX_ACTIVE_ENEMY_CAP: int = 240
+const ACTIVE_ENEMY_CAP_GROWTH_PER_MINUTE: float = 10.0
+const BOSS_RESERVE_ENEMY_PRESSURE: int = 16
+const PRESSURE_MINION_SPAWN_RATIO: float = 0.92
+const PRESSURE_SPLIT_SPAWN_RATIO: float = 0.96
 const VISIBILITY_CULL_MARGIN: float = 160.0
 const VISIBILITY_CULL_GROUPS: Array[String] = [
 	"Enemy",
@@ -343,9 +350,12 @@ func _process(delta: float) -> void:
 		try_spawn_boss()
 	
 	if spawn_timer >= spawn_interval:
-		var enemy_config := get_enemy_config_to_spawn()
-		enemy_config = apply_random_elite_affix(enemy_config)
-		spawn_enemy(enemy_config.scene, _on_enemy_defeated, enemy_config)
+		if can_spawn_regular_enemy():
+			var enemy_config := get_enemy_config_to_spawn()
+			enemy_config = apply_random_elite_affix(enemy_config)
+			spawn_enemy(enemy_config.scene, _on_enemy_defeated, enemy_config)
+		else:
+			spawn_skips_from_pressure += 1
 		spawn_timer = 0.0
 
 
@@ -551,6 +561,27 @@ func get_average_spawn_enemy_hp() -> float:
 	return weighted_health / max(total_weight, 0.001) * health_multiplier
 
 
+func can_spawn_regular_enemy() -> bool:
+	return has_enemy_pressure_room(0)
+
+
+func has_enemy_pressure_room(reserved_slots: int = 0) -> bool:
+	return get_active_enemy_count() + reserved_slots < get_active_enemy_cap()
+
+
+func get_active_enemy_cap() -> int:
+	var minutes: float = run_time / 60.0
+	return clampi(
+		BASE_ACTIVE_ENEMY_CAP + int(floor(minutes * ACTIVE_ENEMY_CAP_GROWTH_PER_MINUTE)),
+		BASE_ACTIVE_ENEMY_CAP,
+		MAX_ACTIVE_ENEMY_CAP
+	)
+
+
+func get_pressure_scaled_cap(ratio: float) -> int:
+	return clampi(int(floor(float(get_active_enemy_cap()) * ratio)), 1, get_active_enemy_cap())
+
+
 func get_ai_preferred_upgrade_id(displayed_upgrades: Array[String]) -> String:
 	if displayed_upgrades.is_empty():
 		return ""
@@ -571,6 +602,8 @@ func get_ai_preferred_upgrade_id(displayed_upgrades: Array[String]) -> String:
 
 func try_spawn_boss() -> void:
 	if is_boss_alive():
+		return
+	if not has_enemy_pressure_room(BOSS_RESERVE_ENEMY_PRESSURE):
 		return
 	
 	var boss_config := get_boss_config_to_spawn()
@@ -593,7 +626,8 @@ func execute_boss_ability(boss: Node2D, module: Dictionary, phase_index: int) ->
 func spawn_boss_minions(origin: Vector2, module: Dictionary, phase_index: int) -> void:
 	var spawn_count: int = int(module.get("count", 2)) + phase_index * int(module.get("phase_count_bonus", 1))
 	spawn_count = mini(spawn_count, 7)
-	if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+	var minion_pressure_cap := get_pressure_scaled_cap(PRESSURE_MINION_SPAWN_RATIO)
+	if get_active_enemy_count() >= minion_pressure_cap:
 		return
 	
 	var minion_config := {
@@ -609,7 +643,7 @@ func spawn_boss_minions(origin: Vector2, module: Dictionary, phase_index: int) -
 		"movement_style": "weaver",
 	}
 	for i in range(spawn_count):
-		if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+		if get_active_enemy_count() >= minion_pressure_cap:
 			return
 		var minion = spawn_enemy(ENEMY, _on_enemy_defeated, minion_config)
 		minion.global_position = origin + Vector2.RIGHT.rotated((TAU / float(spawn_count)) * float(i)) * randf_range(80.0, 128.0)
@@ -730,6 +764,9 @@ func get_boss_config_to_spawn() -> Dictionary:
 
 
 func apply_random_elite_affix(enemy_config: Dictionary) -> Dictionary:
+	if get_active_enemy_count() >= get_pressure_scaled_cap(PRESSURE_SPLIT_SPAWN_RATIO):
+		return enemy_config
+	
 	var elite_chance := get_elite_spawn_chance()
 	if randf() > elite_chance:
 		return enemy_config
@@ -899,13 +936,14 @@ func spawn_split_elite_children(enemy_position: Vector2, death_payload: Dictiona
 	var child_count: int = mini(int(death_payload.get("count", 2)), 3)
 	if child_count <= 0:
 		return
-	if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+	var split_pressure_cap := mini(get_pressure_scaled_cap(PRESSURE_SPLIT_SPAWN_RATIO), ELITE_SPLIT_ACTIVE_ENEMY_CAP)
+	if get_active_enemy_count() >= split_pressure_cap:
 		return
 	
 	var child_scene: PackedScene = death_payload.get("scene", ENEMY) as PackedScene
 	var child_config: Dictionary = death_payload.get("config", {}) as Dictionary
 	for i in range(child_count):
-		if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+		if get_active_enemy_count() >= split_pressure_cap:
 			return
 		var child = spawn_enemy(child_scene, _on_enemy_defeated, child_config)
 		child.global_position = enemy_position + Vector2.RIGHT.rotated((TAU / float(child_count)) * float(i) + randf_range(-0.35, 0.35)) * randf_range(14.0, 28.0)
@@ -1311,11 +1349,13 @@ func update_stats_label() -> void:
 	
 	var exp_multiplier_percent := int(round((1.0 + float(player.exp_bonus_level) * 0.25) * 100.0))
 	var armor_percent := int(round(player.get_armor_damage_reduction() * 100.0)) if player.has_method("get_armor_damage_reduction") else 0
-	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
+	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
 		player.selected_tank_name,
 		player.attack_damage,
 		player_dps,
 		get_average_spawn_enemy_hp(),
+		get_active_enemy_count(),
+		get_active_enemy_cap(),
 		float(player.barbed_wire_level) * 33.0,
 		player.get_splash_radius(),
 		1 + player.cannon_level,
@@ -1334,6 +1374,7 @@ func get_run_summary_text(unlock_text: String) -> String:
 		"Modifiers: %s" % run_modifier_summary,
 		"Kills: %s  Elites: %s  Bosses: %s" % [enemies_defeated, elites_defeated, bosses_defeated],
 		"Damage Dealt: %s  Taken: %s  DPS: %.1f" % [total_damage_dealt, total_damage_taken, player_dps],
+		"Pressure: %s/%s  Skipped Spawns: %s" % [get_active_enemy_count(), get_active_enemy_cap(), spawn_skips_from_pressure],
 		"Build: %s" % get_build_summary_text(),
 	]
 	if unlock_text != "":
