@@ -97,6 +97,14 @@ var boss_variant_catalog: Array[Dictionary] = [
 	{"id": "wraith", "scene": BOSS_ENEMY, "unlock_seconds": 1680.0, "weight": 40.0, "health": 1750, "speed": 30.0, "contact_damage": 9, "exp_drop_count": 60, "exp_drop_min_tier": 4, "color": Color(0.72, 0.2, 1.0, 1.0), "scale": 1.02, "behavior": "wraith"},
 ]
 
+var enemy_affix_catalog: Array[Dictionary] = [
+	{"id": "hasty", "name": "Hasty", "unlock_seconds": 90.0, "weight": 28.0, "speed_multiplier": 1.45, "health_multiplier": 0.85, "color": Color(1.0, 0.95, 0.16, 1.0)},
+	{"id": "armored", "name": "Armored", "unlock_seconds": 150.0, "weight": 24.0, "speed_multiplier": 0.82, "health_multiplier": 1.85, "scale_multiplier": 1.12, "color": Color(0.62, 0.72, 0.84, 1.0)},
+	{"id": "rich", "name": "Rich", "unlock_seconds": 210.0, "weight": 18.0, "health_multiplier": 1.2, "exp_drop_multiplier": 2.4, "exp_drop_min_tier_bonus": 1, "color": Color(0.46, 1.0, 0.35, 1.0)},
+	{"id": "volatile", "name": "Volatile", "unlock_seconds": 300.0, "weight": 16.0, "speed_multiplier": 1.18, "health_multiplier": 0.9, "death_effect": "volatile", "death_radius": 92.0, "death_damage": 34.0, "color": Color(1.0, 0.18, 0.08, 1.0)},
+	{"id": "splitting", "name": "Splitting", "unlock_seconds": 420.0, "weight": 14.0, "health_multiplier": 1.35, "death_effect": "split", "split_count": 2, "split_health": 8, "split_speed": 82.0, "color": Color(0.95, 0.36, 1.0, 1.0)},
+]
+
 const MAGNET_DURATION: float = 5.0
 const MAGNET_SPAWN_INTERVAL: float = 180.0
 const SUPPLY_BOX_SPAWN_INTERVAL: float = 15.0
@@ -142,6 +150,10 @@ const ORANGE_ORB_TIER: int = 2
 const PURPLE_ORB_TIER: int = 3
 const VIOLET_ORB_TIER: int = 4
 const BOSS_ARENA_INSET: float = 80.0
+const ELITE_CHANCE_START_SECONDS: float = 90.0
+const ELITE_CHANCE_FULL_SECONDS: float = 900.0
+const ELITE_CHANCE_MAX: float = 0.18
+const ELITE_SPLIT_ACTIVE_ENEMY_CAP: int = 180
 const MOVEMENT_INPUT_ACTIONS: Array[String] = [
 	"move_left",
 	"move_right",
@@ -326,6 +338,7 @@ func _process(delta: float) -> void:
 	
 	if spawn_timer >= spawn_interval:
 		var enemy_config := get_enemy_config_to_spawn()
+		enemy_config = apply_random_elite_affix(enemy_config)
 		spawn_enemy(enemy_config.scene, _on_enemy_defeated, enemy_config)
 		spawn_timer = 0.0
 
@@ -595,6 +608,94 @@ func get_boss_config_to_spawn() -> Dictionary:
 	return pick_weighted_entry(get_unlocked_weighted_entries(boss_variant_catalog))
 
 
+func apply_random_elite_affix(enemy_config: Dictionary) -> Dictionary:
+	var elite_chance := get_elite_spawn_chance()
+	if randf() > elite_chance:
+		return enemy_config
+	
+	var affix := get_affix_config_to_apply()
+	if affix.is_empty():
+		return enemy_config
+	
+	var modified_config := enemy_config.duplicate(true)
+	modified_config["elite_affix"] = String(affix.id)
+	modified_config["elite_name"] = String(affix.name)
+	modified_config["health"] = maxi(1, int(ceil(float(modified_config.get("health", RED_ENEMY_BASE_HEALTH)) * float(affix.get("health_multiplier", 1.0)))))
+	modified_config["speed"] = max(1.0, float(modified_config.get("speed", 50.0)) * float(affix.get("speed_multiplier", 1.0)))
+	modified_config["contact_damage"] = maxi(1, int(ceil(float(modified_config.get("contact_damage", 1)) * float(affix.get("damage_multiplier", 1.0)))))
+	modified_config["exp_drop_count"] = maxi(1, int(ceil(float(modified_config.get("exp_drop_count", 1)) * float(affix.get("exp_drop_multiplier", 1.0)))))
+	modified_config["exp_drop_min_tier"] = clampi(int(modified_config.get("exp_drop_min_tier", BLUE_ORB_TIER)) + int(affix.get("exp_drop_min_tier_bonus", 0)), BLUE_ORB_TIER, VIOLET_ORB_TIER)
+	modified_config["scale"] = float(modified_config.get("scale", 1.0)) * float(affix.get("scale_multiplier", 1.0))
+	modified_config["color"] = blend_elite_color(modified_config.get("color", Color.WHITE) as Color, affix.get("color", Color.WHITE) as Color)
+	
+	var death_effect := String(affix.get("death_effect", ""))
+	if death_effect != "":
+		modified_config["death_payload"] = build_elite_death_payload(modified_config, affix)
+	
+	return modified_config
+
+
+func get_elite_spawn_chance() -> float:
+	if run_time < ELITE_CHANCE_START_SECONDS:
+		return 0.0
+	
+	var progress: float = clamp((run_time - ELITE_CHANCE_START_SECONDS) / (ELITE_CHANCE_FULL_SECONDS - ELITE_CHANCE_START_SECONDS), 0.0, 1.0)
+	return lerpf(0.02, ELITE_CHANCE_MAX, progress)
+
+
+func get_affix_config_to_apply() -> Dictionary:
+	var entries: Array[Dictionary] = []
+	for affix in enemy_affix_catalog:
+		if run_time < float(affix.get("unlock_seconds", 0.0)):
+			continue
+		entries.append({"config": affix, "weight": float(affix.get("weight", 0.0))})
+	if entries.is_empty():
+		return {}
+	return pick_weighted_entry(entries)
+
+
+func blend_elite_color(base_color: Color, affix_color: Color) -> Color:
+	if base_color == Color.WHITE:
+		return affix_color
+	return base_color.lerp(affix_color, 0.48)
+
+
+func build_elite_death_payload(enemy_config: Dictionary, affix: Dictionary) -> Dictionary:
+	var effect := String(affix.get("death_effect", ""))
+	match effect:
+		"volatile":
+			return {
+				"effect": "volatile",
+				"radius": float(affix.get("death_radius", 90.0)),
+				"damage": float(affix.get("death_damage", 30.0)),
+			}
+		"split":
+			return {
+				"effect": "split",
+				"count": int(affix.get("split_count", 2)),
+				"scene": enemy_config.scene,
+				"config": build_split_child_config(enemy_config, affix),
+			}
+	return {}
+
+
+func build_split_child_config(enemy_config: Dictionary, affix: Dictionary) -> Dictionary:
+	var child_config := enemy_config.duplicate(true)
+	child_config.erase("death_payload")
+	child_config.erase("elite_affix")
+	child_config.erase("elite_name")
+	child_config["id"] = "%s_split" % String(enemy_config.get("id", "enemy"))
+	child_config["health"] = int(affix.get("split_health", 8))
+	child_config["speed"] = float(affix.get("split_speed", 82.0))
+	child_config["contact_damage"] = 1
+	child_config["exp_drop_count"] = 1
+	child_config["exp_drop_min_tier"] = BLUE_ORB_TIER
+	child_config["scale"] = max(float(enemy_config.get("scale", 1.0)) * 0.58, 0.42)
+	child_config["color"] = Color(0.92, 0.38, 1.0, 1.0)
+	child_config["movement_style"] = "weaver"
+	return child_config
+
+
 func get_unlocked_weighted_entries(catalog: Array[Dictionary]) -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	for config in catalog:
@@ -631,12 +732,13 @@ func pick_weighted_entry(weighted_entries: Array[Dictionary]) -> Dictionary:
 	return weighted_entries.back().config
 
 
-func _on_enemy_defeated(enemy_position: Vector2, exp_drop_count: int = 1, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
+func _on_enemy_defeated(enemy_position: Vector2, exp_drop_count: int = 1, exp_drop_min_tier: int = BLUE_ORB_TIER, death_payload: Dictionary = {}) -> void:
 	enemies_defeated += 1
 	var mass_damage_active := dynamite_blast_active or splash_blast_active
 	
 	if not mass_damage_active:
 		spawn_enemy_death_burst.call_deferred(enemy_position)
+		apply_elite_death_payload.call_deferred(enemy_position, death_payload)
 	
 	if mass_damage_active:
 		queue_exp_drops(enemy_position, exp_drop_count, exp_drop_min_tier)
@@ -646,6 +748,48 @@ func _on_enemy_defeated(enemy_position: Vector2, exp_drop_count: int = 1, exp_dr
 	if not mass_damage_active:
 		try_drop_dynamite.call_deferred(enemy_position)
 		try_drop_wrench.call_deferred(enemy_position)
+
+
+func apply_elite_death_payload(enemy_position: Vector2, death_payload: Dictionary) -> void:
+	if death_payload.is_empty():
+		return
+	
+	match String(death_payload.get("effect", "")):
+		"volatile":
+			apply_volatile_elite_death(enemy_position, float(death_payload.get("radius", 90.0)), float(death_payload.get("damage", 30.0)))
+		"split":
+			spawn_split_elite_children(enemy_position, death_payload)
+
+
+func apply_volatile_elite_death(enemy_position: Vector2, radius: float, damage: float) -> void:
+	splash_blast_active = true
+	for enemy in get_tree().get_nodes_in_group("Enemy"):
+		if not is_instance_valid(enemy) or enemy.global_position.distance_to(enemy_position) > radius:
+			continue
+		if enemy.has_method("hit"):
+			enemy.hit(damage, false)
+	splash_blast_active = false
+	spawn_particle_burst.call_deferred(self, enemy_position, 18, Color(1.0, 0.22, 0.08, 1.0), 230.0, 0.24, Vector2(8.0, 14.0), true)
+
+
+func spawn_split_elite_children(enemy_position: Vector2, death_payload: Dictionary) -> void:
+	var child_count: int = mini(int(death_payload.get("count", 2)), 3)
+	if child_count <= 0:
+		return
+	if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+		return
+	
+	var child_scene: PackedScene = death_payload.get("scene", ENEMY) as PackedScene
+	var child_config: Dictionary = death_payload.get("config", {}) as Dictionary
+	for i in range(child_count):
+		if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+			return
+		var child = spawn_enemy(child_scene, _on_enemy_defeated, child_config)
+		child.global_position = enemy_position + Vector2.RIGHT.rotated((TAU / float(child_count)) * float(i) + randf_range(-0.35, 0.35)) * randf_range(14.0, 28.0)
+
+
+func get_active_enemy_count() -> int:
+	return get_tree().get_nodes_in_group("Enemy").size()
 
 
 func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:

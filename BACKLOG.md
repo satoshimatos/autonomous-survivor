@@ -38,6 +38,7 @@ Completed issues:
 - #2 Add random run modifiers and deterministic seed display
 - #3 Add unlock progression for tanks, abilities, and modifiers
 - #4 Add ability rarity, synergy tags, and weighted ability choices
+- #5 Add elite enemy affixes using lightweight modifiers
 
 ### P1 - Replayability And Power Growth
 
@@ -46,7 +47,6 @@ Completed issues:
 ### P1 - Enemies And Bosses
 
 - Expand boss behavior scripts with minion spawning, hazard drops, projectile rings, and phase transitions.
-- Add elite affixes that can be applied to existing enemy variants at spawn time.
 - Tune enemy spawn weights after short automated survival checks.
 
 ### P2 - Performance

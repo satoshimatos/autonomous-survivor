@@ -43,12 +43,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Unlock state is saved in `user://unlock_state.cfg` and updates from survival time, best level, enemy defeats, and boss defeats.
   - Tanks, ability choices, and run modifiers are now filtered by unlocked content, with locked tanks shown on the main menu.
   - Defeat summaries now report newly unlocked content so progression rewards are visible after each run.
+- Added elite enemy affixes:
+  - Regular enemy spawns can gradually roll Hasty, Armored, Rich, Volatile, or Splitting affixes as run time advances.
+  - Affixes are data-driven and modify stats, colors, scale, rewards, and death effects without creating duplicate scenes.
+  - Volatile elites damage nearby enemies on death, while Splitting elites spawn bounded child enemies to keep pressure high without unbounded growth.
 
 ## Backlog
 
 ### Next
 
-- Add elite enemy affixes using lightweight modifiers instead of many duplicate scenes.
+- Expand boss behaviors beyond stat profiles with minion calls, projectile rings, arena hazards, and phase changes.
 
 ### Content
 

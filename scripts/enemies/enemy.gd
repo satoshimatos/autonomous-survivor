@@ -1,6 +1,6 @@
 extends Area2D
 
-signal defeated(enemy_position: Vector2, exp_drop_count: int, exp_drop_min_tier: int)
+signal defeated(enemy_position: Vector2, exp_drop_count: int, exp_drop_min_tier: int, death_payload: Dictionary)
 
 @export var base_speed: float = 50.0
 @export var health: int = 14
@@ -23,6 +23,7 @@ var movement_seed: float = 0.0
 var movement_timer: float = 0.0
 var slow_timer: float = 0.0
 var slow_multiplier: float = 1.0
+var death_payload: Dictionary = {}
 
 @onready var mesh_instance: MeshInstance2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -67,6 +68,7 @@ func configure_variant(config: Dictionary) -> void:
 	movement_style = String(config.get("movement_style", movement_style))
 	variant_color = config.get("color", Color.WHITE) as Color
 	variant_scale = float(config.get("scale", 1.0))
+	death_payload = config.get("death_payload", {}) as Dictionary
 	if is_node_ready():
 		base_health = health
 		max_health = health
@@ -143,7 +145,7 @@ func hit(damage: float = 10.0, show_number: bool = true) -> int:
 	
 	if health <= 0:
 		is_defeated = true
-		defeated.emit(global_position, exp_drop_count, exp_drop_min_tier)
+		defeated.emit(global_position, exp_drop_count, exp_drop_min_tier, death_payload)
 		queue_free()
 	
 	return actual_damage
