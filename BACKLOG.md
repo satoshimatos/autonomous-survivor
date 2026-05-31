@@ -33,6 +33,7 @@ Completed setup:
   - #8 Add run summary details and build telemetry
   - #9 Add spawn director caps based on active pressure
   - #10 Improve upgrade cards with clearer synergy tags
+  - #11 Tune enemy and boss spawn weights with survival checks
 
 Completed issues:
 
@@ -45,6 +46,7 @@ Completed issues:
 - #7 Add object pools and effect budgets for performance
 - #8 Add run summary details and build telemetry
 - #9 Add spawn director caps based on active pressure
+- #10 Improve upgrade cards with clearer synergy tags
 
 ### P1 - Replayability And Power Growth
 
@@ -52,7 +54,7 @@ Completed issues:
 
 ### P1 - Enemies And Bosses
 
-- Tune enemy spawn weights after short automated survival checks.
+- #11 Tune enemy spawn weights after short automated survival checks.
 
 ### P2 - Performance
 
@@ -60,4 +62,4 @@ Completed issues:
 
 ### P2 - UI And Feedback
 
-- #10 Improve upgrade cards with clearer synergy tags once the upgrade set grows.
+- Continue improving upgrade and ability card readability as the build system grows.

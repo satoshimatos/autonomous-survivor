@@ -8,6 +8,20 @@ var player: CharacterBody2D
 var displayed_upgrades: Array[String] = []
 var ai_pick_in_progress: bool = false
 
+var upgrade_catalog: Dictionary = {
+	"speed": {"title": "+ SPEED", "tag": "MOBILITY", "hint": "Move faster and reposition sooner.", "synergy": ["magnet", "oil_slick_level"]},
+	"fire_rate": {"title": "+ FIRE RATE", "tag": "WEAPON", "hint": "Shoot more often.", "synergy": ["damage", "cannon", "footsoldier_level", "drone_swarm_level"]},
+	"damage": {"title": "+ DAMAGE", "tag": "POWER", "hint": "Raise all direct weapon damage.", "synergy": ["fire_rate", "splash", "piercing", "shock_field_level"]},
+	"regeneration": {"title": "+ REGENERATION", "tag": "SUSTAIN", "hint": "Recover health over time.", "synergy": ["armor", "barbed_wire"]},
+	"exp": {"title": "+ EXP", "tag": "ECONOMY", "hint": "Level faster from every orb.", "synergy": ["magnet"]},
+	"splash": {"title": "+ SPLASH", "tag": "AREA", "hint": "Projectiles explode over a wider radius.", "synergy": ["damage", "piercing", "artillery_level", "landmine_level"]},
+	"piercing": {"title": "+ PIERCING", "tag": "CLEAR", "hint": "Shots pass through more targets.", "synergy": ["damage", "splash", "fire_rate"]},
+	"barbed_wire": {"title": "+ BARBED WIRE", "tag": "CONTACT", "hint": "Damage enemies that get too close.", "synergy": ["armor", "regeneration", "shock_field_level"]},
+	"armor": {"title": "+ ARMOR", "tag": "DEFENSE", "hint": "Reduce incoming hit damage.", "synergy": ["barbed_wire", "regeneration", "circular_saw_level"]},
+	"magnet": {"title": "+ MAGNET", "tag": "ECONOMY", "hint": "Pull EXP from farther away.", "synergy": ["exp", "speed", "artillery_level"]},
+	"cannon": {"title": "+ CANNON", "tag": "MULTISHOT", "hint": "Add another cannon to each volley.", "synergy": ["damage", "fire_rate", "drone_swarm_level"]},
+}
+
 @onready var buttons: Array[Button] = [
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton1,
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton2,
@@ -29,36 +43,119 @@ func roll_upgrade_options() -> void:
 		if i < displayed_upgrades.size():
 			buttons[i].visible = true
 			buttons[i].text = get_upgrade_label(displayed_upgrades[i])
+			buttons[i].tooltip_text = get_upgrade_tooltip(displayed_upgrades[i])
 		else:
 			buttons[i].visible = false
 
 
 func get_upgrade_label(upgrade_id: String) -> String:
-	match upgrade_id:
-		"speed":
-			return "+ SPEED"
-		"fire_rate":
-			return "+ FIRE RATE"
-		"damage":
-			return "+ DAMAGE"
-		"regeneration":
-			return "+ REGENERATION"
-		"exp":
-			return "+ EXP"
-		"splash":
-			return "+ SPLASH"
-		"piercing":
-			return "+ PIERCING"
-		"barbed_wire":
-			return "+ BARBED WIRE"
-		"armor":
-			return "+ ARMOR"
-		"magnet":
-			return "+ MAGNET"
-		"cannon":
-			return "+ CANNON"
+	var data: Dictionary = upgrade_catalog.get(upgrade_id, {}) as Dictionary
+	if data.is_empty():
+		return "UNKNOWN"
 	
-	return "UNKNOWN"
+	var synergy_text := get_synergy_text(upgrade_id)
+	if synergy_text != "":
+		synergy_text = "\nSYNC: %s" % synergy_text
+	return "%s  [%s]\n%s%s" % [
+		String(data.title),
+		String(data.tag),
+		String(data.hint),
+		synergy_text,
+	]
+
+
+func get_upgrade_tooltip(upgrade_id: String) -> String:
+	var data: Dictionary = upgrade_catalog.get(upgrade_id, {}) as Dictionary
+	if data.is_empty():
+		return ""
+	return "%s\n%s" % [String(data.hint), get_synergy_text(upgrade_id)]
+
+
+func get_synergy_text(upgrade_id: String) -> String:
+	var data: Dictionary = upgrade_catalog.get(upgrade_id, {}) as Dictionary
+	var synergy_ids: Array = data.get("synergy", []) as Array
+	var active_synergies: Array[String] = []
+	for synergy_id in synergy_ids:
+		var level := get_synergy_level(String(synergy_id))
+		if level > 0:
+			active_synergies.append("%s %s" % [get_synergy_label(String(synergy_id)), level])
+	
+	if not active_synergies.is_empty():
+		return ", ".join(active_synergies.slice(0, 2))
+	
+	if synergy_ids.is_empty():
+		return ""
+	return "pairs with %s" % get_synergy_label(String(synergy_ids[0]))
+
+
+func get_synergy_level(synergy_id: String) -> int:
+	if player == null:
+		return 0
+	match synergy_id:
+		"speed":
+			return player.speed_level
+		"fire_rate":
+			return player.fire_rate_level
+		"damage":
+			return player.damage_level
+		"regeneration":
+			return player.regeneration_level
+		"exp":
+			return player.exp_bonus_level
+		"splash":
+			return player.splash_level
+		"piercing":
+			return player.piercing_level
+		"barbed_wire":
+			return player.barbed_wire_level
+		"armor":
+			return player.armor_level
+		"magnet":
+			return player.magnet_level
+		"cannon":
+			return player.cannon_level
+		"landmine_level":
+			return player.landmine_level
+		"circular_saw_level":
+			return player.circular_saw_level
+		"footsoldier_level":
+			return player.footsoldier_level
+		"shock_field_level":
+			return player.shock_field_level
+		"artillery_level":
+			return player.artillery_level
+		"drone_swarm_level":
+			return player.drone_swarm_level
+		"oil_slick_level":
+			return player.oil_slick_level
+		"freeze_pulse_level":
+			return player.freeze_pulse_level
+	return 0
+
+
+func get_synergy_label(synergy_id: String) -> String:
+	match synergy_id:
+		"fire_rate":
+			return "Fire Rate"
+		"barbed_wire":
+			return "Barbed Wire"
+		"landmine_level":
+			return "Landmine"
+		"circular_saw_level":
+			return "Circular Saw"
+		"footsoldier_level":
+			return "Footsoldier"
+		"shock_field_level":
+			return "Shock Field"
+		"artillery_level":
+			return "Artillery"
+		"drone_swarm_level":
+			return "Drone Swarm"
+		"oil_slick_level":
+			return "Oil Slick"
+		"freeze_pulse_level":
+			return "Freeze Pulse"
+	return synergy_id.capitalize()
 
 
 func apply_upgrade(slot_index: int) -> void:

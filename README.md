@@ -63,16 +63,20 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Regular enemy spawns now respect a time-scaling active enemy cap instead of growing unbounded.
   - Boss spawns reserve pressure space, while boss minion waves and splitting elites use pressure-scaled caps.
   - The HUD and defeat report now show active pressure and skipped spawn counts for tuning.
+- Improved upgrade choice cards:
+  - Upgrade options now show role tags, short mechanical hints, and synergy notes.
+  - Synergy hints react to currently active upgrades and abilities so build choices are easier to evaluate.
+  - Upgrade option copy is driven by a compact data catalog instead of scattered match-only labels.
 
 ## Backlog
 
 ### Next
 
-- Improve upgrade cards with clearer synergy tags. See issue #10.
+- Tune enemy and boss spawn weights with survival checks. See issue #11.
 
 ### Content
 
-- Tune enemy and boss spawn weights after short automated survival checks.
+- #11 Tune enemy and boss spawn weights after short automated survival checks.
 
 ### Systems
 
