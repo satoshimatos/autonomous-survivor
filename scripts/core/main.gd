@@ -235,6 +235,8 @@ func _ready() -> void:
 			"level": player.level,
 			"enemies_defeated": enemies_defeated,
 			"bosses_defeated": bosses_defeated,
+			"elites_defeated": elites_defeated,
+			"build_levels": get_build_level_snapshot(),
 		})
 		var unlock_text := ""
 		if not unlocked_messages.is_empty():
@@ -258,8 +260,8 @@ func configure_run_seed_and_modifiers() -> void:
 	boss_spawn_interval = BOSS_SPAWN_INTERVAL * float(run_config.get_modifier_multiplier("boss_spawn_interval_multiplier"))
 	supply_box_spawn_interval = SUPPLY_BOX_SPAWN_INTERVAL * float(run_config.get_modifier_multiplier("supply_box_interval_multiplier"))
 	supply_box_spawn_chance = clamp(SUPPLY_BOX_SPAWN_CHANCE * float(run_config.get_modifier_multiplier("supply_box_chance_multiplier")), 0.0, 1.0)
-	wrench_drop_chance = clamp(WRENCH_DROP_CHANCE * float(run_config.get_modifier_multiplier("wrench_drop_multiplier")), 0.0, 1.0)
-	dynamite_drop_chance = clamp(DYNAMITE_DROP_CHANCE * float(run_config.get_modifier_multiplier("dynamite_drop_multiplier")), 0.0, 1.0)
+	wrench_drop_chance = clamp(WRENCH_DROP_CHANCE * float(run_config.get_modifier_multiplier("wrench_drop_multiplier")) * float(run_config.get_meta_reward_multiplier("wrench_drop_multiplier")), 0.0, 1.0)
+	dynamite_drop_chance = clamp(DYNAMITE_DROP_CHANCE * float(run_config.get_modifier_multiplier("dynamite_drop_multiplier")) * float(run_config.get_meta_reward_multiplier("dynamite_drop_multiplier")), 0.0, 1.0)
 	spawn_interval *= float(run_config.get_modifier_multiplier("spawn_interval_multiplier"))
 
 
@@ -1391,6 +1393,29 @@ func get_build_summary_text() -> String:
 	for i in range(mini(4, entries.size())):
 		top_entries.append("%s %s" % [String(entries[i].name), int(entries[i].level)])
 	return ", ".join(top_entries)
+
+
+func get_build_level_snapshot() -> Dictionary:
+	return {
+		"damage": player.damage_level,
+		"fire_rate": player.fire_rate_level,
+		"speed": player.speed_level,
+		"armor": player.armor_level,
+		"cannon": player.cannon_level,
+		"piercing": player.piercing_level,
+		"splash": player.splash_level,
+		"magnet": player.magnet_level,
+		"exp": player.exp_bonus_level,
+		"barbed_wire": player.barbed_wire_level,
+		"landmine": player.landmine_level,
+		"circular_saw": player.circular_saw_level,
+		"footsoldier": player.footsoldier_level,
+		"shock_field": player.shock_field_level,
+		"artillery": player.artillery_level,
+		"drone_swarm": player.drone_swarm_level,
+		"oil_slick": player.oil_slick_level,
+		"freeze_pulse": player.freeze_pulse_level,
+	}
 
 
 func get_ranked_build_entries() -> Array[Dictionary]:

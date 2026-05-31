@@ -432,12 +432,13 @@ func upgrade_artillery() -> void:
 
 func apply_selected_tank_archetype() -> void:
 	var tank: Dictionary = get_run_config().get_selected_tank()
+	var run_config = get_run_config()
 	selected_tank_id = String(tank.get("id", selected_tank_id))
 	selected_tank_name = String(tank.get("name", selected_tank_name))
 	speed *= float(tank.get("speed_multiplier", 1.0))
-	max_health = max(1, max_health + int(tank.get("health_bonus", 0)))
+	max_health = max(1, max_health + int(tank.get("health_bonus", 0)) + run_config.get_meta_reward_bonus("starting_health_bonus"))
 	attack_damage *= float(tank.get("damage_multiplier", 1.0))
-	fire_interval *= float(tank.get("fire_interval_multiplier", 1.0)) * float(get_run_config().get_modifier_multiplier("player_fire_interval_multiplier"))
+	fire_interval *= float(tank.get("fire_interval_multiplier", 1.0)) * float(run_config.get_modifier_multiplier("player_fire_interval_multiplier"))
 	
 	speed_level += int(tank.get("speed_level", 0))
 	damage_level += int(tank.get("damage_level", 0))
@@ -452,10 +453,22 @@ func apply_selected_tank_archetype() -> void:
 	tank_cannon.modulate = tint
 	
 	apply_starting_ability_levels(tank)
+	apply_meta_progression_rewards(run_config)
 
 
 func get_run_config() -> Node:
 	return get_node("/root/RunConfig")
+
+
+func apply_meta_progression_rewards(run_config: Node) -> void:
+	for i in range(run_config.get_meta_reward_bonus("starting_armor_level")):
+		armor_level += 1
+	for i in range(run_config.get_meta_reward_bonus("starting_damage_level")):
+		upgrade_damage()
+	for i in range(run_config.get_meta_reward_bonus("starting_exp_level")):
+		upgrade_exp()
+	for i in range(run_config.get_meta_reward_bonus("starting_magnet_level")):
+		magnet_level += 1
 
 
 func apply_starting_ability_levels(tank: Dictionary) -> void:

@@ -112,6 +112,13 @@ var run_modifier_catalog: Array[Dictionary] = [
 		"dynamite_drop_multiplier": 2.0,
 		"supply_box_chance_multiplier": 0.65,
 	},
+	{
+		"id": "overclock_cache",
+		"name": "Overclock Cache",
+		"summary": "A challenge reward modifier with faster weapons and lower pickup support.",
+		"player_fire_interval_multiplier": 0.9,
+		"supply_box_chance_multiplier": 0.8,
+	},
 ]
 
 
@@ -187,6 +194,20 @@ func get_modifier_multiplier(key: String, default_value: float = 1.0) -> float:
 	for modifier in active_run_modifiers:
 		multiplier *= float(modifier.get(key, 1.0))
 	return multiplier
+
+
+func get_meta_reward_bonus(reward_key: String) -> int:
+	var unlock_manager = get_unlock_manager()
+	if unlock_manager.has_method("get_meta_reward_bonus"):
+		return int(unlock_manager.get_meta_reward_bonus(reward_key))
+	return 0
+
+
+func get_meta_reward_multiplier(reward_key: String, default_value: float = 1.0) -> float:
+	var unlock_manager = get_unlock_manager()
+	if unlock_manager.has_method("get_meta_reward_multiplier"):
+		return float(unlock_manager.get_meta_reward_multiplier(reward_key, default_value))
+	return default_value
 
 
 func get_unlocked_run_modifiers() -> Array[Dictionary]:

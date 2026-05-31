@@ -35,6 +35,7 @@ Completed setup:
   - #10 Improve upgrade cards with clearer synergy tags
   - #11 Tune enemy and boss spawn weights with survival checks
   - #12 Add challenge goals and meta-progression rewards
+  - #13 Add first evolved upgrade synergy rewards
 
 Completed issues:
 
@@ -49,10 +50,11 @@ Completed issues:
 - #9 Add spawn director caps based on active pressure
 - #10 Improve upgrade cards with clearer synergy tags
 - #11 Tune enemy and boss spawn weights with survival checks
+- #12 Add challenge goals and meta-progression rewards
 
 ### P1 - Replayability And Power Growth
 
-- #12 Add challenge goals and meta-progression rewards.
+- #13 Add first evolved upgrade synergy rewards.
 
 ### P1 - Enemies And Bosses
 

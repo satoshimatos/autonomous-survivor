@@ -75,16 +75,22 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Enemy weights now rotate away from starter scouts into swarm, mobility, and durable variants as survival time increases.
   - Boss weights now decay the starter charger and raise later bosses so longer runs see more varied boss pressure.
   - Active enemy cap growth was tightened from 240 max pressure to 225 to leave more room for readable late-game fights.
+- Added challenge goals and meta-progression rewards:
+  - Unlock state now persists completed challenge goal IDs alongside tanks, abilities, modifiers, and run stats.
+  - Added data-driven challenges for survival time, boss defeats, elite defeats, and build-style milestones.
+  - Challenge rewards can grant starting stat bonuses, drop-rate multipliers, and modifier unlocks without duplicating scenes.
+  - Added the Overclock Cache run modifier as a boss-challenge reward.
+  - Defeat summaries now include newly completed challenge rewards in the unlock list.
 
 ## Backlog
 
 ### Next
 
-- Add challenge goals and meta-progression rewards. See issue #12.
+- Add first evolved upgrade synergy rewards. See issue #13.
 
 ### Content
 
-- #12 Add challenge goals and meta-progression rewards.
+- #13 Add first evolved upgrade synergy rewards.
 
 ### Systems
 
