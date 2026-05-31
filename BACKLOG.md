@@ -34,6 +34,7 @@ Completed setup:
   - #9 Add spawn director caps based on active pressure
   - #10 Improve upgrade cards with clearer synergy tags
   - #11 Tune enemy and boss spawn weights with survival checks
+  - #12 Add challenge goals and meta-progression rewards
 
 Completed issues:
 
@@ -47,18 +48,19 @@ Completed issues:
 - #8 Add run summary details and build telemetry
 - #9 Add spawn director caps based on active pressure
 - #10 Improve upgrade cards with clearer synergy tags
+- #11 Tune enemy and boss spawn weights with survival checks
 
 ### P1 - Replayability And Power Growth
 
-- Add more challenge goals and meta-progression rewards after the first unlock pass.
+- #12 Add challenge goals and meta-progression rewards.
 
 ### P1 - Enemies And Bosses
 
-- #11 Tune enemy spawn weights after short automated survival checks.
+- Add late-game enemy and boss variants once the current weighted catalog needs more variety.
 
 ### P2 - Performance
 
-- Tune active pressure caps after short automated survival checks.
+- Profile dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
 

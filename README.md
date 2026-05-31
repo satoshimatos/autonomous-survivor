@@ -68,15 +68,23 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Synergy hints react to currently active upgrades and abilities so build choices are easier to evaluate.
   - Upgrade option copy is driven by a compact data catalog instead of scattered match-only labels.
 
+### 2026-05-31
+
+- Added repeatable spawn-balance projection:
+  - `tools/balance_check.py` now projects active pressure caps, enemy mix, boss mix, and average spawn health at key run times.
+  - Enemy weights now rotate away from starter scouts into swarm, mobility, and durable variants as survival time increases.
+  - Boss weights now decay the starter charger and raise later bosses so longer runs see more varied boss pressure.
+  - Active enemy cap growth was tightened from 240 max pressure to 225 to leave more room for readable late-game fights.
+
 ## Backlog
 
 ### Next
 
-- Tune enemy and boss spawn weights with survival checks. See issue #11.
+- Add challenge goals and meta-progression rewards. See issue #12.
 
 ### Content
 
-- #11 Tune enemy and boss spawn weights after short automated survival checks.
+- #12 Add challenge goals and meta-progression rewards.
 
 ### Systems
 
