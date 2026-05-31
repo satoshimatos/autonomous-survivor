@@ -36,12 +36,14 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Each run rolls a seed and 2-3 modifiers from a reusable modifier catalog.
   - Modifiers affect spawn pressure, EXP value, boss cadence/rewards, supply drops, enemy scaling, weapon tempo, and salvage drops.
   - Defeat summary now shows the seed and active modifier names.
+- Added rarity, synergy tags, and weighted ability choices:
+  - Ability rolls now consider rarity, current ability stacks, late-game level boosts, existing upgrade synergies, and existing ability synergies.
+  - Ability buttons show rarity and a primary tag while still presenting a 3-choice menu.
 
 ## Backlog
 
 ### Next
 
-- Add ability rarity, synergy tags, or weighted choices so late-game ability rolls can bias toward build-defining combos.
 - Add unlock progression for tanks, abilities, and run modifiers.
 
 ### Content
