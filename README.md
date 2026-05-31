@@ -81,16 +81,22 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Challenge rewards can grant starting stat bonuses, drop-rate multipliers, and modifier unlocks without duplicating scenes.
   - Added the Overclock Cache run modifier as a boss-challenge reward.
   - Defeat summaries now include newly completed challenge rewards in the unlock list.
+- Added evolved upgrade synergies:
+  - Added a data-driven evolution catalog on the player that checks upgrade and ability level requirements after picks.
+  - Shrapnel Core combines damage, splash, and piercing into larger, harder-hitting projectiles with extra penetration.
+  - Storm Armor combines Shock Field, Barbed Wire, and Armor into stronger aura/contact defense and extra damage reduction.
+  - Drone Foundry combines Drone Swarm, Cannon, and Fire Rate into extra multishot pressure and stronger drone levels.
+  - Active evolutions now appear in the upgrade inventory and defeat build summary.
 
 ## Backlog
 
 ### Next
 
-- Add first evolved upgrade synergy rewards. See issue #13.
+- Add randomized mid-run events and gambit rewards. See issue #14.
 
 ### Content
 
-- #13 Add first evolved upgrade synergy rewards.
+- #14 Add randomized mid-run events and gambit rewards.
 
 ### Systems
 

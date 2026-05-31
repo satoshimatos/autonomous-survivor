@@ -180,6 +180,8 @@ func apply_ability(slot_index: int) -> void:
 	var method_name := String(displayed_abilities[slot_index].method)
 	if player and player.has_method(method_name):
 		player.call(method_name)
+		if player.has_method("update_evolutions"):
+			player.update_evolutions()
 	complete_selection()
 
 

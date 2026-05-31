@@ -36,6 +36,7 @@ Completed setup:
   - #11 Tune enemy and boss spawn weights with survival checks
   - #12 Add challenge goals and meta-progression rewards
   - #13 Add first evolved upgrade synergy rewards
+  - #14 Add randomized mid-run events and gambit rewards
 
 Completed issues:
 
@@ -51,10 +52,11 @@ Completed issues:
 - #10 Improve upgrade cards with clearer synergy tags
 - #11 Tune enemy and boss spawn weights with survival checks
 - #12 Add challenge goals and meta-progression rewards
+- #13 Add first evolved upgrade synergy rewards
 
 ### P1 - Replayability And Power Growth
 
-- #13 Add first evolved upgrade synergy rewards.
+- #14 Add randomized mid-run events and gambit rewards.
 
 ### P1 - Enemies And Bosses
 

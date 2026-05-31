@@ -1386,12 +1386,19 @@ func get_run_summary_text(unlock_text: String) -> String:
 
 func get_build_summary_text() -> String:
 	var entries := get_ranked_build_entries()
-	if entries.is_empty():
+	var evolution_names: Array[String] = []
+	if player.has_method("get_active_evolution_names"):
+		evolution_names = player.get_active_evolution_names()
+	
+	if entries.is_empty() and evolution_names.is_empty():
 		return "No upgrades"
 	
 	var top_entries: Array[String] = []
 	for i in range(mini(4, entries.size())):
 		top_entries.append("%s %s" % [String(entries[i].name), int(entries[i].level)])
+	
+	if not evolution_names.is_empty():
+		top_entries.append("Evolved: %s" % ", ".join(evolution_names.slice(0, 3)))
 	return ", ".join(top_entries)
 
 
@@ -1489,6 +1496,13 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Oil Slick", player.oil_slick_level),
 		format_upgrade_inventory_row("Freeze Pulse", player.freeze_pulse_level),
 	]
+	if player.has_method("get_active_evolution_names"):
+		var evolution_names: Array[String] = player.get_active_evolution_names()
+		if not evolution_names.is_empty():
+			rows.append("")
+			rows.append("Evolutions")
+			for evolution_name in evolution_names:
+				rows.append(String(evolution_name))
 	upgrade_inventory_label.text = "\n".join(rows)
 
 

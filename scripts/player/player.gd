@@ -69,6 +69,27 @@ var oil_slick_level: int = 0
 var oil_slick_dispenser: Node2D
 var freeze_pulse_level: int = 0
 var freeze_pulse: Node2D
+var active_evolution_ids: Array[String] = []
+var evolution_catalog: Array[Dictionary] = [
+	{
+		"id": "shrapnel_core",
+		"name": "Shrapnel Core",
+		"requirements": {"damage": 4, "splash": 3, "piercing": 2},
+		"effects": {"projectile_damage_multiplier": 1.2, "splash_radius_bonus": 18.0, "piercing_bonus": 2, "projectile_scale": 1.22},
+	},
+	{
+		"id": "storm_armor",
+		"name": "Storm Armor",
+		"requirements": {"shock_field": 3, "barbed_wire": 3, "armor": 3},
+		"effects": {"shock_field_level_bonus": 2, "barbed_wire_radius_bonus": 30.0, "barbed_wire_damage_multiplier": 1.35, "armor_reduction_bonus": 0.08},
+	},
+	{
+		"id": "drone_foundry",
+		"name": "Drone Foundry",
+		"requirements": {"drone_swarm": 2, "cannon": 3, "fire_rate": 4},
+		"effects": {"drone_swarm_level_bonus": 2, "cannon_projectile_bonus": 1, "projectile_damage_multiplier": 1.1, "projectile_scale": 1.12},
+	},
+]
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
 const UPGRADE = preload("uid://gi785n7oy38v")
@@ -404,13 +425,13 @@ func upgrade_shock_field() -> void:
 	shock_field_level += 1
 	if is_instance_valid(shock_field):
 		if shock_field.has_method("update_level"):
-			shock_field.update_level(shock_field_level)
+			shock_field.update_level(get_effective_ability_level("shock_field"))
 		return
 	
 	shock_field = SHOCK_FIELD.instantiate()
 	add_child(shock_field)
 	if shock_field.has_method("configure"):
-		shock_field.configure(self, shock_field_level)
+		shock_field.configure(self, get_effective_ability_level("shock_field"))
 
 
 func upgrade_artillery() -> void:
@@ -454,6 +475,7 @@ func apply_selected_tank_archetype() -> void:
 	
 	apply_starting_ability_levels(tank)
 	apply_meta_progression_rewards(run_config)
+	update_evolutions()
 
 
 func get_run_config() -> Node:
@@ -494,13 +516,13 @@ func upgrade_drone_swarm() -> void:
 	drone_swarm_level += 1
 	if is_instance_valid(drone_swarm):
 		if drone_swarm.has_method("update_level"):
-			drone_swarm.update_level(drone_swarm_level)
+			drone_swarm.update_level(get_effective_ability_level("drone_swarm"))
 		return
 	
 	drone_swarm = DRONE_SWARM.instantiate()
 	add_child(drone_swarm)
 	if drone_swarm.has_method("configure"):
-		drone_swarm.configure(self, drone_swarm_level)
+		drone_swarm.configure(self, get_effective_ability_level("drone_swarm"))
 
 
 func upgrade_oil_slick() -> void:
@@ -608,6 +630,7 @@ func apply_upgrade_by_id(upgrade_id: String) -> void:
 			magnet_level += 1
 		"cannon":
 			cannon_level += 1
+	update_evolutions()
 
 
 func upgrade_damage() -> void:
@@ -631,7 +654,7 @@ func get_splash_radius() -> float:
 	if splash_level <= 0:
 		return 0.0
 	
-	return 10.0 + float(splash_level - 1) * 5.0
+	return 10.0 + float(splash_level - 1) * 5.0 + get_evolution_effect_value("splash_radius_bonus")
 
 
 func spawn_muzzle_burst() -> void:
@@ -655,7 +678,7 @@ func upgrade_barbed_wire() -> void:
 
 
 func get_barbed_wire_damage() -> float:
-	return attack_damage * BARBED_WIRE_DAMAGE_MULTIPLIER * float(barbed_wire_level)
+	return attack_damage * BARBED_WIRE_DAMAGE_MULTIPLIER * float(barbed_wire_level) * get_evolution_effect_multiplier("barbed_wire_damage_multiplier")
 
 
 func process_barbed_wire(delta: float) -> void:
@@ -667,7 +690,8 @@ func process_barbed_wire(delta: float) -> void:
 		barbed_wire_cooldowns[enemy_id] = max(float(barbed_wire_cooldowns[enemy_id]) - delta, 0.0)
 	
 	var active_enemy_ids := {}
-	var radius_squared := BARBED_WIRE_RADIUS * BARBED_WIRE_RADIUS
+	var radius := BARBED_WIRE_RADIUS + get_evolution_effect_value("barbed_wire_radius_bonus")
+	var radius_squared := radius * radius
 	for enemy in get_tree().get_nodes_in_group("Enemy"):
 		if not is_instance_valid(enemy):
 			continue
@@ -700,20 +724,21 @@ func increase_max_health_from_level() -> void:
 
 
 func get_projectile_hp() -> int:
-	return piercing_level + 1
+	return piercing_level + 1 + int(get_evolution_effect_value("piercing_bonus"))
 
 
 func fire_projectile_volley(target_direction: Vector2) -> void:
-	var projectile_count := 1 + cannon_level
+	var projectile_count := 1 + cannon_level + int(get_evolution_effect_value("cannon_projectile_bonus"))
 	var spread_radians := deg_to_rad(CANNON_SPREAD_DEGREES)
 	var middle_index := float(projectile_count - 1) / 2.0
 	for i in range(projectile_count):
 		var direction := target_direction.rotated((float(i) - middle_index) * spread_radians).normalized()
 		var projectile_config := {
 			"direction": direction,
-			"damage": attack_damage,
+			"damage": attack_damage * get_evolution_effect_multiplier("projectile_damage_multiplier"),
 			"splash_radius": get_splash_radius(),
 			"max_piercing_hp": get_projectile_hp(),
+			"projectile_scale": get_evolution_projectile_scale(),
 			"fade_in_duration": 0.08,
 		}
 		var main := get_tree().current_scene
@@ -727,7 +752,140 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 
 
 func get_armor_damage_reduction() -> float:
-	return min(float(armor_level) * ARMOR_DAMAGE_REDUCTION_PER_LEVEL, ARMOR_MAX_DAMAGE_REDUCTION)
+	return min(float(armor_level) * ARMOR_DAMAGE_REDUCTION_PER_LEVEL + get_evolution_effect_value("armor_reduction_bonus"), ARMOR_MAX_DAMAGE_REDUCTION)
+
+
+func update_evolutions() -> Array[String]:
+	var newly_active: Array[String] = []
+	for evolution in evolution_catalog:
+		var evolution_id := String(evolution.id)
+		if active_evolution_ids.has(evolution_id):
+			continue
+		if not are_evolution_requirements_met(evolution):
+			continue
+		
+		active_evolution_ids.append(evolution_id)
+		newly_active.append(evolution_id)
+	
+	if not newly_active.is_empty():
+		apply_evolution_runtime_updates()
+	return newly_active
+
+
+func are_evolution_requirements_met(evolution: Dictionary) -> bool:
+	var requirements: Dictionary = evolution.get("requirements", {}) as Dictionary
+	for requirement_id in requirements.keys():
+		if get_build_level_for_evolution(String(requirement_id)) < int(requirements[requirement_id]):
+			return false
+	return true
+
+
+func get_build_level_for_evolution(build_id: String) -> int:
+	match build_id:
+		"speed":
+			return speed_level
+		"fire_rate":
+			return fire_rate_level
+		"damage":
+			return damage_level
+		"regeneration":
+			return regeneration_level
+		"exp":
+			return exp_bonus_level
+		"splash":
+			return splash_level
+		"piercing":
+			return piercing_level
+		"barbed_wire":
+			return barbed_wire_level
+		"armor":
+			return armor_level
+		"magnet":
+			return magnet_level
+		"cannon":
+			return cannon_level
+		"landmine":
+			return landmine_level
+		"circular_saw":
+			return circular_saw_level
+		"footsoldier":
+			return footsoldier_level
+		"shock_field":
+			return shock_field_level
+		"artillery":
+			return artillery_level
+		"drone_swarm":
+			return drone_swarm_level
+		"oil_slick":
+			return oil_slick_level
+		"freeze_pulse":
+			return freeze_pulse_level
+	return 0
+
+
+func apply_evolution_runtime_updates() -> void:
+	if is_instance_valid(shock_field) and shock_field.has_method("update_level"):
+		shock_field.update_level(get_effective_ability_level("shock_field"))
+	if is_instance_valid(drone_swarm) and drone_swarm.has_method("update_level"):
+		drone_swarm.update_level(get_effective_ability_level("drone_swarm"))
+	update_barbed_wire_visual()
+	spawn_evolution_burst()
+
+
+func get_effective_ability_level(ability_id: String) -> int:
+	match ability_id:
+		"shock_field":
+			return shock_field_level + int(get_evolution_effect_value("shock_field_level_bonus"))
+		"drone_swarm":
+			return drone_swarm_level + int(get_evolution_effect_value("drone_swarm_level_bonus"))
+	return get_build_level_for_evolution(ability_id)
+
+
+func get_evolution_effect_value(effect_id: String) -> float:
+	var total := 0.0
+	for evolution in get_active_evolution_configs():
+		var effects: Dictionary = evolution.get("effects", {}) as Dictionary
+		total += float(effects.get(effect_id, 0.0))
+	return total
+
+
+func get_evolution_effect_multiplier(effect_id: String) -> float:
+	var multiplier := 1.0
+	for evolution in get_active_evolution_configs():
+		var effects: Dictionary = evolution.get("effects", {}) as Dictionary
+		if effects.has(effect_id):
+			multiplier *= float(effects.get(effect_id, 1.0))
+	return multiplier
+
+
+func get_evolution_projectile_scale() -> float:
+	var scale_multiplier := 1.0
+	for evolution in get_active_evolution_configs():
+		var effects: Dictionary = evolution.get("effects", {}) as Dictionary
+		if effects.has("projectile_scale"):
+			scale_multiplier = max(scale_multiplier, float(effects.projectile_scale))
+	return scale_multiplier
+
+
+func get_active_evolution_configs() -> Array[Dictionary]:
+	var evolutions: Array[Dictionary] = []
+	for evolution in evolution_catalog:
+		if active_evolution_ids.has(String(evolution.id)):
+			evolutions.append(evolution)
+	return evolutions
+
+
+func get_active_evolution_names() -> Array[String]:
+	var names: Array[String] = []
+	for evolution in get_active_evolution_configs():
+		names.append(String(evolution.name))
+	return names
+
+
+func spawn_evolution_burst() -> void:
+	var main := get_tree().current_scene
+	if main and main.has_method("spawn_particle_burst"):
+		main.spawn_particle_burst(main, global_position, 42, Color(0.35, 1.0, 0.9, 1.0), 250.0, 0.35, Vector2(4.0, 8.0), true)
 
 
 func process_personal_magnet() -> void:
