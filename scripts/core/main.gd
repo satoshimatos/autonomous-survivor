@@ -198,13 +198,23 @@ func _ready() -> void:
 		low_health_vignette.set_low_health_active(false)
 		get_tree().paused = true
 		%DefeatControl.visible = true
-		%ResultLabel.text = "Tank: %s\nSeed: %s\nModifiers: %s\nTime: %s\nEnemies Defeated: %s\nBosses Defeated: %s" % [
+		var unlocked_messages: Array[String] = get_unlock_manager().record_run_result({
+			"survival_seconds": int(floor(run_time)),
+			"level": player.level,
+			"enemies_defeated": enemies_defeated,
+			"bosses_defeated": bosses_defeated,
+		})
+		var unlock_text := ""
+		if not unlocked_messages.is_empty():
+			unlock_text = "\nUnlocked: %s" % ", ".join(unlocked_messages)
+		%ResultLabel.text = "Tank: %s\nSeed: %s\nModifiers: %s\nTime: %s\nEnemies Defeated: %s\nBosses Defeated: %s%s" % [
 			player.selected_tank_name,
 			run_seed_text,
 			run_modifier_summary,
 			get_formatted_run_time(),
 			enemies_defeated,
 			bosses_defeated,
+			unlock_text,
 		]
 	)
 
@@ -231,6 +241,10 @@ func configure_run_seed_and_modifiers() -> void:
 
 func get_run_config() -> Node:
 	return get_node("/root/RunConfig")
+
+
+func get_unlock_manager() -> Node:
+	return get_node("/root/UnlockManager")
 
 
 func setup_pickup_pools() -> void:

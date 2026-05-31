@@ -10,14 +10,14 @@ var ai_pick_in_progress: bool = false
 var displayed_abilities: Array[Dictionary] = []
 
 var ability_catalog: Array[Dictionary] = [
-	{"label": "+1 PLACE LANDMINE", "method": "upgrade_landmine", "level_property": "landmine_level", "rarity": "Common", "base_weight": 18.0, "tags": ["device", "area"], "synergy_upgrades": ["damage", "splash"], "synergy_abilities": ["oil_slick_level", "artillery_level"]},
-	{"label": "+1 CIRCULAR SAW", "method": "upgrade_circular_saw", "level_property": "circular_saw_level", "rarity": "Common", "base_weight": 17.0, "tags": ["orbit", "contact"], "synergy_upgrades": ["damage", "armor", "speed"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
-	{"label": "+ FOOTSOLDIER", "method": "upgrade_footsoldier", "level_property": "footsoldier_level", "rarity": "Uncommon", "base_weight": 13.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "piercing"], "synergy_abilities": ["drone_swarm_level"]},
-	{"label": "+ SHOCK FIELD", "method": "upgrade_shock_field", "level_property": "shock_field_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["aura", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["circular_saw_level", "freeze_pulse_level"]},
-	{"label": "+ ARTILLERY", "method": "upgrade_artillery", "level_property": "artillery_level", "rarity": "Rare", "base_weight": 8.0, "late_level": 12, "late_weight_multiplier": 1.65, "tags": ["area", "burst"], "synergy_upgrades": ["damage", "splash", "magnet"], "synergy_abilities": ["landmine_level", "oil_slick_level"]},
-	{"label": "+ DRONE SWARM", "method": "upgrade_drone_swarm", "level_property": "drone_swarm_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "cannon"], "synergy_abilities": ["footsoldier_level"]},
-	{"label": "+ OIL SLICK", "method": "upgrade_oil_slick", "level_property": "oil_slick_level", "rarity": "Common", "base_weight": 15.0, "tags": ["device", "crowd-control"], "synergy_upgrades": ["speed", "armor"], "synergy_abilities": ["landmine_level", "artillery_level"]},
-	{"label": "+ FREEZE PULSE", "method": "upgrade_freeze_pulse", "level_property": "freeze_pulse_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 10, "late_weight_multiplier": 1.8, "tags": ["burst", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["shock_field_level", "circular_saw_level"]},
+	{"id": "landmine", "label": "+1 PLACE LANDMINE", "method": "upgrade_landmine", "level_property": "landmine_level", "rarity": "Common", "base_weight": 18.0, "tags": ["device", "area"], "synergy_upgrades": ["damage", "splash"], "synergy_abilities": ["oil_slick_level", "artillery_level"]},
+	{"id": "circular_saw", "label": "+1 CIRCULAR SAW", "method": "upgrade_circular_saw", "level_property": "circular_saw_level", "rarity": "Common", "base_weight": 17.0, "tags": ["orbit", "contact"], "synergy_upgrades": ["damage", "armor", "speed"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
+	{"id": "footsoldier", "label": "+ FOOTSOLDIER", "method": "upgrade_footsoldier", "level_property": "footsoldier_level", "rarity": "Uncommon", "base_weight": 13.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "piercing"], "synergy_abilities": ["drone_swarm_level"]},
+	{"id": "shock_field", "label": "+ SHOCK FIELD", "method": "upgrade_shock_field", "level_property": "shock_field_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["aura", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["circular_saw_level", "freeze_pulse_level"]},
+	{"id": "artillery", "label": "+ ARTILLERY", "method": "upgrade_artillery", "level_property": "artillery_level", "rarity": "Rare", "base_weight": 8.0, "late_level": 12, "late_weight_multiplier": 1.65, "tags": ["area", "burst"], "synergy_upgrades": ["damage", "splash", "magnet"], "synergy_abilities": ["landmine_level", "oil_slick_level"]},
+	{"id": "drone_swarm", "label": "+ DRONE SWARM", "method": "upgrade_drone_swarm", "level_property": "drone_swarm_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "cannon"], "synergy_abilities": ["footsoldier_level"]},
+	{"id": "oil_slick", "label": "+ OIL SLICK", "method": "upgrade_oil_slick", "level_property": "oil_slick_level", "rarity": "Common", "base_weight": 15.0, "tags": ["device", "crowd-control"], "synergy_upgrades": ["speed", "armor"], "synergy_abilities": ["landmine_level", "artillery_level"]},
+	{"id": "freeze_pulse", "label": "+ FREEZE PULSE", "method": "upgrade_freeze_pulse", "level_property": "freeze_pulse_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 10, "late_weight_multiplier": 1.8, "tags": ["burst", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["shock_field_level", "circular_saw_level"]},
 ]
 
 @onready var ability_buttons: Array[Button] = [
@@ -47,13 +47,24 @@ func roll_ability_options() -> void:
 
 
 func roll_weighted_ability_options() -> Array[Dictionary]:
-	var available_options := ability_catalog.duplicate(true)
+	var available_options := get_unlocked_ability_options()
 	var rolled_options: Array[Dictionary] = []
 	for i in range(mini(OPTION_COUNT, available_options.size())):
 		var picked_index := pick_weighted_ability_index(available_options)
 		rolled_options.append(available_options[picked_index])
 		available_options.remove_at(picked_index)
 	return rolled_options
+
+
+func get_unlocked_ability_options() -> Array[Dictionary]:
+	var unlocked_options: Array[Dictionary] = []
+	var unlock_manager = get_unlock_manager()
+	for ability in ability_catalog:
+		if unlock_manager.is_ability_unlocked(String(ability.id)):
+			unlocked_options.append(ability.duplicate(true))
+	if unlocked_options.is_empty() and not ability_catalog.is_empty():
+		unlocked_options.append(ability_catalog[0].duplicate(true))
+	return unlocked_options
 
 
 func pick_weighted_ability_index(options: Array[Dictionary]) -> int:
@@ -144,6 +155,10 @@ func get_player_property_as_int(property_name: String) -> int:
 	if player == null or property_name == "":
 		return 0
 	return int(player.get(property_name))
+
+
+func get_unlock_manager() -> Node:
+	return get_node("/root/UnlockManager")
 
 
 func get_ability_button_label(ability: Dictionary) -> String:

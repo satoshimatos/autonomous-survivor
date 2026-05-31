@@ -39,12 +39,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Added rarity, synergy tags, and weighted ability choices:
   - Ability rolls now consider rarity, current ability stacks, late-game level boosts, existing upgrade synergies, and existing ability synergies.
   - Ability buttons show rarity and a primary tag while still presenting a 3-choice menu.
+- Added persistent unlock progression:
+  - Unlock state is saved in `user://unlock_state.cfg` and updates from survival time, best level, enemy defeats, and boss defeats.
+  - Tanks, ability choices, and run modifiers are now filtered by unlocked content, with locked tanks shown on the main menu.
+  - Defeat summaries now report newly unlocked content so progression rewards are visible after each run.
 
 ## Backlog
 
 ### Next
 
-- Add unlock progression for tanks, abilities, and run modifiers.
+- Add elite enemy affixes using lightweight modifiers instead of many duplicate scenes.
 
 ### Content
 

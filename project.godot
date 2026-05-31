@@ -18,6 +18,7 @@ config/icon="res://icon.svg"
 [autoload]
 
 RunConfig="*res://scripts/core/run_config.gd"
+UnlockManager="*res://scripts/core/unlock_manager.gd"
 
 [display]
 

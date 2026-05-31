@@ -36,11 +36,12 @@ Completed issues:
 
 - #1 Add tank archetype selection with unique starts
 - #2 Add random run modifiers and deterministic seed display
+- #3 Add unlock progression for tanks, abilities, and modifiers
 - #4 Add ability rarity, synergy tags, and weighted ability choices
 
 ### P1 - Replayability And Power Growth
 
-- Add unlock progression for tanks, abilities, modifiers, and challenge goals.
+- Add more challenge goals and meta-progression rewards after the first unlock pass.
 
 ### P1 - Enemies And Bosses
 

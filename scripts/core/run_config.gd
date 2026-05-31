@@ -116,6 +116,8 @@ var run_modifier_catalog: Array[Dictionary] = [
 
 
 func get_selected_tank() -> Dictionary:
+	if not get_unlock_manager().is_tank_unlocked(selected_tank_id):
+		selected_tank_id = get_first_unlocked_tank_id()
 	return get_tank_by_id(selected_tank_id)
 
 
@@ -127,7 +129,8 @@ func get_tank_by_id(tank_id: String) -> Dictionary:
 
 
 func set_selected_tank(tank_id: String) -> void:
-	selected_tank_id = get_tank_by_id(tank_id).id
+	if get_unlock_manager().is_tank_unlocked(tank_id):
+		selected_tank_id = get_tank_by_id(tank_id).id
 
 
 func start_new_run() -> void:
@@ -153,7 +156,7 @@ func generate_run_seed() -> String:
 func roll_run_modifiers(seed_text: String) -> Array[Dictionary]:
 	var rng := RandomNumberGenerator.new()
 	rng.seed = hash(seed_text)
-	var available_modifiers := run_modifier_catalog.duplicate()
+	var available_modifiers := get_unlocked_run_modifiers()
 	var modifier_count := rng.randi_range(2, 3)
 	var modifiers: Array[Dictionary] = []
 	for i in range(modifier_count):
@@ -184,3 +187,24 @@ func get_modifier_multiplier(key: String, default_value: float = 1.0) -> float:
 	for modifier in active_run_modifiers:
 		multiplier *= float(modifier.get(key, 1.0))
 	return multiplier
+
+
+func get_unlocked_run_modifiers() -> Array[Dictionary]:
+	var unlocked: Array[Dictionary] = []
+	var unlock_manager = get_unlock_manager()
+	for modifier in run_modifier_catalog:
+		if unlock_manager.is_modifier_unlocked(String(modifier.id)):
+			unlocked.append(modifier)
+	return unlocked
+
+
+func get_first_unlocked_tank_id() -> String:
+	var unlock_manager = get_unlock_manager()
+	for tank in tank_archetypes:
+		if unlock_manager.is_tank_unlocked(String(tank.id)):
+			return String(tank.id)
+	return "vanguard"
+
+
+func get_unlock_manager() -> Node:
+	return get_node("/root/UnlockManager")
