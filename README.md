@@ -87,16 +87,22 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Storm Armor combines Shock Field, Barbed Wire, and Armor into stronger aura/contact defense and extra damage reduction.
   - Drone Foundry combines Drone Swarm, Cannon, and Fire Rate into extra multishot pressure and stronger drone levels.
   - Active evolutions now appear in the upgrade inventory and defeat build summary.
+- Added randomized mid-run events:
+  - Runs now build a deterministic event schedule from the run seed, so the same seed repeats the same timed event sequence.
+  - Added Crystal Bloom, Supply Cache, Elite Bounty, and Overrun Gambit event definitions with bounded risk/reward effects.
+  - Active events can temporarily modify spawn pressure, enemy speed, enemy damage, or EXP value.
+  - Event rewards can spawn supply caches, trigger bonus upgrade/ability choices, or call in elite waves while respecting pressure caps.
+  - The HUD now shows active or upcoming events, and the defeat summary records triggered events.
 
 ## Backlog
 
 ### Next
 
-- Add randomized mid-run events and gambit rewards. See issue #14.
+- Add accessory upgrade branch for build variety. See issue #15.
 
 ### Content
 
-- #14 Add randomized mid-run events and gambit rewards.
+- #15 Add accessory upgrade branch for build variety.
 
 ### Systems
 

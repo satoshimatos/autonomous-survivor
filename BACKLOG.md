@@ -37,6 +37,7 @@ Completed setup:
   - #12 Add challenge goals and meta-progression rewards
   - #13 Add first evolved upgrade synergy rewards
   - #14 Add randomized mid-run events and gambit rewards
+  - #15 Add accessory upgrade branch for build variety
 
 Completed issues:
 
@@ -53,10 +54,11 @@ Completed issues:
 - #11 Tune enemy and boss spawn weights with survival checks
 - #12 Add challenge goals and meta-progression rewards
 - #13 Add first evolved upgrade synergy rewards
+- #14 Add randomized mid-run events and gambit rewards
 
 ### P1 - Replayability And Power Growth
 
-- #14 Add randomized mid-run events and gambit rewards.
+- #15 Add accessory upgrade branch for build variety.
 
 ### P1 - Enemies And Bosses
 

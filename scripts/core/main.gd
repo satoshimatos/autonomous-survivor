@@ -53,6 +53,10 @@ var supply_box_spawn_interval: float = 15.0
 var supply_box_spawn_chance: float = 0.05
 var wrench_drop_chance: float = 0.05
 var dynamite_drop_chance: float = 0.001
+var run_event_schedule: Array[Dictionary] = []
+var next_run_event_index: int = 0
+var active_run_events: Array[Dictionary] = []
+var completed_run_event_names: Array[String] = []
 
 const ENEMY = preload("uid://kxdifr4760x4")
 const BROWN_ENEMY = preload("res://scenes/enemies/brown_enemy.tscn")
@@ -111,6 +115,13 @@ var enemy_affix_catalog: Array[Dictionary] = [
 	{"id": "rich", "name": "Rich", "unlock_seconds": 210.0, "weight": 18.0, "health_multiplier": 1.2, "exp_drop_multiplier": 2.4, "exp_drop_min_tier_bonus": 1, "color": Color(0.46, 1.0, 0.35, 1.0)},
 	{"id": "volatile", "name": "Volatile", "unlock_seconds": 300.0, "weight": 16.0, "speed_multiplier": 1.18, "health_multiplier": 0.9, "death_effect": "volatile", "death_radius": 92.0, "death_damage": 34.0, "color": Color(1.0, 0.18, 0.08, 1.0)},
 	{"id": "splitting", "name": "Splitting", "unlock_seconds": 420.0, "weight": 14.0, "health_multiplier": 1.35, "death_effect": "split", "split_count": 2, "split_health": 8, "split_speed": 82.0, "color": Color(0.95, 0.36, 1.0, 1.0)},
+]
+
+var run_event_catalog: Array[Dictionary] = [
+	{"id": "crystal_bloom", "name": "Crystal Bloom", "summary": "Richer EXP while enemy damage spikes.", "duration": 48.0, "weight": 28.0, "effects": {"exp_value_multiplier": 1.35, "enemy_damage_multiplier": 1.12}},
+	{"id": "supply_cache", "name": "Supply Cache", "summary": "A cache drops offscreen.", "duration": 0.0, "weight": 24.0, "rewards": {"green_supply": 2, "blue_supply": 1}},
+	{"id": "elite_bounty", "name": "Elite Bounty", "summary": "An elite wave arrives with an upgrade reward.", "duration": 0.0, "weight": 22.0, "risks": {"elite_wave_count": 5}, "rewards": {"upgrade_choices": 1}},
+	{"id": "overrun_gambit", "name": "Overrun Gambit", "summary": "Enemy pressure surges, then grants an ability choice.", "duration": 36.0, "weight": 20.0, "effects": {"spawn_interval_multiplier": 0.72, "enemy_speed_multiplier": 1.1}, "rewards": {"ability_choices": 1}},
 ]
 
 const MAGNET_DURATION: float = 5.0
@@ -263,6 +274,7 @@ func configure_run_seed_and_modifiers() -> void:
 	wrench_drop_chance = clamp(WRENCH_DROP_CHANCE * float(run_config.get_modifier_multiplier("wrench_drop_multiplier")) * float(run_config.get_meta_reward_multiplier("wrench_drop_multiplier")), 0.0, 1.0)
 	dynamite_drop_chance = clamp(DYNAMITE_DROP_CHANCE * float(run_config.get_modifier_multiplier("dynamite_drop_multiplier")) * float(run_config.get_meta_reward_multiplier("dynamite_drop_multiplier")), 0.0, 1.0)
 	spawn_interval *= float(run_config.get_modifier_multiplier("spawn_interval_multiplier"))
+	build_run_event_schedule()
 
 
 func get_run_config() -> Node:
@@ -305,6 +317,7 @@ func _process(delta: float) -> void:
 	run_time += delta
 	update_player_dps()
 	update_low_health_upgrade_timer(delta)
+	process_run_events(delta)
 	update_run_timer_label()
 	update_upgrade_inventory_label()
 	spawn_timer += delta
@@ -351,7 +364,7 @@ func _process(delta: float) -> void:
 		boss_spawn_timer -= boss_spawn_interval
 		try_spawn_boss()
 	
-	if spawn_timer >= spawn_interval:
+	if spawn_timer >= get_effective_spawn_interval():
 		if can_spawn_regular_enemy():
 			var enemy_config := get_enemy_config_to_spawn()
 			enemy_config = apply_random_elite_affix(enemy_config)
@@ -450,6 +463,153 @@ func fade_loading_overlay() -> void:
 		await get_tree().process_frame
 
 
+func build_run_event_schedule() -> void:
+	run_event_schedule.clear()
+	active_run_events.clear()
+	completed_run_event_names.clear()
+	next_run_event_index = 0
+	
+	var rng := RandomNumberGenerator.new()
+	rng.seed = hash("%s:run_events" % run_seed_text)
+	var available_events: Array[Dictionary] = run_event_catalog.duplicate(true)
+	var trigger_time := 150.0 + rng.randf_range(-18.0, 18.0)
+	for i in range(mini(4, available_events.size())):
+		var picked_index := pick_weighted_event_index(available_events, rng)
+		var event_config: Dictionary = available_events[picked_index]
+		available_events.remove_at(picked_index)
+		run_event_schedule.append({
+			"trigger_time": trigger_time,
+			"config": event_config,
+		})
+		trigger_time += rng.randf_range(135.0, 175.0)
+
+
+func pick_weighted_event_index(events: Array[Dictionary], rng: RandomNumberGenerator) -> int:
+	var total_weight: float = 0.0
+	for event in events:
+		total_weight += float(event.get("weight", 1.0))
+	
+	var roll: float = rng.randf() * max(total_weight, 0.001)
+	for i in range(events.size()):
+		roll -= float(events[i].get("weight", 1.0))
+		if roll <= 0.0:
+			return i
+	return max(events.size() - 1, 0)
+
+
+func process_run_events(delta: float) -> void:
+	update_active_run_events(delta)
+	while next_run_event_index < run_event_schedule.size():
+		var scheduled_event: Dictionary = run_event_schedule[next_run_event_index]
+		if run_time < float(scheduled_event.trigger_time):
+			break
+		next_run_event_index += 1
+		start_run_event(scheduled_event.config as Dictionary)
+
+
+func update_active_run_events(delta: float) -> void:
+	for i in range(active_run_events.size() - 1, -1, -1):
+		var event: Dictionary = active_run_events[i]
+		event["remaining"] = float(event.get("remaining", 0.0)) - delta
+		active_run_events[i] = event
+		if float(event.remaining) <= 0.0:
+			active_run_events.remove_at(i)
+
+
+func start_run_event(event_config: Dictionary) -> void:
+	completed_run_event_names.append(String(event_config.name))
+	if completed_run_event_names.size() > 6:
+		completed_run_event_names.pop_front()
+	
+	var duration := float(event_config.get("duration", 0.0))
+	if duration > 0.0:
+		active_run_events.append({
+			"config": event_config,
+			"remaining": duration,
+		})
+	
+	apply_run_event_risks(event_config)
+	apply_run_event_rewards(event_config)
+	spawn_run_event_burst()
+
+
+func apply_run_event_risks(event_config: Dictionary) -> void:
+	var risks: Dictionary = event_config.get("risks", {}) as Dictionary
+	if risks.has("elite_wave_count"):
+		spawn_event_elite_wave(int(risks.elite_wave_count))
+
+
+func apply_run_event_rewards(event_config: Dictionary) -> void:
+	var rewards: Dictionary = event_config.get("rewards", {}) as Dictionary
+	for i in range(int(rewards.get("green_supply", 0))):
+		spawn_supply_box_at_position(SUPPLY_BOX_GREEN, get_offscreen_arena_spawn_point())
+	for i in range(int(rewards.get("blue_supply", 0))):
+		spawn_supply_box_at_position(SUPPLY_BOX_BLUE, get_offscreen_arena_spawn_point())
+	for i in range(int(rewards.get("upgrade_choices", 0))):
+		player.request_supply_upgrade_selection()
+	for i in range(int(rewards.get("ability_choices", 0))):
+		player.request_supply_ability_selection()
+
+
+func spawn_event_elite_wave(wave_count: int) -> void:
+	for i in range(wave_count):
+		if not has_enemy_pressure_room(0):
+			spawn_skips_from_pressure += 1
+			return
+		var enemy_config := get_enemy_config_to_spawn()
+		enemy_config = apply_guaranteed_elite_affix(enemy_config)
+		var enemy = spawn_enemy(enemy_config.scene, _on_enemy_defeated, enemy_config)
+		if enemy is Node2D:
+			enemy.global_position = get_spawn_point()
+
+
+func apply_guaranteed_elite_affix(enemy_config: Dictionary) -> Dictionary:
+	var affix := get_affix_config_to_apply()
+	if affix.is_empty():
+		return enemy_config
+	return apply_affix_to_enemy_config(enemy_config, affix)
+
+
+func get_effective_spawn_interval() -> float:
+	return max(spawn_interval * get_active_run_event_multiplier("spawn_interval_multiplier"), 0.15)
+
+
+func get_active_run_event_multiplier(effect_key: String, default_value: float = 1.0) -> float:
+	var multiplier := default_value
+	for event in active_run_events:
+		var config: Dictionary = event.config as Dictionary
+		var effects: Dictionary = config.get("effects", {}) as Dictionary
+		multiplier *= float(effects.get(effect_key, 1.0))
+	return multiplier
+
+
+func get_run_event_status_text() -> String:
+	if not active_run_events.is_empty():
+		var active_names: Array[String] = []
+		for event in active_run_events:
+			var config: Dictionary = event.config as Dictionary
+			active_names.append("%s %.0fs" % [String(config.name), float(event.remaining)])
+		return ", ".join(active_names)
+	if next_run_event_index < run_event_schedule.size():
+		var next_event: Dictionary = run_event_schedule[next_run_event_index]
+		return "Next: %s" % get_formatted_seconds(max(float(next_event.trigger_time) - run_time, 0.0))
+	if completed_run_event_names.is_empty():
+		return "None"
+	return "Recent: %s" % completed_run_event_names.back()
+
+
+func get_run_event_summary_text() -> String:
+	if completed_run_event_names.is_empty():
+		return "None"
+	return ", ".join(completed_run_event_names)
+
+
+func spawn_run_event_burst() -> void:
+	if player == null:
+		return
+	spawn_particle_burst(self, player.global_position, 48, Color(0.35, 0.9, 1.0, 1.0), 280.0, 0.35, Vector2(4.0, 8.0), true)
+
+
 func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_config: Dictionary = {}) -> Node:
 	var enemy = enemy_scene.instantiate()
 	if not variant_config.is_empty() and enemy.has_method("configure_variant"):
@@ -458,7 +618,7 @@ func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_
 	add_child(enemy)
 	enemy.global_position = get_boss_spawn_point() if enemy.is_in_group("Boss") else get_spawn_point()
 	if enemy.has_method("set_global_speed_scale"):
-		enemy.set_global_speed_scale(enemy_speed_scale)
+		enemy.set_global_speed_scale(enemy_speed_scale * get_active_run_event_multiplier("enemy_speed_multiplier"))
 	if enemy.has_method("apply_health_bonus"):
 		enemy.apply_health_bonus(enemy_health_bonus_total)
 	return enemy
@@ -708,7 +868,7 @@ func apply_enemy_health_bonus_to_active_enemies() -> void:
 
 
 func get_scaled_enemy_contact_damage(base_damage: int) -> int:
-	return maxi(1, int(round(float(base_damage) * enemy_damage_multiplier)))
+	return maxi(1, int(round(float(base_damage) * enemy_damage_multiplier * get_active_run_event_multiplier("enemy_damage_multiplier"))))
 
 
 func get_spawn_point() -> Vector2:
@@ -777,6 +937,10 @@ func apply_random_elite_affix(enemy_config: Dictionary) -> Dictionary:
 	if affix.is_empty():
 		return enemy_config
 	
+	return apply_affix_to_enemy_config(enemy_config, affix)
+
+
+func apply_affix_to_enemy_config(enemy_config: Dictionary, affix: Dictionary) -> Dictionary:
 	var modified_config := enemy_config.duplicate(true)
 	modified_config["elite_affix"] = String(affix.id)
 	modified_config["elite_name"] = String(affix.name)
@@ -1014,7 +1178,7 @@ func _spawn_exp_orb(drop_data: Dictionary) -> void:
 	var exp_orb = EXP_ORB.instantiate()
 	add_child(exp_orb)
 	exp_orb.global_position = enemy_position
-	exp_orb.configure(int(ceil(float(orb_data.value) * exp_value_multiplier)), orb_data.radius, orb_data.texture, orb_data.get("visual_scale", 1.0))
+	exp_orb.configure(int(ceil(float(orb_data.value) * exp_value_multiplier * get_active_run_event_multiplier("exp_value_multiplier"))), orb_data.radius, orb_data.texture, orb_data.get("visual_scale", 1.0))
 	
 	if magnet_effect_timer > 0.0:
 		exp_orb.set_magnet_active(true, player)
@@ -1287,10 +1451,13 @@ func try_spawn_supply_box() -> void:
 		return
 	
 	var spawn_position := get_offscreen_arena_spawn_point()
+	var supply_box_scene := SUPPLY_BOX_BLUE if randf() < BLUE_SUPPLY_BOX_CHANCE else SUPPLY_BOX_GREEN
+	spawn_supply_box_at_position(supply_box_scene, spawn_position)
+
+
+func spawn_supply_box_at_position(supply_box_scene: PackedScene, spawn_position: Vector2) -> void:
 	if spawn_position == Vector2.INF:
 		return
-	
-	var supply_box_scene := SUPPLY_BOX_BLUE if randf() < BLUE_SUPPLY_BOX_CHANCE else SUPPLY_BOX_GREEN
 	var supply_box = supply_box_scene.instantiate()
 	add_child(supply_box)
 	supply_box.global_position = spawn_position
@@ -1351,13 +1518,14 @@ func update_stats_label() -> void:
 	
 	var exp_multiplier_percent := int(round((1.0 + float(player.exp_bonus_level) * 0.25) * 100.0))
 	var armor_percent := int(round(player.get_armor_damage_reduction() * 100.0)) if player.has_method("get_armor_damage_reduction") else 0
-	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
+	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nEvent: %s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
 		player.selected_tank_name,
 		player.attack_damage,
 		player_dps,
 		get_average_spawn_enemy_hp(),
 		get_active_enemy_count(),
 		get_active_enemy_cap(),
+		get_run_event_status_text(),
 		float(player.barbed_wire_level) * 33.0,
 		player.get_splash_radius(),
 		1 + player.cannon_level,
@@ -1374,6 +1542,7 @@ func get_run_summary_text(unlock_text: String) -> String:
 		"Tank: %s  Level: %s" % [player.selected_tank_name, player.level],
 		"Time: %s  Seed: %s" % [get_formatted_run_time(), run_seed_text],
 		"Modifiers: %s" % run_modifier_summary,
+		"Events: %s" % get_run_event_summary_text(),
 		"Kills: %s  Elites: %s  Bosses: %s" % [enemies_defeated, elites_defeated, bosses_defeated],
 		"Damage Dealt: %s  Taken: %s  DPS: %.1f" % [total_damage_dealt, total_damage_taken, player_dps],
 		"Pressure: %s/%s  Skipped Spawns: %s" % [get_active_enemy_count(), get_active_enemy_cap(), spawn_skips_from_pressure],
@@ -1516,9 +1685,14 @@ func update_run_timer_label() -> void:
 
 func get_formatted_run_time() -> String:
 	var total_seconds: int = int(floor(run_time))
+	return get_formatted_seconds(float(total_seconds))
+
+
+func get_formatted_seconds(duration_seconds: float) -> String:
+	var total_seconds: int = int(floor(duration_seconds))
 	var minutes: int = int(float(total_seconds) / 60.0)
-	var seconds: int = total_seconds % 60
-	return "%02d:%02d" % [minutes, seconds]
+	var seconds_remainder: int = total_seconds % 60
+	return "%02d:%02d" % [minutes, seconds_remainder]
 
 
 func _on_restart_button_pressed() -> void:
