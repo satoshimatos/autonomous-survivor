@@ -47,17 +47,20 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Regular enemy spawns can gradually roll Hasty, Armored, Rich, Volatile, or Splitting affixes as run time advances.
   - Affixes are data-driven and modify stats, colors, scale, rewards, and death effects without creating duplicate scenes.
   - Volatile elites damage nearby enemies on death, while Splitting elites spawn bounded child enemies to keep pressure high without unbounded growth.
+- Expanded boss behaviors:
+  - Boss configs can now declare timed ability modules and health-based phase thresholds.
+  - Bulwark can summon bounded minion waves, Crusher can create warning telegraph hazard rings, and Wraith can target the player with hazards while calling support.
+  - Boss phase transitions increase pressure and trigger a simple burst effect without replacing the shared state-machine movement.
 
 ## Backlog
 
 ### Next
 
-- Expand boss behaviors beyond stat profiles with minion calls, projectile rings, arena hazards, and phase changes.
+- Add object pools and effect budgets for performance.
 
 ### Content
 
-- Add elite enemy affixes using lightweight modifiers instead of many duplicate scenes.
-- Expand boss behaviors beyond stat profiles with minion calls, projectile rings, arena hazards, and phase changes.
+- Tune enemy and boss spawn weights after short automated survival checks.
 
 ### Systems
 

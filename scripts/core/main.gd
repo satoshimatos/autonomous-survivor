@@ -59,6 +59,7 @@ const SUPPLY_BOX_BLUE = preload("res://scenes/pickups/supply_box_blue.tscn")
 const SUPPLY_BOX_GREEN = preload("res://scenes/pickups/supply_box_green.tscn")
 const PARTICLE_BURST = preload("res://scenes/effects/particle_burst.tscn")
 const SPLASH_AREA = preload("res://scenes/effects/splash_area.tscn")
+const BOSS_HAZARD = preload("res://scenes/effects/boss_hazard.tscn")
 const HEALING_POPUP = preload("res://scenes/effects/healing_popup.tscn")
 const GREEN_EXP_CRYSTAL = preload("res://assets/exp/exp_crystal_green.png")
 const BLUE_EXP_CRYSTAL = preload("res://assets/exp/exp_crystal_blue.png")
@@ -91,10 +92,10 @@ var enemy_variant_catalog: Array[Dictionary] = [
 
 var boss_variant_catalog: Array[Dictionary] = [
 	{"id": "charger", "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 100.0, "health": 950, "speed": 25.0, "contact_damage": 5, "exp_drop_count": 30, "exp_drop_min_tier": 1, "color": Color(0.5, 0.05, 0.62, 1.0), "scale": 1.0, "behavior": "charger"},
-	{"id": "bulwark", "scene": BOSS_ENEMY, "unlock_seconds": 420.0, "weight": 55.0, "health": 1550, "speed": 17.0, "contact_damage": 8, "exp_drop_count": 38, "exp_drop_min_tier": 2, "color": Color(0.18, 0.45, 0.8, 1.0), "scale": 1.18, "behavior": "bulwark"},
+	{"id": "bulwark", "scene": BOSS_ENEMY, "unlock_seconds": 420.0, "weight": 55.0, "health": 1550, "speed": 17.0, "contact_damage": 8, "exp_drop_count": 38, "exp_drop_min_tier": 2, "color": Color(0.18, 0.45, 0.8, 1.0), "scale": 1.18, "behavior": "bulwark", "phase_thresholds": [0.55], "ability_modules": [{"type": "minion_call", "cooldown": 8.0, "initial_delay": 3.5, "count": 3, "phase_count_bonus": 2}]},
 	{"id": "sprinter", "scene": BOSS_ENEMY, "unlock_seconds": 840.0, "weight": 45.0, "health": 1100, "speed": 34.0, "contact_damage": 6, "exp_drop_count": 42, "exp_drop_min_tier": 2, "color": Color(1.0, 0.38, 0.08, 1.0), "scale": 0.9, "behavior": "sprinter"},
-	{"id": "crusher", "scene": BOSS_ENEMY, "unlock_seconds": 1260.0, "weight": 42.0, "health": 2200, "speed": 15.0, "contact_damage": 11, "exp_drop_count": 52, "exp_drop_min_tier": 3, "color": Color(0.7, 0.08, 0.08, 1.0), "scale": 1.35, "behavior": "crusher"},
-	{"id": "wraith", "scene": BOSS_ENEMY, "unlock_seconds": 1680.0, "weight": 40.0, "health": 1750, "speed": 30.0, "contact_damage": 9, "exp_drop_count": 60, "exp_drop_min_tier": 4, "color": Color(0.72, 0.2, 1.0, 1.0), "scale": 1.02, "behavior": "wraith"},
+	{"id": "crusher", "scene": BOSS_ENEMY, "unlock_seconds": 1260.0, "weight": 42.0, "health": 2200, "speed": 15.0, "contact_damage": 11, "exp_drop_count": 52, "exp_drop_min_tier": 3, "color": Color(0.7, 0.08, 0.08, 1.0), "scale": 1.35, "behavior": "crusher", "phase_thresholds": [0.65, 0.32], "ability_modules": [{"type": "hazard_ring", "cooldown": 7.2, "initial_delay": 2.8, "count": 5, "phase_count_bonus": 2, "radius": 74.0, "ring_distance": 170.0, "damage": 3}]},
+	{"id": "wraith", "scene": BOSS_ENEMY, "unlock_seconds": 1680.0, "weight": 40.0, "health": 1750, "speed": 30.0, "contact_damage": 9, "exp_drop_count": 60, "exp_drop_min_tier": 4, "color": Color(0.72, 0.2, 1.0, 1.0), "scale": 1.02, "behavior": "wraith", "phase_thresholds": [0.5], "ability_modules": [{"type": "target_hazard", "cooldown": 5.6, "initial_delay": 2.2, "radius": 64.0, "damage": 3}, {"type": "minion_call", "cooldown": 11.0, "initial_delay": 5.0, "count": 2, "phase_count_bonus": 1}]},
 ]
 
 var enemy_affix_catalog: Array[Dictionary] = [
@@ -373,6 +374,7 @@ func warmup_runtime_scenes() -> void:
 		SUPPLY_BOX_GREEN,
 		PARTICLE_BURST,
 		SPLASH_AREA,
+		BOSS_HAZARD,
 		HEALING_POPUP,
 		PROJECTILE,
 		LANDMINE,
@@ -534,6 +536,83 @@ func try_spawn_boss() -> void:
 	
 	var boss_config := get_boss_config_to_spawn()
 	spawn_enemy(boss_config.scene, _on_boss_defeated, boss_config)
+
+
+func execute_boss_ability(boss: Node2D, module: Dictionary, phase_index: int) -> void:
+	if boss == null or not is_instance_valid(boss):
+		return
+	
+	match String(module.get("type", "")):
+		"minion_call":
+			spawn_boss_minions(boss.global_position, module, phase_index)
+		"hazard_ring":
+			spawn_boss_hazard_ring(boss.global_position, module, phase_index)
+		"target_hazard":
+			spawn_targeted_boss_hazard(module, phase_index)
+
+
+func spawn_boss_minions(origin: Vector2, module: Dictionary, phase_index: int) -> void:
+	var spawn_count: int = int(module.get("count", 2)) + phase_index * int(module.get("phase_count_bonus", 1))
+	spawn_count = mini(spawn_count, 7)
+	if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+		return
+	
+	var minion_config := {
+		"id": "boss_minion",
+		"scene": ENEMY,
+		"health": 14 + phase_index * 4,
+		"speed": 72.0 + float(phase_index) * 8.0,
+		"contact_damage": 1 + phase_index,
+		"exp_drop_count": 1,
+		"exp_drop_min_tier": BLUE_ORB_TIER,
+		"color": Color(0.35, 0.55, 1.0, 1.0),
+		"scale": 0.68,
+		"movement_style": "weaver",
+	}
+	for i in range(spawn_count):
+		if get_active_enemy_count() >= ELITE_SPLIT_ACTIVE_ENEMY_CAP:
+			return
+		var minion = spawn_enemy(ENEMY, _on_enemy_defeated, minion_config)
+		minion.global_position = origin + Vector2.RIGHT.rotated((TAU / float(spawn_count)) * float(i)) * randf_range(80.0, 128.0)
+
+
+func spawn_boss_hazard_ring(origin: Vector2, module: Dictionary, phase_index: int) -> void:
+	var hazard_count: int = int(module.get("count", 5)) + phase_index * int(module.get("phase_count_bonus", 1))
+	hazard_count = mini(hazard_count, 10)
+	var ring_distance := float(module.get("ring_distance", 160.0)) + float(phase_index) * 24.0
+	var angle_offset := randf() * TAU
+	for i in range(hazard_count):
+		var hazard_position := origin + Vector2.RIGHT.rotated(angle_offset + (TAU / float(hazard_count)) * float(i)) * ring_distance
+		spawn_boss_hazard(hazard_position, float(module.get("radius", 72.0)), int(module.get("damage", 3)) + phase_index)
+
+
+func spawn_targeted_boss_hazard(module: Dictionary, phase_index: int) -> void:
+	if player == null:
+		return
+	var offset := Vector2.RIGHT.rotated(randf() * TAU) * randf_range(0.0, 42.0)
+	spawn_boss_hazard(player.global_position + offset, float(module.get("radius", 64.0)) + float(phase_index) * 10.0, int(module.get("damage", 3)) + phase_index)
+
+
+func spawn_boss_hazard(hazard_position: Vector2, radius: float, damage: int) -> void:
+	var hazard = BOSS_HAZARD.instantiate()
+	add_child(hazard)
+	hazard.global_position = clamp_position_to_arena(hazard_position)
+	hazard.configure(radius, 0.85, 0.42, damage)
+
+
+func clamp_position_to_arena(position_to_clamp: Vector2) -> Vector2:
+	var arena_rect := get_arena_rect().grow(-BOSS_ARENA_INSET)
+	if arena_rect.size.x <= 0.0 or arena_rect.size.y <= 0.0:
+		arena_rect = get_arena_rect()
+	return Vector2(
+		clamp(position_to_clamp.x, arena_rect.position.x, arena_rect.end.x),
+		clamp(position_to_clamp.y, arena_rect.position.y, arena_rect.end.y)
+	)
+
+
+func spawn_boss_phase_burst(boss_position: Vector2, phase_index: int) -> void:
+	var burst_count := 36 + phase_index * 16
+	spawn_particle_burst(self, boss_position, burst_count, Color(1.0, 0.08, 0.04, 1.0), 260.0, 0.45, Vector2(12.0, 20.0), true)
 
 
 func is_boss_alive() -> bool:

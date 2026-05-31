@@ -1,0 +1,15 @@
+[gd_scene load_steps=3 format=3]
+
+[ext_resource type="Script" path="res://scripts/effects/boss_hazard.gd" id="1_boss_hazard"]
+
+[sub_resource type="CircleShape2D" id="CircleShape2D_boss_hazard"]
+radius = 72.0
+
+[node name="BossHazard" type="Area2D"]
+z_index = 2
+collision_layer = 0
+collision_mask = 2
+script = ExtResource("1_boss_hazard")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource("CircleShape2D_boss_hazard")

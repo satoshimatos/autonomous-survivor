@@ -8,6 +8,8 @@ signal defeated(enemy_position: Vector2, exp_drop_count: int, exp_drop_min_tier:
 @export var exp_drop_count: int = 30
 @export var exp_drop_min_tier: int = 1
 @export var boss_behavior: String = "charger"
+@export var ability_modules: Array[Dictionary] = []
+@export var phase_thresholds: Array[float] = []
 
 const ARENA_INSET: float = 72.0
 
@@ -24,6 +26,8 @@ var variant_scale: float = 1.0
 var pulse_timer: float = 0.0
 var slow_timer: float = 0.0
 var slow_multiplier: float = 1.0
+var ability_timers: Array[float] = []
+var phase_index: int = 0
 
 @onready var mesh_instance: MeshInstance2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -47,6 +51,8 @@ func _process(delta: float) -> void:
 	pulse_timer += delta
 	update_status_effects(delta)
 	update_behavior_effect(delta)
+	update_phase_state()
+	update_ability_modules(delta)
 	update_hit_flash(delta)
 	state_machine.update(delta)
 	clamp_to_arena()
@@ -61,6 +67,9 @@ func configure_variant(config: Dictionary) -> void:
 	exp_drop_count = int(config.get("exp_drop_count", exp_drop_count))
 	exp_drop_min_tier = int(config.get("exp_drop_min_tier", exp_drop_min_tier))
 	boss_behavior = String(config.get("behavior", boss_behavior))
+	ability_modules = (config.get("ability_modules", []) as Array).duplicate(true)
+	phase_thresholds = (config.get("phase_thresholds", []) as Array).duplicate()
+	reset_ability_timers()
 	variant_color = config.get("color", Color.WHITE) as Color
 	variant_scale = float(config.get("scale", 1.0))
 	if is_node_ready():
@@ -69,6 +78,13 @@ func configure_variant(config: Dictionary) -> void:
 		apply_variant_visuals()
 		base_modulate = mesh_instance.modulate
 		update_health_bar()
+
+
+func reset_ability_timers() -> void:
+	ability_timers.clear()
+	for module in ability_modules:
+		var initial_delay := float(module.get("initial_delay", module.get("cooldown", 4.0)))
+		ability_timers.append(initial_delay)
 
 
 func apply_variant_visuals() -> void:
@@ -113,6 +129,33 @@ func update_behavior_effect(delta: float) -> void:
 			mesh_instance.modulate.a = 0.72 + abs(sin(pulse_timer * 2.0)) * 0.28
 		_:
 			pass
+
+
+func update_phase_state() -> void:
+	if phase_thresholds.is_empty() or max_health <= 0:
+		return
+	
+	var health_ratio := float(health) / float(max_health)
+	while phase_index < phase_thresholds.size() and health_ratio <= float(phase_thresholds[phase_index]):
+		phase_index += 1
+		base_speed *= 1.08
+		contact_damage += 1
+		if main and main.has_method("spawn_boss_phase_burst"):
+			main.spawn_boss_phase_burst(global_position, phase_index)
+
+
+func update_ability_modules(delta: float) -> void:
+	if ability_modules.is_empty() or main == null or not main.has_method("execute_boss_ability"):
+		return
+	
+	for i in range(ability_modules.size()):
+		ability_timers[i] -= delta
+		if ability_timers[i] > 0.0:
+			continue
+		var module: Dictionary = ability_modules[i]
+		main.execute_boss_ability(self, module, phase_index)
+		var phase_cooldown_multiplier := pow(float(module.get("phase_cooldown_multiplier", 0.86)), phase_index)
+		ability_timers[i] = float(module.get("cooldown", 6.0)) * phase_cooldown_multiplier
 
 
 func process_contact_damage() -> void:
