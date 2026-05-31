@@ -68,7 +68,9 @@ func configure_variant(config: Dictionary) -> void:
 	movement_style = String(config.get("movement_style", movement_style))
 	variant_color = config.get("color", Color.WHITE) as Color
 	variant_scale = float(config.get("scale", 1.0))
-	death_payload = config.get("death_payload", {}) as Dictionary
+	death_payload = (config.get("death_payload", {}) as Dictionary).duplicate(true)
+	if config.has("elite_affix"):
+		death_payload["elite_affix"] = String(config.get("elite_affix", ""))
 	if is_node_ready():
 		base_health = health
 		max_health = health

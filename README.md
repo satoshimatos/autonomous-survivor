@@ -55,12 +55,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Tank and footsoldier shots now use a reusable projectile pool instead of constant projectile allocation/free churn.
   - Particle bursts now recycle through a pool and respect an active burst budget.
   - Damage numbers, splash areas, particle bursts, and boss hazards now have explicit runtime budgets to keep dense fights bounded.
+- Added run summary telemetry:
+  - Runtime now tracks total damage dealt, damage taken, elite kills, boss kills, and top build choices.
+  - The defeat screen now shows a compact run report with tank, level, seed, modifiers, survival time, kill counts, damage totals, DPS, build highlights, and unlocks.
+  - The defeat report layout was widened and tightened so the extra tuning data remains readable.
 
 ## Backlog
 
 ### Next
 
-- Add run summary details and build telemetry.
+- Add spawn director caps based on active pressure. See issue #9.
 
 ### Content
 
@@ -70,7 +74,6 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 - Keep enemy, boss, upgrade, and ability definitions data-driven so tuning does not require scene duplication.
 - Add deterministic run seeds and show the seed on the defeat screen.
-- Add balancing telemetry for run time, chosen upgrades, enemy kills, boss kills, damage dealt, and damage taken.
 
 ### Testing
 

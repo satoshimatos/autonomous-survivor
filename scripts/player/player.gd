@@ -774,7 +774,11 @@ func hit(damage_amount: int = 1) -> bool:
 	if i_timer < i_window:
 		return false
 	var reduced_damage := maxi(1, int(ceil(float(damage_amount) * (1.0 - get_armor_damage_reduction()))))
+	var previous_health := health
 	health = max(health - reduced_damage, 0)
+	var main := get_tree().current_scene
+	if main and main.has_method("record_player_damage_taken"):
+		main.record_player_damage_taken(previous_health - health)
 	if camera.has_method("start_shake"):
 		camera.start_shake()
 	damaged.emit(global_position)

@@ -31,6 +31,9 @@ var particle_burst_pool: Array[Node] = []
 var is_player_paused: bool = false
 var enemies_defeated: int = 0
 var bosses_defeated: int = 0
+var elites_defeated: int = 0
+var total_damage_dealt: int = 0
+var total_damage_taken: int = 0
 var debug_time_scale_index: int = 0
 var is_startup_loading: bool = true
 var player_damage_events: Array[Dictionary] = []
@@ -229,15 +232,7 @@ func _ready() -> void:
 		var unlock_text := ""
 		if not unlocked_messages.is_empty():
 			unlock_text = "\nUnlocked: %s" % ", ".join(unlocked_messages)
-		%ResultLabel.text = "Tank: %s\nSeed: %s\nModifiers: %s\nTime: %s\nEnemies Defeated: %s\nBosses Defeated: %s%s" % [
-			player.selected_tank_name,
-			run_seed_text,
-			run_modifier_summary,
-			get_formatted_run_time(),
-			enemies_defeated,
-			bosses_defeated,
-			unlock_text,
-		]
+		%ResultLabel.text = get_run_summary_text(unlock_text)
 	)
 
 
@@ -506,11 +501,16 @@ func record_player_damage(amount: int) -> void:
 	if amount <= 0:
 		return
 	
+	total_damage_dealt += amount
 	player_damage_events.append({
 		"time": run_time,
 		"damage": float(amount),
 	})
 	update_player_dps()
+
+
+func record_player_damage_taken(amount: int) -> void:
+	total_damage_taken += max(amount, 0)
 
 
 func update_player_dps() -> void:
@@ -855,6 +855,8 @@ func pick_weighted_entry(weighted_entries: Array[Dictionary]) -> Dictionary:
 
 func _on_enemy_defeated(enemy_position: Vector2, exp_drop_count: int = 1, exp_drop_min_tier: int = BLUE_ORB_TIER, death_payload: Dictionary = {}) -> void:
 	enemies_defeated += 1
+	if String(death_payload.get("elite_affix", "")) != "":
+		elites_defeated += 1
 	var mass_damage_active := dynamite_blast_active or splash_blast_active
 	
 	if not mass_damage_active:
@@ -1323,6 +1325,74 @@ func update_stats_label() -> void:
 		regen_per_second,
 		exp_multiplier_percent
 	]
+
+
+func get_run_summary_text(unlock_text: String) -> String:
+	var lines: Array[String] = [
+		"Tank: %s  Level: %s" % [player.selected_tank_name, player.level],
+		"Time: %s  Seed: %s" % [get_formatted_run_time(), run_seed_text],
+		"Modifiers: %s" % run_modifier_summary,
+		"Kills: %s  Elites: %s  Bosses: %s" % [enemies_defeated, elites_defeated, bosses_defeated],
+		"Damage Dealt: %s  Taken: %s  DPS: %.1f" % [total_damage_dealt, total_damage_taken, player_dps],
+		"Build: %s" % get_build_summary_text(),
+	]
+	if unlock_text != "":
+		lines.append(unlock_text.strip_edges())
+	return "\n".join(lines)
+
+
+func get_build_summary_text() -> String:
+	var entries := get_ranked_build_entries()
+	if entries.is_empty():
+		return "No upgrades"
+	
+	var top_entries: Array[String] = []
+	for i in range(mini(4, entries.size())):
+		top_entries.append("%s %s" % [String(entries[i].name), int(entries[i].level)])
+	return ", ".join(top_entries)
+
+
+func get_ranked_build_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	add_build_entry(entries, "Damage", player.damage_level)
+	add_build_entry(entries, "Fire Rate", player.fire_rate_level)
+	add_build_entry(entries, "Speed", player.speed_level)
+	add_build_entry(entries, "Armor", player.armor_level)
+	add_build_entry(entries, "Cannon", player.cannon_level)
+	add_build_entry(entries, "Piercing", player.piercing_level)
+	add_build_entry(entries, "Splash", player.splash_level)
+	add_build_entry(entries, "Magnet", player.magnet_level)
+	add_build_entry(entries, "Regen", player.regeneration_level)
+	add_build_entry(entries, "EXP", player.exp_bonus_level)
+	add_build_entry(entries, "Barbed Wire", player.barbed_wire_level)
+	add_build_entry(entries, "Landmine", player.landmine_level)
+	add_build_entry(entries, "Circular Saw", player.circular_saw_level)
+	add_build_entry(entries, "Footsoldier", player.footsoldier_level)
+	add_build_entry(entries, "Shock Field", player.shock_field_level)
+	add_build_entry(entries, "Artillery", player.artillery_level)
+	add_build_entry(entries, "Drone Swarm", player.drone_swarm_level)
+	add_build_entry(entries, "Oil Slick", player.oil_slick_level)
+	add_build_entry(entries, "Freeze Pulse", player.freeze_pulse_level)
+	return get_entries_sorted_by_level(entries)
+
+
+func add_build_entry(entries: Array[Dictionary], entry_name: String, level: int) -> void:
+	if level > 0:
+		entries.append({"name": entry_name, "level": level})
+
+
+func get_entries_sorted_by_level(entries: Array[Dictionary]) -> Array[Dictionary]:
+	var sorted_entries: Array[Dictionary] = entries.duplicate(true)
+	for i in range(sorted_entries.size()):
+		var best_index := i
+		for j in range(i + 1, sorted_entries.size()):
+			if int(sorted_entries[j].level) > int(sorted_entries[best_index].level):
+				best_index = j
+		if best_index != i:
+			var temp := sorted_entries[i]
+			sorted_entries[i] = sorted_entries[best_index]
+			sorted_entries[best_index] = temp
+	return sorted_entries
 
 
 func update_upgrade_inventory_label() -> void:

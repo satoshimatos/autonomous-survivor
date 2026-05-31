@@ -31,6 +31,7 @@ Completed setup:
   - #6 Expand boss behaviors with phases and hazards
   - #7 Add object pools and effect budgets for performance
   - #8 Add run summary details and build telemetry
+  - #9 Add spawn director caps based on active pressure
 
 Completed issues:
 
@@ -41,6 +42,7 @@ Completed issues:
 - #5 Add elite enemy affixes using lightweight modifiers
 - #6 Expand boss behaviors with phases and hazards
 - #7 Add object pools and effect budgets for performance
+- #8 Add run summary details and build telemetry
 
 ### P1 - Replayability And Power Growth
 
@@ -52,9 +54,8 @@ Completed issues:
 
 ### P2 - Performance
 
-- Add spawn director caps based on active enemy count and frame pressure.
+- #9 Add spawn director caps based on active enemy count and frame pressure.
 
 ### P2 - UI And Feedback
 
-- Add run summary details: build, seed, time survived, bosses defeated, damage dealt, and favorite upgrade.
 - Improve upgrade cards with clearer synergy tags once the upgrade set grows.
