@@ -4,6 +4,12 @@ Top-down tank survivor prototype built in Godot. The current design target is a 
 
 GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
+## Navigation
+
+- [Game Compendium](docs/GAME_COMPENDIUM.md): open-book reference for mechanics, tanks, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and budgets.
+- [Backlog](BACKLOG.md): autonomous task queue and completed issue history.
+- [Current Changelog](#current-changelog): latest implementation notes.
+
 ## Current Changelog
 
 ### 2026-05-30
@@ -93,6 +99,9 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Active events can temporarily modify spawn pressure, enemy speed, enemy damage, or EXP value.
   - Event rewards can spawn supply caches, trigger bonus upgrade/ability choices, or call in elite waves while respecting pressure caps.
   - The HUD now shows active or upcoming events, and the defeat summary records triggered events.
+- Added a navigable game compendium:
+  - `docs/GAME_COMPENDIUM.md` documents current mechanics, tanks, upgrades, abilities, evolutions, enemies, bosses, events, modifiers, unlocks, pickups, scaling, and performance budgets.
+  - README now links to the compendium from the top navigation section.
 
 ## Backlog
 
