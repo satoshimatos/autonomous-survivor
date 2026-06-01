@@ -191,4 +191,8 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Favor simple shapes and clear silhouettes until the gameplay loop is stable.
 - Prioritize performance and organization over visual polish.
 - Prefer reusable data/config systems for enemies, bosses, upgrades, abilities, tanks, and run modifiers.
+- Keep folders and files neat; split growing systems into clear subfolders and focused scripts/classes.
+- Avoid long singleton-style scripts when behavior can be delegated to owned objects, helper classes, focused managers, or reusable scenes.
+- Prefer object-driven ownership and event-driven communication with signals; avoid brittle hard-coded node paths and direct cross-tree script lookups.
+- Instantiate reusable scenes through clear owner systems, factories, or exported references so scene tree and directory changes stay low-risk.
 - Keep each autonomous run focused on the highest-value backlog item and record results here.

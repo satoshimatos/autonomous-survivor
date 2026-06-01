@@ -12,12 +12,20 @@ Each autonomous run should:
 
 GitHub issues are now the primary task tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
+Standing architecture rule:
+
+- Keep folders and files cleanly organized; create subfolders when a feature family starts to grow.
+- Prefer small purpose-built scripts/classes over long singleton-style catchalls.
+- Use object-driven scene ownership plus event-driven communication through signals where practical.
+- Avoid hard-coded node paths and manual cross-tree script lookups; exported references, typed dependencies, groups, signals, and local ownership should survive directory or scene-tree changes.
+- Instantiate reusable scenes cleanly through focused factories/helpers or owner systems instead of scattering construction logic across unrelated scripts.
+
 ## Priority Queue
 
 ### P0 - Project Operations
 
 - Create GitHub repo `satoshimatos/autonomous-survivor`, push the current project, and create GitHub issues from this backlog.
-- Keep project organization data-driven and avoid one scene per minor variant unless the behavior truly needs unique nodes.
+- Keep project organization data-driven, foldered by responsibility, and avoid one scene per minor variant unless the behavior truly needs unique nodes.
 
 Completed setup:
 
