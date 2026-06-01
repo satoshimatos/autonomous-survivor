@@ -1669,6 +1669,10 @@ func get_build_level_snapshot() -> Dictionary:
 		"missile_pod": player.missile_pod_level,
 		"gravity_well": player.gravity_well_level,
 		"railgun_orbiter": player.railgun_orbiter_level,
+		"tesla_pylon": player.tesla_pylon_level,
+		"nanite_cloud": player.nanite_cloud_level,
+		"ricochet_rounds": player.ricochet_rounds_level,
+		"chrono_burst": player.chrono_burst_level,
 	}
 
 
@@ -1740,6 +1744,10 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Missile Pod", player.missile_pod_level)
 	add_build_entry(entries, "Gravity Well", player.gravity_well_level)
 	add_build_entry(entries, "Railgun Orbiter", player.railgun_orbiter_level)
+	add_build_entry(entries, "Tesla Pylon", player.tesla_pylon_level)
+	add_build_entry(entries, "Nanite Cloud", player.nanite_cloud_level)
+	add_build_entry(entries, "Ricochet Rounds", player.ricochet_rounds_level)
+	add_build_entry(entries, "Chrono Burst", player.chrono_burst_level)
 	return get_entries_sorted_by_level(entries)
 
 
@@ -1836,6 +1844,10 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Missile Pod", player.missile_pod_level),
 		format_upgrade_inventory_row("Gravity Well", player.gravity_well_level),
 		format_upgrade_inventory_row("Railgun Orbiter", player.railgun_orbiter_level),
+		format_upgrade_inventory_row("Tesla Pylon", player.tesla_pylon_level),
+		format_upgrade_inventory_row("Nanite Cloud", player.nanite_cloud_level),
+		format_upgrade_inventory_row("Ricochet Rounds", player.ricochet_rounds_level),
+		format_upgrade_inventory_row("Chrono Burst", player.chrono_burst_level),
 	]
 	if player.has_method("get_active_evolution_names"):
 		var evolution_names: Array[String] = player.get_active_evolution_names()

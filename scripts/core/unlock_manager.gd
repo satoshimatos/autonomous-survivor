@@ -110,6 +110,14 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("ability", "guardian_satellite", "Guardian Satellite ability", unlocked_messages)
 	if total_bosses_defeated >= 2:
 		try_unlock("ability", "railgun_orbiter", "Railgun Orbiter ability", unlocked_messages)
+	if best_survival_seconds >= 720:
+		try_unlock("ability", "tesla_pylon", "Tesla Pylon ability", unlocked_messages)
+	if best_level >= 16:
+		try_unlock("ability", "nanite_cloud", "Nanite Cloud ability", unlocked_messages)
+	if best_survival_seconds >= 1080:
+		try_unlock("ability", "ricochet_rounds", "Ricochet Rounds ability", unlocked_messages)
+	if best_survival_seconds >= 1320:
+		try_unlock("ability", "chrono_burst", "Chrono Burst ability", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:

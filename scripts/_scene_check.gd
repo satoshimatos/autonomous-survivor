@@ -24,6 +24,10 @@ func _init() -> void:
 		"res://scenes/abilities/missile_pod.tscn",
 		"res://scenes/abilities/gravity_well.tscn",
 		"res://scenes/abilities/railgun_orbiter.tscn",
+		"res://scenes/abilities/tesla_pylon.tscn",
+		"res://scenes/abilities/nanite_cloud.tscn",
+		"res://scenes/abilities/ricochet_rounds.tscn",
+		"res://scenes/abilities/chrono_burst.tscn",
 		"res://scenes/effects/boss_hazard.tscn",
 		"res://scenes/ui/ability_menu.tscn",
 	]

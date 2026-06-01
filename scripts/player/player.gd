@@ -125,6 +125,14 @@ var gravity_well_level: int = 0
 var gravity_well: Node2D
 var railgun_orbiter_level: int = 0
 var railgun_orbiter: Node2D
+var tesla_pylon_level: int = 0
+var tesla_pylon: Node2D
+var nanite_cloud_level: int = 0
+var nanite_cloud: Node2D
+var ricochet_rounds_level: int = 0
+var ricochet_rounds: Node2D
+var chrono_burst_level: int = 0
+var chrono_burst: Node2D
 var active_evolution_ids: Array[String] = []
 var evolution_catalog: Array[Dictionary] = [
 	{
@@ -217,6 +225,18 @@ var evolution_catalog: Array[Dictionary] = [
 		"requirements": {"armor_piercers": 3, "weakpoint_scanner": 3, "railgun_orbiter": 2},
 		"effects": {"railgun_orbiter_level_bonus": 2, "projectile_damage_multiplier": 1.16, "crit_multiplier_bonus": 0.25},
 	},
+	{
+		"id": "time_cage",
+		"name": "Time Cage",
+		"requirements": {"chrono_burst": 3, "gravity_well": 3, "field_amplifier": 3},
+		"effects": {"chrono_burst_level_bonus": 2, "gravity_well_level_bonus": 1, "splash_damage_multiplier": 1.1},
+	},
+	{
+		"id": "storm_battery",
+		"name": "Storm Battery",
+		"requirements": {"tesla_pylon": 3, "volt_coils": 3, "chain_lightning": 3},
+		"effects": {"tesla_pylon_level_bonus": 2, "chain_lightning_level_bonus": 1, "overdrive_damage_bonus": 0.08},
+	},
 ]
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
@@ -238,6 +258,10 @@ const REPAIR_BEACON = preload("res://scenes/abilities/repair_beacon.tscn")
 const MISSILE_POD = preload("res://scenes/abilities/missile_pod.tscn")
 const GRAVITY_WELL = preload("res://scenes/abilities/gravity_well.tscn")
 const RAILGUN_ORBITER = preload("res://scenes/abilities/railgun_orbiter.tscn")
+const TESLA_PYLON = preload("res://scenes/abilities/tesla_pylon.tscn")
+const NANITE_CLOUD = preload("res://scenes/abilities/nanite_cloud.tscn")
+const RICOCHET_ROUNDS = preload("res://scenes/abilities/ricochet_rounds.tscn")
+const CHRONO_BURST = preload("res://scenes/abilities/chrono_burst.tscn")
 const MUZZLE_BURST_INTERVAL: float = 0.15
 const REGEN_START_INTERVAL: float = 5.0
 const REGEN_INTERVAL_STEP: float = 1.0 / 3.0
@@ -720,6 +744,14 @@ func apply_starting_ability_levels(tank: Dictionary) -> void:
 		upgrade_gravity_well()
 	for i in range(int(tank.get("railgun_orbiter_level", 0))):
 		upgrade_railgun_orbiter()
+	for i in range(int(tank.get("tesla_pylon_level", 0))):
+		upgrade_tesla_pylon()
+	for i in range(int(tank.get("nanite_cloud_level", 0))):
+		upgrade_nanite_cloud()
+	for i in range(int(tank.get("ricochet_rounds_level", 0))):
+		upgrade_ricochet_rounds()
+	for i in range(int(tank.get("chrono_burst_level", 0))):
+		upgrade_chrono_burst()
 
 
 func upgrade_drone_swarm() -> void:
@@ -863,6 +895,58 @@ func upgrade_railgun_orbiter() -> void:
 	add_child(railgun_orbiter)
 	if railgun_orbiter.has_method("configure"):
 		railgun_orbiter.configure(self, get_effective_ability_level("railgun_orbiter"))
+
+
+func upgrade_tesla_pylon() -> void:
+	tesla_pylon_level += 1
+	if is_instance_valid(tesla_pylon):
+		if tesla_pylon.has_method("update_level"):
+			tesla_pylon.update_level(get_effective_ability_level("tesla_pylon"))
+		return
+
+	tesla_pylon = TESLA_PYLON.instantiate()
+	add_child(tesla_pylon)
+	if tesla_pylon.has_method("configure"):
+		tesla_pylon.configure(self, get_effective_ability_level("tesla_pylon"))
+
+
+func upgrade_nanite_cloud() -> void:
+	nanite_cloud_level += 1
+	if is_instance_valid(nanite_cloud):
+		if nanite_cloud.has_method("update_level"):
+			nanite_cloud.update_level(get_effective_ability_level("nanite_cloud"))
+		return
+
+	nanite_cloud = NANITE_CLOUD.instantiate()
+	add_child(nanite_cloud)
+	if nanite_cloud.has_method("configure"):
+		nanite_cloud.configure(self, get_effective_ability_level("nanite_cloud"))
+
+
+func upgrade_ricochet_rounds() -> void:
+	ricochet_rounds_level += 1
+	if is_instance_valid(ricochet_rounds):
+		if ricochet_rounds.has_method("update_level"):
+			ricochet_rounds.update_level(get_effective_ability_level("ricochet_rounds"))
+		return
+
+	ricochet_rounds = RICOCHET_ROUNDS.instantiate()
+	add_child(ricochet_rounds)
+	if ricochet_rounds.has_method("configure"):
+		ricochet_rounds.configure(self, get_effective_ability_level("ricochet_rounds"))
+
+
+func upgrade_chrono_burst() -> void:
+	chrono_burst_level += 1
+	if is_instance_valid(chrono_burst):
+		if chrono_burst.has_method("update_level"):
+			chrono_burst.update_level(get_effective_ability_level("chrono_burst"))
+		return
+
+	chrono_burst = CHRONO_BURST.instantiate()
+	add_child(chrono_burst)
+	if chrono_burst.has_method("configure"):
+		chrono_burst.configure(self, get_effective_ability_level("chrono_burst"))
 
 
 func process_landmine_placement(delta: float) -> void:
@@ -1501,11 +1585,19 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return gravity_well_level
 		"railgun_orbiter":
 			return railgun_orbiter_level
+		"tesla_pylon":
+			return tesla_pylon_level
+		"nanite_cloud":
+			return nanite_cloud_level
+		"ricochet_rounds":
+			return ricochet_rounds_level
+		"chrono_burst":
+			return chrono_burst_level
 	return 0
 
 
 func apply_evolution_runtime_updates() -> void:
-	for ability_id in ["shock_field", "artillery", "drone_swarm", "chain_lightning", "guardian_satellite", "flame_wave", "repair_beacon", "missile_pod", "gravity_well", "railgun_orbiter"]:
+	for ability_id in ["shock_field", "artillery", "drone_swarm", "chain_lightning", "guardian_satellite", "flame_wave", "repair_beacon", "missile_pod", "gravity_well", "railgun_orbiter", "tesla_pylon", "nanite_cloud", "ricochet_rounds", "chrono_burst"]:
 		update_power_level(ability_id)
 	update_barbed_wire_visual()
 	spawn_evolution_burst()
@@ -1534,6 +1626,14 @@ func update_power_level(ability_id: String) -> void:
 			ability_node = gravity_well
 		"railgun_orbiter":
 			ability_node = railgun_orbiter
+		"tesla_pylon":
+			ability_node = tesla_pylon
+		"nanite_cloud":
+			ability_node = nanite_cloud
+		"ricochet_rounds":
+			ability_node = ricochet_rounds
+		"chrono_burst":
+			ability_node = chrono_burst
 	if is_instance_valid(ability_node) and ability_node.has_method("update_level"):
 		ability_node.update_level(get_effective_ability_level(ability_id))
 
@@ -1560,6 +1660,14 @@ func get_effective_ability_level(ability_id: String) -> int:
 			return gravity_well_level + int(get_evolution_effect_value("gravity_well_level_bonus")) + int(floor(float(field_amplifier_level + gravity_anchor_level) / 2.0))
 		"railgun_orbiter":
 			return railgun_orbiter_level + int(get_evolution_effect_value("railgun_orbiter_level_bonus")) + int(floor(float(rail_stabilizer_level + weakpoint_scanner_level) / 2.0))
+		"tesla_pylon":
+			return tesla_pylon_level + int(get_evolution_effect_value("tesla_pylon_level_bonus")) + int(floor(float(volt_coils_level) / 2.0))
+		"nanite_cloud":
+			return nanite_cloud_level + int(floor(float(repair_drones_level + med_pump_level) / 2.0))
+		"ricochet_rounds":
+			return ricochet_rounds_level + int(floor(float(armor_piercers_level + lucky_core_level) / 2.0))
+		"chrono_burst":
+			return chrono_burst_level + int(get_evolution_effect_value("chrono_burst_level_bonus")) + int(floor(float(field_amplifier_level) / 2.0))
 	return get_build_level_for_evolution(ability_id)
 
 
@@ -1762,6 +1870,18 @@ func disable_combat_on_death() -> void:
 	if is_instance_valid(railgun_orbiter):
 		railgun_orbiter.queue_free()
 		railgun_orbiter = null
+	if is_instance_valid(tesla_pylon):
+		tesla_pylon.queue_free()
+		tesla_pylon = null
+	if is_instance_valid(nanite_cloud):
+		nanite_cloud.queue_free()
+		nanite_cloud = null
+	if is_instance_valid(ricochet_rounds):
+		ricochet_rounds.queue_free()
+		ricochet_rounds = null
+	if is_instance_valid(chrono_burst):
+		chrono_burst.queue_free()
+		chrono_burst = null
 
 
 func clear_active_ability_nodes(nodes: Array[Node2D]) -> void:

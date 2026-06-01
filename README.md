@@ -142,16 +142,20 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Vector Thrusters, Impact Fuse, Armor Piercers, Weakpoint Scanner, Med Pump, Orbit Gears, Mine Dispenser, Drone Command, and Lucky Core.
   - The unique upgrade catalog is now 50/50, covering mobility, area damage, pierce, crit, sustain, orbit/contact damage, mines, pets, and luck-driven replayability.
   - Added Death Orbit and Breach Rounds evolutions to deepen orbit and precision late-game builds.
+- Reached the requested power count:
+  - Added Tesla Pylon, Nanite Cloud, Ricochet Rounds, and Chrono Burst, bringing the ability/power catalog to 20/20 powers.
+  - New powers add stationary electric area denial, sustain aura damage, projectile ricochet chains, and heavy crowd-control bursts.
+  - Added Time Cage and Storm Battery evolutions for late-game control and electric synergy spikes.
 
 ## Backlog
 
 ### Next
 
-- Finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
+- Run a 30-minute progression balance pass and tune the long-run curve.
 
 ### Content
 
-- Finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
+- Run a 30-minute progression balance pass and tune the long-run curve.
 
 ### Systems
 

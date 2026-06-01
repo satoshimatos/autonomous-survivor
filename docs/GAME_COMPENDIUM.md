@@ -180,6 +180,10 @@ Ability menus roll 3 weighted options from unlocked abilities. Weight increases 
 | Gravity Well | Rare | crowd-control, area | Reach level 14 | Opens a pull field on dense enemy clusters within 540px. Base interval 6.2s, -0.3s per level, minimum 2.4s. The well lasts 1.8s plus small level scaling, pulls and slows enemies in 96 + 10 per extra level radius, and damages every 0.36s. |
 | Guardian Satellite | Uncommon | orbit, defense | Survive 900s | Adds orbiting satellites that damage enemies on contact every 0.28s. Satellite count is min(1 + level, 8), orbit radius grows by 8px per level, and damage is player damage * 0.24 * 1.08^(level - 1). |
 | Railgun Orbiter | Rare | pierce, projectile | Defeat 2 total bosses | Periodically fires a piercing beam through the nearest enemy. Base interval 3.8s, -0.2s per level, minimum 1.2s. Beam length is 720px, pierces 4 + level enemies, and damage is player damage * 1.05 * 1.12^(level - 1), scaled by power damage bonuses. |
+| Tesla Pylon | Rare | electric, area | Survive 720s | Deploys a temporary pylon at dense enemy clusters within 560px. Base interval 5.8s, -0.28s per level, minimum 2.1s. The pylon lasts 2.4s plus small level scaling, zaps every 0.34s in 92 + 8 per extra level radius, damages for player damage * 0.36 * 1.09^(level - 1), and briefly slows enemies. |
+| Nanite Cloud | Uncommon | sustain, aura | Reach level 16 | Maintains a player-centered cloud. Radius is 72 + 7 per extra level. Every 0.55s it damages and lightly slows nearby enemies; every 5.4s, reduced by 0.22s per level to 2s minimum, it heals the player for 1 HP plus 1 per 4 levels. |
+| Ricochet Rounds | Rare | chain, projectile | Survive 1080s | Periodically fires bouncing damage through nearby enemies. Base interval 3.9s, -0.2s per level, minimum 1.25s. Range is 430 + 16 per extra level, starts at 4 bounces, gains more every 2 levels, and uses projectile damage multipliers. |
+| Chrono Burst | Rare | crowd-control, burst | Survive 1320s | Periodically emits a heavy time-slow burst. Base interval 7s, -0.34s per level, minimum 2.4s. Radius is 132 + 13 per extra level. Damages for player damage * 0.42 * 1.1^(level - 1) and slows enemies for 1.45s + 0.08s per level at 24% speed. |
 
 ## Evolved Synergies
 
@@ -202,6 +206,8 @@ Evolutions are checked after upgrade and ability picks. Active evolutions appear
 | Recovery Swarm | Repair Drones 3, Repair Beacon 3, Nanobots 3 | Repair Beacon effective level +2, healing received +18 percentage points, and armor reduction +3 percentage points. |
 | Death Orbit | Orbit Gears 3, Circular Saw 3, Guardian Satellite 3 | Guardian Satellite effective level +2, Barbed Wire radius +18, and contact power damage +18 percentage points. |
 | Breach Rounds | Armor Piercers 3, Weakpoint Scanner 3, Railgun Orbiter 2 | Railgun Orbiter effective level +2, projectile damage *1.16, and crit multiplier +0.25. |
+| Time Cage | Chrono Burst 3, Gravity Well 3, Field Amplifier 3 | Chrono Burst effective level +2, Gravity Well effective level +1, and splash damage *1.1. |
+| Storm Battery | Tesla Pylon 3, Volt Coils 3, Chain Lightning 3 | Tesla Pylon effective level +2, Chain Lightning effective level +1, and power damage +8 percentage points. |
 
 Projectile damage multipliers from active evolutions multiply together. Projectile scale uses the largest active scale bonus.
 
@@ -326,9 +332,13 @@ Progress is saved in `user://unlock_state.cfg`.
 | Best survival time >= 300s | Repair Beacon ability |
 | Best survival time >= 480s | Missile Pod ability |
 | Best survival time >= 600s | Chain Lightning ability |
+| Best survival time >= 720s | Tesla Pylon ability |
 | Best level >= 14 | Gravity Well ability |
 | Best survival time >= 900s | Guardian Satellite ability |
 | Total bosses defeated >= 2 | Railgun Orbiter ability |
+| Best level >= 16 | Nanite Cloud ability |
+| Best survival time >= 1080s | Ricochet Rounds ability |
+| Best survival time >= 1320s | Chrono Burst ability |
 
 ### Challenge Goals
 

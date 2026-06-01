@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/abilities/ricochet_rounds.gd" id="1_ricochet"]
+
+[node name="RicochetRounds" type="Node2D" groups=["RicochetRounds"]]
+z_index = 5
+script = ExtResource("1_ricochet")
