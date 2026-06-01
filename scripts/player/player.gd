@@ -94,6 +94,16 @@ var guardian_satellite_level: int = 0
 var guardian_satellite: Node2D
 var overdrive_core_level: int = 0
 var overdrive_core: Node2D
+var flame_wave_level: int = 0
+var flame_wave: Node2D
+var repair_beacon_level: int = 0
+var repair_beacon: Node2D
+var missile_pod_level: int = 0
+var missile_pod: Node2D
+var gravity_well_level: int = 0
+var gravity_well: Node2D
+var railgun_orbiter_level: int = 0
+var railgun_orbiter: Node2D
 var active_evolution_ids: Array[String] = []
 var evolution_catalog: Array[Dictionary] = [
 	{
@@ -138,6 +148,24 @@ var evolution_catalog: Array[Dictionary] = [
 		"requirements": {"guardian_satellite": 3, "overdrive_core": 3, "armor": 3},
 		"effects": {"guardian_satellite_level_bonus": 2, "overdrive_damage_bonus": 0.12, "armor_reduction_bonus": 0.04},
 	},
+	{
+		"id": "siege_command",
+		"name": "Siege Command",
+		"requirements": {"missile_pod": 3, "railgun_orbiter": 3, "targeting_array": 3},
+		"effects": {"missile_pod_level_bonus": 2, "railgun_orbiter_level_bonus": 2, "projectile_damage_multiplier": 1.12},
+	},
+	{
+		"id": "singularity_engine",
+		"name": "Singularity Engine",
+		"requirements": {"gravity_well": 3, "flame_wave": 3, "combustion_mix": 2},
+		"effects": {"gravity_well_level_bonus": 2, "flame_wave_level_bonus": 2, "splash_damage_multiplier": 1.12},
+	},
+	{
+		"id": "field_medic",
+		"name": "Field Medic",
+		"requirements": {"repair_beacon": 3, "nanobots": 3, "armor": 2},
+		"effects": {"repair_beacon_level_bonus": 2, "armor_reduction_bonus": 0.03, "overdrive_damage_bonus": 0.04},
+	},
 ]
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
@@ -154,6 +182,11 @@ const FREEZE_PULSE = preload("res://scenes/abilities/freeze_pulse.tscn")
 const CHAIN_LIGHTNING = preload("res://scenes/abilities/chain_lightning.tscn")
 const GUARDIAN_SATELLITE = preload("res://scenes/abilities/guardian_satellite.tscn")
 const OVERDRIVE_CORE = preload("res://scenes/abilities/overdrive_core.tscn")
+const FLAME_WAVE = preload("res://scenes/abilities/flame_wave.tscn")
+const REPAIR_BEACON = preload("res://scenes/abilities/repair_beacon.tscn")
+const MISSILE_POD = preload("res://scenes/abilities/missile_pod.tscn")
+const GRAVITY_WELL = preload("res://scenes/abilities/gravity_well.tscn")
+const RAILGUN_ORBITER = preload("res://scenes/abilities/railgun_orbiter.tscn")
 const MUZZLE_BURST_INTERVAL: float = 0.15
 const REGEN_START_INTERVAL: float = 5.0
 const REGEN_INTERVAL_STEP: float = 1.0 / 3.0
@@ -595,6 +628,16 @@ func apply_starting_ability_levels(tank: Dictionary) -> void:
 		upgrade_guardian_satellite()
 	for i in range(int(tank.get("overdrive_core_level", 0))):
 		upgrade_overdrive_core()
+	for i in range(int(tank.get("flame_wave_level", 0))):
+		upgrade_flame_wave()
+	for i in range(int(tank.get("repair_beacon_level", 0))):
+		upgrade_repair_beacon()
+	for i in range(int(tank.get("missile_pod_level", 0))):
+		upgrade_missile_pod()
+	for i in range(int(tank.get("gravity_well_level", 0))):
+		upgrade_gravity_well()
+	for i in range(int(tank.get("railgun_orbiter_level", 0))):
+		upgrade_railgun_orbiter()
 
 
 func upgrade_drone_swarm() -> void:
@@ -673,6 +716,71 @@ func upgrade_overdrive_core() -> void:
 	add_child(overdrive_core)
 	if overdrive_core.has_method("configure"):
 		overdrive_core.configure(self, overdrive_core_level)
+
+
+func upgrade_flame_wave() -> void:
+	flame_wave_level += 1
+	if is_instance_valid(flame_wave):
+		if flame_wave.has_method("update_level"):
+			flame_wave.update_level(get_effective_ability_level("flame_wave"))
+		return
+
+	flame_wave = FLAME_WAVE.instantiate()
+	add_child(flame_wave)
+	if flame_wave.has_method("configure"):
+		flame_wave.configure(self, get_effective_ability_level("flame_wave"))
+
+
+func upgrade_repair_beacon() -> void:
+	repair_beacon_level += 1
+	if is_instance_valid(repair_beacon):
+		if repair_beacon.has_method("update_level"):
+			repair_beacon.update_level(get_effective_ability_level("repair_beacon"))
+		return
+
+	repair_beacon = REPAIR_BEACON.instantiate()
+	add_child(repair_beacon)
+	if repair_beacon.has_method("configure"):
+		repair_beacon.configure(self, get_effective_ability_level("repair_beacon"))
+
+
+func upgrade_missile_pod() -> void:
+	missile_pod_level += 1
+	if is_instance_valid(missile_pod):
+		if missile_pod.has_method("update_level"):
+			missile_pod.update_level(get_effective_ability_level("missile_pod"))
+		return
+
+	missile_pod = MISSILE_POD.instantiate()
+	add_child(missile_pod)
+	if missile_pod.has_method("configure"):
+		missile_pod.configure(self, get_effective_ability_level("missile_pod"))
+
+
+func upgrade_gravity_well() -> void:
+	gravity_well_level += 1
+	if is_instance_valid(gravity_well):
+		if gravity_well.has_method("update_level"):
+			gravity_well.update_level(get_effective_ability_level("gravity_well"))
+		return
+
+	gravity_well = GRAVITY_WELL.instantiate()
+	add_child(gravity_well)
+	if gravity_well.has_method("configure"):
+		gravity_well.configure(self, get_effective_ability_level("gravity_well"))
+
+
+func upgrade_railgun_orbiter() -> void:
+	railgun_orbiter_level += 1
+	if is_instance_valid(railgun_orbiter):
+		if railgun_orbiter.has_method("update_level"):
+			railgun_orbiter.update_level(get_effective_ability_level("railgun_orbiter"))
+		return
+
+	railgun_orbiter = RAILGUN_ORBITER.instantiate()
+	add_child(railgun_orbiter)
+	if railgun_orbiter.has_method("configure"):
+		railgun_orbiter.configure(self, get_effective_ability_level("railgun_orbiter"))
 
 
 func process_landmine_placement(delta: float) -> void:
@@ -1151,6 +1259,16 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return guardian_satellite_level
 		"overdrive_core":
 			return overdrive_core_level
+		"flame_wave":
+			return flame_wave_level
+		"repair_beacon":
+			return repair_beacon_level
+		"missile_pod":
+			return missile_pod_level
+		"gravity_well":
+			return gravity_well_level
+		"railgun_orbiter":
+			return railgun_orbiter_level
 	return 0
 
 
@@ -1163,6 +1281,16 @@ func apply_evolution_runtime_updates() -> void:
 		chain_lightning.update_level(get_effective_ability_level("chain_lightning"))
 	if is_instance_valid(guardian_satellite) and guardian_satellite.has_method("update_level"):
 		guardian_satellite.update_level(get_effective_ability_level("guardian_satellite"))
+	if is_instance_valid(flame_wave) and flame_wave.has_method("update_level"):
+		flame_wave.update_level(get_effective_ability_level("flame_wave"))
+	if is_instance_valid(repair_beacon) and repair_beacon.has_method("update_level"):
+		repair_beacon.update_level(get_effective_ability_level("repair_beacon"))
+	if is_instance_valid(missile_pod) and missile_pod.has_method("update_level"):
+		missile_pod.update_level(get_effective_ability_level("missile_pod"))
+	if is_instance_valid(gravity_well) and gravity_well.has_method("update_level"):
+		gravity_well.update_level(get_effective_ability_level("gravity_well"))
+	if is_instance_valid(railgun_orbiter) and railgun_orbiter.has_method("update_level"):
+		railgun_orbiter.update_level(get_effective_ability_level("railgun_orbiter"))
 	update_barbed_wire_visual()
 	spawn_evolution_burst()
 
@@ -1177,6 +1305,16 @@ func get_effective_ability_level(ability_id: String) -> int:
 			return chain_lightning_level + int(get_evolution_effect_value("chain_lightning_level_bonus"))
 		"guardian_satellite":
 			return guardian_satellite_level + int(get_evolution_effect_value("guardian_satellite_level_bonus"))
+		"flame_wave":
+			return flame_wave_level + int(get_evolution_effect_value("flame_wave_level_bonus"))
+		"repair_beacon":
+			return repair_beacon_level + int(get_evolution_effect_value("repair_beacon_level_bonus"))
+		"missile_pod":
+			return missile_pod_level + int(get_evolution_effect_value("missile_pod_level_bonus"))
+		"gravity_well":
+			return gravity_well_level + int(get_evolution_effect_value("gravity_well_level_bonus"))
+		"railgun_orbiter":
+			return railgun_orbiter_level + int(get_evolution_effect_value("railgun_orbiter_level_bonus"))
 	return get_build_level_for_evolution(ability_id)
 
 
@@ -1352,6 +1490,21 @@ func disable_combat_on_death() -> void:
 	if is_instance_valid(overdrive_core):
 		overdrive_core.queue_free()
 		overdrive_core = null
+	if is_instance_valid(flame_wave):
+		flame_wave.queue_free()
+		flame_wave = null
+	if is_instance_valid(repair_beacon):
+		repair_beacon.queue_free()
+		repair_beacon = null
+	if is_instance_valid(missile_pod):
+		missile_pod.queue_free()
+		missile_pod = null
+	if is_instance_valid(gravity_well):
+		gravity_well.queue_free()
+		gravity_well = null
+	if is_instance_valid(railgun_orbiter):
+		railgun_orbiter.queue_free()
+		railgun_orbiter = null
 
 
 func clear_active_ability_nodes(nodes: Array[Node2D]) -> void:

@@ -1,0 +1,7 @@
+[gd_scene load_steps=2 format=3]
+
+[ext_resource type="Script" path="res://scripts/abilities/railgun_orbiter.gd" id="1_rail"]
+
+[node name="RailgunOrbiter" type="Node2D" groups=["RailgunOrbiter"]]
+z_index = 5
+script = ExtResource("1_rail")

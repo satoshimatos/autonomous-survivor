@@ -96,10 +96,20 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("modifier", "unstable_engine", "Unstable Engine modifier", unlocked_messages)
 	if best_level >= 12:
 		try_unlock("ability", "overdrive_core", "Overdrive Core ability", unlocked_messages)
+	if best_survival_seconds >= 240:
+		try_unlock("ability", "flame_wave", "Flame Wave ability", unlocked_messages)
+	if best_survival_seconds >= 300:
+		try_unlock("ability", "repair_beacon", "Repair Beacon ability", unlocked_messages)
+	if best_survival_seconds >= 480:
+		try_unlock("ability", "missile_pod", "Missile Pod ability", unlocked_messages)
 	if best_survival_seconds >= 600:
 		try_unlock("ability", "chain_lightning", "Chain Lightning ability", unlocked_messages)
+	if best_level >= 14:
+		try_unlock("ability", "gravity_well", "Gravity Well ability", unlocked_messages)
 	if best_survival_seconds >= 900:
 		try_unlock("ability", "guardian_satellite", "Guardian Satellite ability", unlocked_messages)
+	if total_bosses_defeated >= 2:
+		try_unlock("ability", "railgun_orbiter", "Railgun Orbiter ability", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:

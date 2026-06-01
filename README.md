@@ -129,16 +129,21 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Gyro Stabilizer, Rapid Loader, High Caliber, Nanobots, Kinetic Treads, Ammo Synthesizer, Shatter Rounds, Phase Core, Capacitor Bank, Salvage Magnet, Emergency Repairs, and Combustion Mix.
   - New upgrades feed existing projectile, splash, piercing, healing, economy, movement, rotation, power-damage, and low-health sustain systems.
   - Upgrade cards, HUD stats, inventory, run summaries, ability synergies, and the compendium now include the new upgrade IDs.
+- Added another power batch:
+  - Added Flame Wave, Repair Beacon, Missile Pod, Gravity Well, and Railgun Orbiter, bringing the ability/power catalog to 16 powers.
+  - New powers add radial burn waves, sustain pulses, splash missile targeting, enemy-cluster pull fields, and piercing beam damage.
+  - Added Siege Command, Singularity Engine, and Field Medic evolutions to push late-game build synergies higher.
+  - New powers are wired into unlock progression, weighted ability rolls, inventory, run summaries, scene validation, and the compendium.
 
 ## Backlog
 
 ### Next
 
-- Add another power batch toward 20 powers, then continue upgrade expansion toward 50 unique upgrades.
+- Add another upgrade branch batch toward 50 unique upgrades, then finish the last 4 powers toward 20 total.
 
 ### Content
 
-- Add another power batch toward 20 powers, then continue upgrade expansion toward 50 unique upgrades.
+- Add another upgrade branch batch toward 50 unique upgrades, then finish the last 4 powers toward 20 total.
 
 ### Systems
 

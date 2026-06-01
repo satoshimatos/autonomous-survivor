@@ -19,6 +19,11 @@ func _init() -> void:
 		"res://scenes/abilities/chain_lightning.tscn",
 		"res://scenes/abilities/guardian_satellite.tscn",
 		"res://scenes/abilities/overdrive_core.tscn",
+		"res://scenes/abilities/flame_wave.tscn",
+		"res://scenes/abilities/repair_beacon.tscn",
+		"res://scenes/abilities/missile_pod.tscn",
+		"res://scenes/abilities/gravity_well.tscn",
+		"res://scenes/abilities/railgun_orbiter.tscn",
 		"res://scenes/effects/boss_hazard.tscn",
 		"res://scenes/ui/ability_menu.tscn",
 	]

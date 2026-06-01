@@ -1643,6 +1643,11 @@ func get_build_level_snapshot() -> Dictionary:
 		"chain_lightning": player.chain_lightning_level,
 		"guardian_satellite": player.guardian_satellite_level,
 		"overdrive_core": player.overdrive_core_level,
+		"flame_wave": player.flame_wave_level,
+		"repair_beacon": player.repair_beacon_level,
+		"missile_pod": player.missile_pod_level,
+		"gravity_well": player.gravity_well_level,
+		"railgun_orbiter": player.railgun_orbiter_level,
 	}
 
 
@@ -1688,6 +1693,11 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Chain Lightning", player.chain_lightning_level)
 	add_build_entry(entries, "Guardian Satellite", player.guardian_satellite_level)
 	add_build_entry(entries, "Overdrive Core", player.overdrive_core_level)
+	add_build_entry(entries, "Flame Wave", player.flame_wave_level)
+	add_build_entry(entries, "Repair Beacon", player.repair_beacon_level)
+	add_build_entry(entries, "Missile Pod", player.missile_pod_level)
+	add_build_entry(entries, "Gravity Well", player.gravity_well_level)
+	add_build_entry(entries, "Railgun Orbiter", player.railgun_orbiter_level)
 	return get_entries_sorted_by_level(entries)
 
 
@@ -1758,6 +1768,11 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Chain Lightning", player.chain_lightning_level),
 		format_upgrade_inventory_row("Guardian Satellite", player.guardian_satellite_level),
 		format_upgrade_inventory_row("Overdrive Core", player.overdrive_core_level),
+		format_upgrade_inventory_row("Flame Wave", player.flame_wave_level),
+		format_upgrade_inventory_row("Repair Beacon", player.repair_beacon_level),
+		format_upgrade_inventory_row("Missile Pod", player.missile_pod_level),
+		format_upgrade_inventory_row("Gravity Well", player.gravity_well_level),
+		format_upgrade_inventory_row("Railgun Orbiter", player.railgun_orbiter_level),
 	]
 	if player.has_method("get_active_evolution_names"):
 		var evolution_names: Array[String] = player.get_active_evolution_names()

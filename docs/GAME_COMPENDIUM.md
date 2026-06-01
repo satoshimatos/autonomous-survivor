@@ -152,8 +152,13 @@ Ability menus roll 3 weighted options from unlocked abilities. Weight increases 
 | Artillery | Rare | area, burst | Defeat 1 total boss | Targets dense enemy clusters within 520px. Base interval 4s, -0.28s per level, minimum 1.4s. Telegraphs for 0.55s, then creates a splash radius 82 + 9 per extra level. Damage is player damage * 2.1 * 1.18^(level - 1). Gains late weight at player level 12. |
 | Freeze Pulse | Rare | burst, crowd-control | Reach level 10 | Periodically bursts around the player. Base interval 6s, -0.42s per level, minimum 2s. Radius is 120 + 15 per extra level. Damage is player damage * 0.58 * 1.12^(level - 1). Slows for 1.25s + 0.08s per level at 16% speed. Gains late weight at player level 10. |
 | Overdrive Core | Rare | buff, mobility | Reach level 12 | Adds a permanent power core. Damage multiplier starts at +8% and adds +3.5% per extra level. Move speed multiplier starts at +4% and adds +1.5% per extra level. |
+| Flame Wave | Uncommon | area, burn | Survive 240s | Periodically emits a radial heat wave. Base interval 5.2s, -0.32s per level, minimum 1.8s. Radius is 112 + 14 per extra level. Damage is player damage * 0.72 * 1.13^(level - 1), scaled by area and power damage bonuses, and briefly slows enemies. |
+| Repair Beacon | Uncommon | sustain, support | Survive 300s | Periodically pulses from the player. Base interval 6.5s, -0.28s per level, minimum 2.8s. Each pulse heals 1 HP, +1 per 3 levels, then lightly damages and slows enemies in 88 + 8 per extra level radius. |
+| Missile Pod | Uncommon | area, projectile | Survive 480s | Fires splash missiles at nearby enemies. Base interval 4.4s, -0.24s per level, minimum 1.4s. Missile count is min(2 + level / 2, 8). Each missile creates a splash radius 42 + 3 per extra level and scales with area and power damage bonuses. |
 | Chain Lightning | Rare | chain, crowd-control | Survive 600s | Every 4.8s, reduced by 0.25s per level to 1.8s minimum, strikes nearby enemies in a chain. Starts with 3 jumps, gains more jumps every 2 levels, deals player damage * 0.48 * 1.1^(level - 1), and briefly slows targets. |
+| Gravity Well | Rare | crowd-control, area | Reach level 14 | Opens a pull field on dense enemy clusters within 540px. Base interval 6.2s, -0.3s per level, minimum 2.4s. The well lasts 1.8s plus small level scaling, pulls and slows enemies in 96 + 10 per extra level radius, and damages every 0.36s. |
 | Guardian Satellite | Uncommon | orbit, defense | Survive 900s | Adds orbiting satellites that damage enemies on contact every 0.28s. Satellite count is min(1 + level, 8), orbit radius grows by 8px per level, and damage is player damage * 0.24 * 1.08^(level - 1). |
+| Railgun Orbiter | Rare | pierce, projectile | Defeat 2 total bosses | Periodically fires a piercing beam through the nearest enemy. Base interval 3.8s, -0.2s per level, minimum 1.2s. Beam length is 720px, pierces 4 + level enemies, and damage is player damage * 1.05 * 1.12^(level - 1), scaled by power damage bonuses. |
 
 ## Evolved Synergies
 
@@ -168,6 +173,9 @@ Evolutions are checked after upgrade and ability picks. Active evolutions appear
 | Repair Loop | Recycler 3, Alloy Plating 3, Reactive Shield 2 | Recycler heal chance +8 percentage points and armor reduction +5 percentage points. |
 | Storm Grid | Chain Lightning 3, Shock Field 3, Freeze Pulse 2 | Chain Lightning effective level +2 and Shock Field effective level +1. |
 | Guardian Protocol | Guardian Satellite 3, Overdrive Core 3, Armor 3 | Guardian Satellite effective level +2, Overdrive damage bonus +12 percentage points, and armor reduction +4 percentage points. |
+| Siege Command | Missile Pod 3, Railgun Orbiter 3, Targeting Array 3 | Missile Pod and Railgun Orbiter effective levels +2, projectile damage *1.12. |
+| Singularity Engine | Gravity Well 3, Flame Wave 3, Combustion Mix 2 | Gravity Well and Flame Wave effective levels +2, splash damage *1.12. |
+| Field Medic | Repair Beacon 3, Nanobots 3, Armor 2 | Repair Beacon effective level +2, armor reduction +3 percentage points, and power damage +4 percentage points. |
 
 Projectile damage multipliers from active evolutions multiply together. Projectile scale uses the largest active scale bonus.
 
@@ -288,8 +296,13 @@ Progress is saved in `user://unlock_state.cfg`.
 | Best enemies defeated >= 250 | Engineer tank, Salvage Field modifier |
 | Best level >= 10 | Freeze Pulse ability, Unstable Engine modifier |
 | Best level >= 12 | Overdrive Core ability |
+| Best survival time >= 240s | Flame Wave ability |
+| Best survival time >= 300s | Repair Beacon ability |
+| Best survival time >= 480s | Missile Pod ability |
 | Best survival time >= 600s | Chain Lightning ability |
+| Best level >= 14 | Gravity Well ability |
 | Best survival time >= 900s | Guardian Satellite ability |
+| Total bosses defeated >= 2 | Railgun Orbiter ability |
 
 ### Challenge Goals
 

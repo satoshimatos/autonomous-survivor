@@ -21,6 +21,11 @@ var ability_catalog: Array[Dictionary] = [
 	{"id": "chain_lightning", "label": "+ CHAIN LIGHTNING", "method": "upgrade_chain_lightning", "level_property": "chain_lightning_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 12, "late_weight_multiplier": 1.7, "tags": ["chain", "crowd-control"], "synergy_upgrades": ["damage", "fire_rate", "targeting_array"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
 	{"id": "guardian_satellite", "label": "+ GUARDIAN SATELLITE", "method": "upgrade_guardian_satellite", "level_property": "guardian_satellite_level", "rarity": "Uncommon", "base_weight": 11.0, "tags": ["orbit", "defense"], "synergy_upgrades": ["armor", "payload_rack", "reactive_shield"], "synergy_abilities": ["circular_saw_level", "overdrive_core_level"]},
 	{"id": "overdrive_core", "label": "+ OVERDRIVE CORE", "method": "upgrade_overdrive_core", "level_property": "overdrive_core_level", "rarity": "Rare", "base_weight": 8.5, "late_level": 8, "late_weight_multiplier": 1.4, "tags": ["buff", "mobility"], "synergy_upgrades": ["speed", "damage", "accelerator"], "synergy_abilities": ["guardian_satellite_level", "drone_swarm_level"]},
+	{"id": "flame_wave", "label": "+ FLAME WAVE", "method": "upgrade_flame_wave", "level_property": "flame_wave_level", "rarity": "Uncommon", "base_weight": 11.0, "late_level": 6, "late_weight_multiplier": 1.45, "tags": ["area", "burn"], "synergy_upgrades": ["damage", "combustion_mix", "splash"], "synergy_abilities": ["oil_slick_level", "gravity_well_level"]},
+	{"id": "repair_beacon", "label": "+ REPAIR BEACON", "method": "upgrade_repair_beacon", "level_property": "repair_beacon_level", "rarity": "Uncommon", "base_weight": 9.5, "late_level": 7, "late_weight_multiplier": 1.35, "tags": ["sustain", "support"], "synergy_upgrades": ["armor", "nanobots", "reactive_shield"], "synergy_abilities": ["guardian_satellite_level", "overdrive_core_level"]},
+	{"id": "missile_pod", "label": "+ MISSILE POD", "method": "upgrade_missile_pod", "level_property": "missile_pod_level", "rarity": "Uncommon", "base_weight": 10.0, "late_level": 8, "late_weight_multiplier": 1.55, "tags": ["area", "projectile"], "synergy_upgrades": ["payload_rack", "targeting_array", "combustion_mix"], "synergy_abilities": ["artillery_level", "railgun_orbiter_level"]},
+	{"id": "gravity_well", "label": "+ GRAVITY WELL", "method": "upgrade_gravity_well", "level_property": "gravity_well_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 14, "late_weight_multiplier": 1.8, "tags": ["crowd-control", "area"], "synergy_upgrades": ["capacitor_bank", "barbed_wire", "combustion_mix"], "synergy_abilities": ["flame_wave_level", "chain_lightning_level"]},
+	{"id": "railgun_orbiter", "label": "+ RAILGUN ORBITER", "method": "upgrade_railgun_orbiter", "level_property": "railgun_orbiter_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 14, "late_weight_multiplier": 1.75, "tags": ["pierce", "projectile"], "synergy_upgrades": ["targeting_array", "accelerator", "high_caliber"], "synergy_abilities": ["missile_pod_level", "drone_swarm_level"]},
 ]
 
 @onready var ability_buttons: Array[Button] = [
@@ -165,6 +170,12 @@ func get_upgrade_level(upgrade_id: String) -> int:
 			return player.high_caliber_level
 		"capacitor_bank":
 			return player.capacitor_bank_level
+		"combustion_mix":
+			return player.combustion_mix_level
+		"nanobots":
+			return player.nanobots_level
+		"shatter_rounds":
+			return player.shatter_rounds_level
 	return 0
 
 
