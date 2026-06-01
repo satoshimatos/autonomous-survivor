@@ -38,6 +38,18 @@ var upgrade_catalog: Dictionary = {
 	"salvage_magnet": {"title": "+ SALVAGE MAGNET", "tag": "ECONOMY", "hint": "Boosts EXP value and pickup pull radius.", "synergy": ["magnet", "exp", "recycler"]},
 	"emergency_repairs": {"title": "+ EMERGENCY REPAIRS", "tag": "SUSTAIN", "hint": "Repairs the tank while critically damaged.", "synergy": ["armor", "nanobots", "reactive_shield"]},
 	"combustion_mix": {"title": "+ COMBUSTION MIX", "tag": "AREA", "hint": "Raises splash and contact-area damage.", "synergy": ["splash", "barbed_wire", "landmine_level"]},
+	"heat_sinks": {"title": "+ HEAT SINKS", "tag": "TEMPO", "hint": "Lowers firing interval without adding shots.", "synergy": ["fire_rate", "overdrive_core_level", "railgun_orbiter_level"]},
+	"overclocked_barrel": {"title": "+ OVERCLOCKED BARREL", "tag": "WEAPON", "hint": "Raises damage while slightly lowering fire interval.", "synergy": ["damage", "rapid_loader", "heat_sinks"]},
+	"rail_stabilizer": {"title": "+ RAIL STABILIZER", "tag": "PRECISION", "hint": "Adds crit chance and boosts Railgun Orbiter levels.", "synergy": ["targeting_array", "railgun_orbiter_level", "accelerator"]},
+	"missile_guidance": {"title": "+ MISSILE GUIDANCE", "tag": "AREA", "hint": "Boosts Missile Pod levels and adds blast radius.", "synergy": ["missile_pod_level", "payload_rack", "ordnance_bay"]},
+	"ordnance_bay": {"title": "+ ORDNANCE BAY", "tag": "AREA", "hint": "Raises splash radius, splash damage, and siege power levels.", "synergy": ["splash", "artillery_level", "missile_pod_level"]},
+	"field_amplifier": {"title": "+ FIELD AMPLIFIER", "tag": "AURA", "hint": "Boosts aura and field powers every two levels.", "synergy": ["shock_field_level", "flame_wave_level", "gravity_well_level"]},
+	"volt_coils": {"title": "+ VOLT COILS", "tag": "POWER", "hint": "Boosts electric powers and power damage.", "synergy": ["chain_lightning_level", "shock_field_level", "capacitor_bank"]},
+	"gravity_anchor": {"title": "+ GRAVITY ANCHOR", "tag": "CONTROL", "hint": "Boosts Gravity Well and area damage.", "synergy": ["gravity_well_level", "combustion_mix", "barbed_wire"]},
+	"repair_drones": {"title": "+ REPAIR DRONES", "tag": "SUSTAIN", "hint": "Improves healing and Repair Beacon level.", "synergy": ["repair_beacon_level", "nanobots", "recycler"]},
+	"crystal_lens": {"title": "+ CRYSTAL LENS", "tag": "ECONOMY", "hint": "Adds EXP value and crit chance.", "synergy": ["exp", "salvage_magnet", "targeting_array"]},
+	"munition_printer": {"title": "+ MUNITION PRINTER", "tag": "MULTISHOT", "hint": "Adds periodic extra shots to volleys.", "synergy": ["cannon", "ammo_synthesizer", "ordnance_bay"]},
+	"stabilized_chassis": {"title": "+ STABILIZED CHASSIS", "tag": "DEFENSE", "hint": "Adds armor reduction and rotation control.", "synergy": ["armor", "gyro_stabilizer", "reactive_shield"]},
 }
 
 @onready var buttons: Array[Button] = [
@@ -168,6 +180,46 @@ func get_synergy_level(synergy_id: String) -> int:
 			return player.emergency_repairs_level
 		"combustion_mix":
 			return player.combustion_mix_level
+		"heat_sinks":
+			return player.heat_sinks_level
+		"overclocked_barrel":
+			return player.overclocked_barrel_level
+		"rail_stabilizer":
+			return player.rail_stabilizer_level
+		"missile_guidance":
+			return player.missile_guidance_level
+		"ordnance_bay":
+			return player.ordnance_bay_level
+		"field_amplifier":
+			return player.field_amplifier_level
+		"volt_coils":
+			return player.volt_coils_level
+		"gravity_anchor":
+			return player.gravity_anchor_level
+		"repair_drones":
+			return player.repair_drones_level
+		"crystal_lens":
+			return player.crystal_lens_level
+		"munition_printer":
+			return player.munition_printer_level
+		"stabilized_chassis":
+			return player.stabilized_chassis_level
+		"chain_lightning_level":
+			return player.chain_lightning_level
+		"guardian_satellite_level":
+			return player.guardian_satellite_level
+		"overdrive_core_level":
+			return player.overdrive_core_level
+		"flame_wave_level":
+			return player.flame_wave_level
+		"repair_beacon_level":
+			return player.repair_beacon_level
+		"missile_pod_level":
+			return player.missile_pod_level
+		"gravity_well_level":
+			return player.gravity_well_level
+		"railgun_orbiter_level":
+			return player.railgun_orbiter_level
 		"landmine_level":
 			return player.landmine_level
 		"circular_saw_level":
@@ -239,6 +291,46 @@ func get_synergy_label(synergy_id: String) -> String:
 			return "Emergency Repairs"
 		"combustion_mix":
 			return "Combustion Mix"
+		"heat_sinks":
+			return "Heat Sinks"
+		"overclocked_barrel":
+			return "Overclocked Barrel"
+		"rail_stabilizer":
+			return "Rail Stabilizer"
+		"missile_guidance":
+			return "Missile Guidance"
+		"ordnance_bay":
+			return "Ordnance Bay"
+		"field_amplifier":
+			return "Field Amplifier"
+		"volt_coils":
+			return "Volt Coils"
+		"gravity_anchor":
+			return "Gravity Anchor"
+		"repair_drones":
+			return "Repair Drones"
+		"crystal_lens":
+			return "Crystal Lens"
+		"munition_printer":
+			return "Munition Printer"
+		"stabilized_chassis":
+			return "Stabilized Chassis"
+		"chain_lightning_level":
+			return "Chain Lightning"
+		"guardian_satellite_level":
+			return "Guardian Satellite"
+		"overdrive_core_level":
+			return "Overdrive Core"
+		"flame_wave_level":
+			return "Flame Wave"
+		"repair_beacon_level":
+			return "Repair Beacon"
+		"missile_pod_level":
+			return "Missile Pod"
+		"gravity_well_level":
+			return "Gravity Well"
+		"railgun_orbiter_level":
+			return "Railgun Orbiter"
 	return synergy_id.capitalize()
 
 

@@ -14,18 +14,18 @@ var ability_catalog: Array[Dictionary] = [
 	{"id": "circular_saw", "label": "+1 CIRCULAR SAW", "method": "upgrade_circular_saw", "level_property": "circular_saw_level", "rarity": "Common", "base_weight": 17.0, "tags": ["orbit", "contact"], "synergy_upgrades": ["damage", "armor", "speed"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
 	{"id": "footsoldier", "label": "+ FOOTSOLDIER", "method": "upgrade_footsoldier", "level_property": "footsoldier_level", "rarity": "Uncommon", "base_weight": 13.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "piercing"], "synergy_abilities": ["drone_swarm_level"]},
 	{"id": "shock_field", "label": "+ SHOCK FIELD", "method": "upgrade_shock_field", "level_property": "shock_field_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["aura", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["circular_saw_level", "freeze_pulse_level"]},
-	{"id": "artillery", "label": "+ ARTILLERY", "method": "upgrade_artillery", "level_property": "artillery_level", "rarity": "Rare", "base_weight": 8.0, "late_level": 12, "late_weight_multiplier": 1.65, "tags": ["area", "burst"], "synergy_upgrades": ["damage", "splash", "magnet"], "synergy_abilities": ["landmine_level", "oil_slick_level"]},
+	{"id": "artillery", "label": "+ ARTILLERY", "method": "upgrade_artillery", "level_property": "artillery_level", "rarity": "Rare", "base_weight": 8.0, "late_level": 12, "late_weight_multiplier": 1.65, "tags": ["area", "burst"], "synergy_upgrades": ["damage", "splash", "ordnance_bay"], "synergy_abilities": ["landmine_level", "oil_slick_level"]},
 	{"id": "drone_swarm", "label": "+ DRONE SWARM", "method": "upgrade_drone_swarm", "level_property": "drone_swarm_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "cannon"], "synergy_abilities": ["footsoldier_level"]},
 	{"id": "oil_slick", "label": "+ OIL SLICK", "method": "upgrade_oil_slick", "level_property": "oil_slick_level", "rarity": "Common", "base_weight": 15.0, "tags": ["device", "crowd-control"], "synergy_upgrades": ["speed", "armor"], "synergy_abilities": ["landmine_level", "artillery_level"]},
 	{"id": "freeze_pulse", "label": "+ FREEZE PULSE", "method": "upgrade_freeze_pulse", "level_property": "freeze_pulse_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 10, "late_weight_multiplier": 1.8, "tags": ["burst", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["shock_field_level", "circular_saw_level"]},
-	{"id": "chain_lightning", "label": "+ CHAIN LIGHTNING", "method": "upgrade_chain_lightning", "level_property": "chain_lightning_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 12, "late_weight_multiplier": 1.7, "tags": ["chain", "crowd-control"], "synergy_upgrades": ["damage", "fire_rate", "targeting_array"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
+	{"id": "chain_lightning", "label": "+ CHAIN LIGHTNING", "method": "upgrade_chain_lightning", "level_property": "chain_lightning_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 12, "late_weight_multiplier": 1.7, "tags": ["chain", "crowd-control"], "synergy_upgrades": ["damage", "volt_coils", "capacitor_bank"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
 	{"id": "guardian_satellite", "label": "+ GUARDIAN SATELLITE", "method": "upgrade_guardian_satellite", "level_property": "guardian_satellite_level", "rarity": "Uncommon", "base_weight": 11.0, "tags": ["orbit", "defense"], "synergy_upgrades": ["armor", "payload_rack", "reactive_shield"], "synergy_abilities": ["circular_saw_level", "overdrive_core_level"]},
 	{"id": "overdrive_core", "label": "+ OVERDRIVE CORE", "method": "upgrade_overdrive_core", "level_property": "overdrive_core_level", "rarity": "Rare", "base_weight": 8.5, "late_level": 8, "late_weight_multiplier": 1.4, "tags": ["buff", "mobility"], "synergy_upgrades": ["speed", "damage", "accelerator"], "synergy_abilities": ["guardian_satellite_level", "drone_swarm_level"]},
-	{"id": "flame_wave", "label": "+ FLAME WAVE", "method": "upgrade_flame_wave", "level_property": "flame_wave_level", "rarity": "Uncommon", "base_weight": 11.0, "late_level": 6, "late_weight_multiplier": 1.45, "tags": ["area", "burn"], "synergy_upgrades": ["damage", "combustion_mix", "splash"], "synergy_abilities": ["oil_slick_level", "gravity_well_level"]},
-	{"id": "repair_beacon", "label": "+ REPAIR BEACON", "method": "upgrade_repair_beacon", "level_property": "repair_beacon_level", "rarity": "Uncommon", "base_weight": 9.5, "late_level": 7, "late_weight_multiplier": 1.35, "tags": ["sustain", "support"], "synergy_upgrades": ["armor", "nanobots", "reactive_shield"], "synergy_abilities": ["guardian_satellite_level", "overdrive_core_level"]},
-	{"id": "missile_pod", "label": "+ MISSILE POD", "method": "upgrade_missile_pod", "level_property": "missile_pod_level", "rarity": "Uncommon", "base_weight": 10.0, "late_level": 8, "late_weight_multiplier": 1.55, "tags": ["area", "projectile"], "synergy_upgrades": ["payload_rack", "targeting_array", "combustion_mix"], "synergy_abilities": ["artillery_level", "railgun_orbiter_level"]},
-	{"id": "gravity_well", "label": "+ GRAVITY WELL", "method": "upgrade_gravity_well", "level_property": "gravity_well_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 14, "late_weight_multiplier": 1.8, "tags": ["crowd-control", "area"], "synergy_upgrades": ["capacitor_bank", "barbed_wire", "combustion_mix"], "synergy_abilities": ["flame_wave_level", "chain_lightning_level"]},
-	{"id": "railgun_orbiter", "label": "+ RAILGUN ORBITER", "method": "upgrade_railgun_orbiter", "level_property": "railgun_orbiter_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 14, "late_weight_multiplier": 1.75, "tags": ["pierce", "projectile"], "synergy_upgrades": ["targeting_array", "accelerator", "high_caliber"], "synergy_abilities": ["missile_pod_level", "drone_swarm_level"]},
+	{"id": "flame_wave", "label": "+ FLAME WAVE", "method": "upgrade_flame_wave", "level_property": "flame_wave_level", "rarity": "Uncommon", "base_weight": 11.0, "late_level": 6, "late_weight_multiplier": 1.45, "tags": ["area", "burn"], "synergy_upgrades": ["field_amplifier", "combustion_mix", "splash"], "synergy_abilities": ["oil_slick_level", "gravity_well_level"]},
+	{"id": "repair_beacon", "label": "+ REPAIR BEACON", "method": "upgrade_repair_beacon", "level_property": "repair_beacon_level", "rarity": "Uncommon", "base_weight": 9.5, "late_level": 7, "late_weight_multiplier": 1.35, "tags": ["sustain", "support"], "synergy_upgrades": ["repair_drones", "nanobots", "reactive_shield"], "synergy_abilities": ["guardian_satellite_level", "overdrive_core_level"]},
+	{"id": "missile_pod", "label": "+ MISSILE POD", "method": "upgrade_missile_pod", "level_property": "missile_pod_level", "rarity": "Uncommon", "base_weight": 10.0, "late_level": 8, "late_weight_multiplier": 1.55, "tags": ["area", "projectile"], "synergy_upgrades": ["missile_guidance", "ordnance_bay", "combustion_mix"], "synergy_abilities": ["artillery_level", "railgun_orbiter_level"]},
+	{"id": "gravity_well", "label": "+ GRAVITY WELL", "method": "upgrade_gravity_well", "level_property": "gravity_well_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 14, "late_weight_multiplier": 1.8, "tags": ["crowd-control", "area"], "synergy_upgrades": ["gravity_anchor", "field_amplifier", "combustion_mix"], "synergy_abilities": ["flame_wave_level", "chain_lightning_level"]},
+	{"id": "railgun_orbiter", "label": "+ RAILGUN ORBITER", "method": "upgrade_railgun_orbiter", "level_property": "railgun_orbiter_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 14, "late_weight_multiplier": 1.75, "tags": ["pierce", "projectile"], "synergy_upgrades": ["rail_stabilizer", "accelerator", "high_caliber"], "synergy_abilities": ["missile_pod_level", "drone_swarm_level"]},
 ]
 
 @onready var ability_buttons: Array[Button] = [
@@ -176,6 +176,30 @@ func get_upgrade_level(upgrade_id: String) -> int:
 			return player.nanobots_level
 		"shatter_rounds":
 			return player.shatter_rounds_level
+		"heat_sinks":
+			return player.heat_sinks_level
+		"overclocked_barrel":
+			return player.overclocked_barrel_level
+		"rail_stabilizer":
+			return player.rail_stabilizer_level
+		"missile_guidance":
+			return player.missile_guidance_level
+		"ordnance_bay":
+			return player.ordnance_bay_level
+		"field_amplifier":
+			return player.field_amplifier_level
+		"volt_coils":
+			return player.volt_coils_level
+		"gravity_anchor":
+			return player.gravity_anchor_level
+		"repair_drones":
+			return player.repair_drones_level
+		"crystal_lens":
+			return player.crystal_lens_level
+		"munition_printer":
+			return player.munition_printer_level
+		"stabilized_chassis":
+			return player.stabilized_chassis_level
 	return 0
 
 

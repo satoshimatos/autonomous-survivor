@@ -136,6 +136,18 @@ Accessories are part of the normal 3-choice upgrade pool. They are lightweight s
 | Salvage Magnet | Improves economy and pickup reach. | +8% EXP value and +24px EXP pull radius per level. | Magnet, EXP, Recycler |
 | Emergency Repairs | Repairs while critically damaged. | At or below 42% health, heals Emergency Repairs level HP every 9s. | Armor, Nanobots, Reactive Shield |
 | Combustion Mix | Improves area and contact damage. | Splash, Barbed Wire, and other area/contact damage gain +6.5% per level. | Splash, Barbed Wire, Landmine |
+| Heat Sinks | Improves weapon tempo. | Fire interval multiplies by 0.965 per level. | Fire Rate, Overdrive Core, Railgun Orbiter |
+| Overclocked Barrel | Improves damage and tempo together. | Attack damage multiplies by 1.07 and fire interval multiplies by 0.97 per level. | Damage, Rapid Loader, Heat Sinks |
+| Rail Stabilizer | Improves precision builds and Railgun Orbiter. | +2.5% crit chance per level; Railgun Orbiter gains +1 effective level every 2 levels. | Targeting Array, Railgun Orbiter, Accelerator |
+| Missile Guidance | Improves missile and splash builds. | +2px splash radius per level; Missile Pod gains effective levels from Missile Guidance plus Ordnance Bay. | Missile Pod, Payload Rack, Ordnance Bay |
+| Ordnance Bay | Improves siege and splash builds. | +5px splash radius and +4.5% splash damage per level; Artillery gains +1 effective level every 2 levels; Missile Pod shares effective-level scaling with Missile Guidance. | Splash, Artillery, Missile Pod |
+| Field Amplifier | Improves aura and field powers. | Shock Field, Flame Wave, Repair Beacon, and Gravity Well gain +1 effective level every 2 levels. | Shock Field, Flame Wave, Gravity Well |
+| Volt Coils | Improves electric powers and power damage. | +3% power damage per level; Shock Field and Chain Lightning gain +1 effective level every 2 levels. | Chain Lightning, Shock Field, Capacitor Bank |
+| Gravity Anchor | Improves control-area builds. | +4% area damage per level; Gravity Well shares effective-level scaling with Field Amplifier. | Gravity Well, Combustion Mix, Barbed Wire |
+| Repair Drones | Improves sustain builds. | +8% healing received per level; Repair Beacon gains +1 effective level every 2 levels. | Repair Beacon, Nanobots, Recycler |
+| Crystal Lens | Improves economy and crit builds. | +5% EXP value and +2% crit chance per level. | EXP, Salvage Magnet, Targeting Array |
+| Munition Printer | Improves multishot builds. | +1 guaranteed shot every 3 levels; non-multiple levels have a 33% chance to add one extra shot. | Cannon, Ammo Synthesizer, Ordnance Bay |
+| Stabilized Chassis | Improves defense and aiming control. | +2.5% armor reduction and *1.06 rotation speed per level. | Armor, Gyro Stabilizer, Reactive Shield |
 
 ## Abilities
 
@@ -176,6 +188,9 @@ Evolutions are checked after upgrade and ability picks. Active evolutions appear
 | Siege Command | Missile Pod 3, Railgun Orbiter 3, Targeting Array 3 | Missile Pod and Railgun Orbiter effective levels +2, projectile damage *1.12. |
 | Singularity Engine | Gravity Well 3, Flame Wave 3, Combustion Mix 2 | Gravity Well and Flame Wave effective levels +2, splash damage *1.12. |
 | Field Medic | Repair Beacon 3, Nanobots 3, Armor 2 | Repair Beacon effective level +2, armor reduction +3 percentage points, and power damage +4 percentage points. |
+| Coil Reactor | Volt Coils 3, Capacitor Bank 3, Chain Lightning 3 | Chain Lightning effective level +2, Shock Field effective level +1, and power damage +8 percentage points. |
+| War Factory | Ordnance Bay 3, Missile Guidance 3, Munition Printer 3 | Missile Pod effective level +2, cannon projectile bonus +1, and splash damage *1.14. |
+| Recovery Swarm | Repair Drones 3, Repair Beacon 3, Nanobots 3 | Repair Beacon effective level +2, healing received +18 percentage points, and armor reduction +3 percentage points. |
 
 Projectile damage multipliers from active evolutions multiply together. Projectile scale uses the largest active scale bonus.
 

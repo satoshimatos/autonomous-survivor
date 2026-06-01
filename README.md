@@ -134,16 +134,20 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - New powers add radial burn waves, sustain pulses, splash missile targeting, enemy-cluster pull fields, and piercing beam damage.
   - Added Siege Command, Singularity Engine, and Field Medic evolutions to push late-game build synergies higher.
   - New powers are wired into unlock progression, weighted ability rolls, inventory, run summaries, scene validation, and the compendium.
+- Added another upgrade branch batch:
+  - Added Heat Sinks, Overclocked Barrel, Rail Stabilizer, Missile Guidance, Ordnance Bay, Field Amplifier, Volt Coils, Gravity Anchor, Repair Drones, Crystal Lens, Munition Printer, and Stabilized Chassis.
+  - The unique upgrade catalog is now 41/50, with new branches for tempo, precision, missile/siege scaling, field/aura scaling, electric power damage, control-area damage, healing, economy/crit, multishot, and defensive control.
+  - Added Coil Reactor, War Factory, and Recovery Swarm evolutions to connect the new upgrades into late-game synergy spikes.
 
 ## Backlog
 
 ### Next
 
-- Add another upgrade branch batch toward 50 unique upgrades, then finish the last 4 powers toward 20 total.
+- Add the final 9 upgrades toward 50 unique upgrades, finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
 
 ### Content
 
-- Add another upgrade branch batch toward 50 unique upgrades, then finish the last 4 powers toward 20 total.
+- Add the final 9 upgrades toward 50 unique upgrades, finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
 
 ### Systems
 

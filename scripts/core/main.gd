@@ -1627,6 +1627,18 @@ func get_build_level_snapshot() -> Dictionary:
 		"salvage_magnet": player.salvage_magnet_level,
 		"emergency_repairs": player.emergency_repairs_level,
 		"combustion_mix": player.combustion_mix_level,
+		"heat_sinks": player.heat_sinks_level,
+		"overclocked_barrel": player.overclocked_barrel_level,
+		"rail_stabilizer": player.rail_stabilizer_level,
+		"missile_guidance": player.missile_guidance_level,
+		"ordnance_bay": player.ordnance_bay_level,
+		"field_amplifier": player.field_amplifier_level,
+		"volt_coils": player.volt_coils_level,
+		"gravity_anchor": player.gravity_anchor_level,
+		"repair_drones": player.repair_drones_level,
+		"crystal_lens": player.crystal_lens_level,
+		"munition_printer": player.munition_printer_level,
+		"stabilized_chassis": player.stabilized_chassis_level,
 		"piercing": player.piercing_level,
 		"splash": player.splash_level,
 		"magnet": player.magnet_level,
@@ -1676,6 +1688,18 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Salvage Magnet", player.salvage_magnet_level)
 	add_build_entry(entries, "Emergency Repairs", player.emergency_repairs_level)
 	add_build_entry(entries, "Combustion Mix", player.combustion_mix_level)
+	add_build_entry(entries, "Heat Sinks", player.heat_sinks_level)
+	add_build_entry(entries, "Overclocked Barrel", player.overclocked_barrel_level)
+	add_build_entry(entries, "Rail Stabilizer", player.rail_stabilizer_level)
+	add_build_entry(entries, "Missile Guidance", player.missile_guidance_level)
+	add_build_entry(entries, "Ordnance Bay", player.ordnance_bay_level)
+	add_build_entry(entries, "Field Amplifier", player.field_amplifier_level)
+	add_build_entry(entries, "Volt Coils", player.volt_coils_level)
+	add_build_entry(entries, "Gravity Anchor", player.gravity_anchor_level)
+	add_build_entry(entries, "Repair Drones", player.repair_drones_level)
+	add_build_entry(entries, "Crystal Lens", player.crystal_lens_level)
+	add_build_entry(entries, "Munition Printer", player.munition_printer_level)
+	add_build_entry(entries, "Stabilized Chassis", player.stabilized_chassis_level)
 	add_build_entry(entries, "Piercing", player.piercing_level)
 	add_build_entry(entries, "Splash", player.splash_level)
 	add_build_entry(entries, "Magnet", player.magnet_level)
@@ -1755,6 +1779,18 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Salvage Magnet", player.salvage_magnet_level),
 		format_upgrade_inventory_row("Emergency Repairs", player.emergency_repairs_level),
 		format_upgrade_inventory_row("Combustion Mix", player.combustion_mix_level),
+		format_upgrade_inventory_row("Heat Sinks", player.heat_sinks_level),
+		format_upgrade_inventory_row("Overclock Barrel", player.overclocked_barrel_level),
+		format_upgrade_inventory_row("Rail Stabilizer", player.rail_stabilizer_level),
+		format_upgrade_inventory_row("Missile Guidance", player.missile_guidance_level),
+		format_upgrade_inventory_row("Ordnance Bay", player.ordnance_bay_level),
+		format_upgrade_inventory_row("Field Amplifier", player.field_amplifier_level),
+		format_upgrade_inventory_row("Volt Coils", player.volt_coils_level),
+		format_upgrade_inventory_row("Gravity Anchor", player.gravity_anchor_level),
+		format_upgrade_inventory_row("Repair Drones", player.repair_drones_level),
+		format_upgrade_inventory_row("Crystal Lens", player.crystal_lens_level),
+		format_upgrade_inventory_row("Munition Print", player.munition_printer_level),
+		format_upgrade_inventory_row("Stabilized Chassis", player.stabilized_chassis_level),
 		"",
 		"Abilities",
 		format_upgrade_inventory_row("Landmine", player.landmine_level),
