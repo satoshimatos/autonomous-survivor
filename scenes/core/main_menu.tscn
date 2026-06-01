@@ -41,9 +41,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -300.0
-offset_top = -228.0
+offset_top = -260.0
 offset_right = 300.0
-offset_bottom = 228.0
+offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_panel")
@@ -97,6 +97,12 @@ layout_mode = 2
 theme_override_font_sizes/font_size = 24
 text = "Play"
 
+[node name="CompendiumButton" type="Button" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(220, 48)
+layout_mode = 2
+theme_override_font_sizes/font_size = 22
+text = "Compendium"
+
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(220, 52)
 layout_mode = 2
@@ -105,4 +111,5 @@ text = "Quit"
 
 [connection signal="item_selected" from="CenterContainer/VBoxContainer/TankSelector" to="." method="_on_tank_selector_item_selected"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/PlayButton" to="." method="_on_play_button_pressed"]
+[connection signal="pressed" from="CenterContainer/VBoxContainer/CompendiumButton" to="." method="_on_compendium_button_pressed"]
 [connection signal="pressed" from="CenterContainer/VBoxContainer/QuitButton" to="." method="_on_quit_button_pressed"]

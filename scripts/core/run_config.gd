@@ -66,6 +66,50 @@ var tank_archetypes: Array[Dictionary] = [
 		"damage_multiplier": 0.95,
 		"color": Color(0.92, 0.62, 1.0, 1.0),
 	},
+	{
+		"id": "storm_chaser",
+		"name": "Storm Chaser",
+		"summary": "A fast electric raider that starts with Shock Field and Chain Lightning pressure.",
+		"speed_multiplier": 1.18,
+		"health_bonus": -1,
+		"damage_multiplier": 0.96,
+		"shock_field_level": 1,
+		"chain_lightning_level": 1,
+		"color": Color(0.25, 0.88, 1.0, 1.0),
+	},
+	{
+		"id": "pyroclast",
+		"name": "Pyroclast",
+		"summary": "Burn-and-blast tank that opens with Flame Wave and stronger splash scaling.",
+		"speed_multiplier": 0.94,
+		"health_bonus": 2,
+		"damage_multiplier": 1.04,
+		"splash_level": 1,
+		"flame_wave_level": 1,
+		"color": Color(1.0, 0.38, 0.12, 1.0),
+	},
+	{
+		"id": "medic",
+		"name": "Medic",
+		"summary": "Support tank with stronger sustain, repair tools, and gentler early survival.",
+		"speed_multiplier": 0.98,
+		"health_bonus": 4,
+		"regeneration_level": 1,
+		"repair_beacon_level": 1,
+		"nanite_cloud_level": 1,
+		"color": Color(0.55, 1.0, 0.72, 1.0),
+	},
+	{
+		"id": "singularity_rig",
+		"name": "Singularity Rig",
+		"summary": "Late-game control tank that starts slow but bends crowds with Gravity Well.",
+		"speed_multiplier": 0.86,
+		"health_bonus": 5,
+		"damage_multiplier": 1.08,
+		"gravity_well_level": 1,
+		"capacitor_bank_level": 1,
+		"color": Color(0.78, 0.46, 1.0, 1.0),
+	},
 ]
 
 var run_modifier_catalog: Array[Dictionary] = [
@@ -138,6 +182,10 @@ func get_tank_by_id(tank_id: String) -> Dictionary:
 func set_selected_tank(tank_id: String) -> void:
 	if get_unlock_manager().is_tank_unlocked(tank_id):
 		selected_tank_id = get_tank_by_id(tank_id).id
+
+
+func can_start_selected_tank() -> bool:
+	return get_unlock_manager().is_tank_unlocked(selected_tank_id)
 
 
 func start_new_run() -> void:

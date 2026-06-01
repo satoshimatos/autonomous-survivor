@@ -1,0 +1,129 @@
+[gd_scene load_steps=4 format=3]
+
+[ext_resource type="Script" path="res://scripts/core/compendium_menu.gd" id="1_compendium"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_backdrop_generated.png" id="2_bg"]
+[ext_resource type="Texture2D" path="res://assets/visual/ui/chunky_panel.png" id="3_panel"]
+
+[node name="CompendiumMenu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_compendium")
+
+[node name="Backdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="Panel" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 28.0
+offset_top = 28.0
+offset_right = -28.0
+offset_bottom = -28.0
+grow_horizontal = 2
+grow_vertical = 2
+modulate = Color(0.86, 0.95, 1, 1)
+texture = ExtResource("3_panel")
+patch_margin_left = 28
+patch_margin_top = 28
+patch_margin_right = 28
+patch_margin_bottom = 28
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
+
+[node name="MarginContainer" type="MarginContainer" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = 54.0
+offset_top = 46.0
+offset_right = -54.0
+offset_bottom = -46.0
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_constants/margin_left = 24
+theme_override_constants/margin_top = 18
+theme_override_constants/margin_right = 24
+theme_override_constants/margin_bottom = 18
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="TitleLabel" type="Label" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_font_sizes/font_size = 36
+text = "Compendium"
+horizontal_alignment = 1
+
+[node name="HeaderRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+theme_override_constants/separation = 10
+
+[node name="CategorySelector" type="OptionButton" parent="MarginContainer/VBoxContainer/HeaderRow"]
+custom_minimum_size = Vector2(280, 42)
+layout_mode = 2
+size_flags_horizontal = 0
+theme_override_font_sizes/font_size = 18
+
+[node name="HintLabel" type="Label" parent="MarginContainer/VBoxContainer/HeaderRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_colors/font_color = Color(0.94, 0.98, 1, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.035, 1)
+theme_override_constants/outline_size = 4
+theme_override_font_sizes/font_size = 16
+text = "Browse tanks, upgrades, powers, enemies, bosses, modifiers, and unlock goals."
+vertical_alignment = 1
+autowrap_mode = 3
+
+[node name="ContentRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_constants/separation = 16
+
+[node name="EntryList" type="ItemList" parent="MarginContainer/VBoxContainer/ContentRow"]
+custom_minimum_size = Vector2(290, 0)
+layout_mode = 2
+size_flags_vertical = 3
+theme_override_font_sizes/font_size = 16
+
+[node name="DetailText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ContentRow"]
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+theme_override_colors/default_color = Color(0.94, 0.98, 1, 1)
+theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.035, 1)
+theme_override_constants/outline_size = 3
+theme_override_font_sizes/normal_font_size = 17
+bbcode_enabled = true
+fit_content = true
+scroll_following = true
+
+[node name="FooterRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
+layout_mode = 2
+alignment = 2
+
+[node name="BackButton" type="Button" parent="MarginContainer/VBoxContainer/FooterRow"]
+custom_minimum_size = Vector2(160, 46)
+layout_mode = 2
+theme_override_font_sizes/font_size = 20
+text = "Back"
+
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/HeaderRow/CategorySelector" to="." method="_on_category_selector_item_selected"]
+[connection signal="item_selected" from="MarginContainer/VBoxContainer/ContentRow/EntryList" to="." method="_on_entry_list_item_selected"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/FooterRow/BackButton" to="." method="_on_back_button_pressed"]

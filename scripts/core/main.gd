@@ -240,6 +240,7 @@ func _ready() -> void:
 	setup_pause_input_router()
 	configure_run_seed_and_modifiers()
 	set_debug_time_scale_index(0)
+	hide_player_facing_debug_ui()
 	is_startup_loading = true
 	loading_overlay.visible = true
 	loading_overlay.modulate.a = 1.0
@@ -271,11 +272,16 @@ func _ready() -> void:
 			"elites_defeated": elites_defeated,
 			"build_levels": get_build_level_snapshot(),
 		})
-		var unlock_text := ""
-		if not unlocked_messages.is_empty():
-			unlock_text = "\nUnlocked: %s" % ", ".join(unlocked_messages)
-		%ResultLabel.text = get_run_summary_text(unlock_text)
+		%ResultLabel.text = get_run_summary_text(unlocked_messages)
 	)
+
+
+func hide_player_facing_debug_ui() -> void:
+	stats_label.visible = false
+	upgrade_inventory_label.visible = false
+	for child in $CanvasLayer.get_children():
+		if child.name.begins_with("Debug"):
+			child.visible = false
 
 
 func configure_run_seed_and_modifiers() -> void:
@@ -1126,6 +1132,7 @@ func apply_elite_death_payload(enemy_position: Vector2, death_payload: Dictionar
 
 
 func apply_volatile_elite_death(enemy_position: Vector2, radius: float, damage: float) -> void:
+	shake_camera(0.16, 3.5)
 	splash_blast_active = true
 	for enemy in get_tree().get_nodes_in_group("Enemy"):
 		if not is_instance_valid(enemy) or enemy.global_position.distance_to(enemy_position) > radius:
@@ -1160,6 +1167,7 @@ func get_active_enemy_count() -> int:
 func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
 	enemies_defeated += 1
 	bosses_defeated += 1
+	shake_camera(0.34, 8.0)
 	exp_drop_count = int(ceil(float(exp_drop_count) * boss_exp_multiplier))
 	var mass_damage_active := dynamite_blast_active or splash_blast_active
 	
@@ -1175,6 +1183,14 @@ func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_dr
 		try_drop_wrench.call_deferred(enemy_position)
 	if player != null and player.has_method("try_recycler_heal"):
 		player.try_recycler_heal(true)
+
+
+func shake_camera(duration: float, strength: float) -> void:
+	if player == null:
+		return
+	var camera := player.get_node_or_null("Camera2D")
+	if camera != null and camera.has_method("start_shake"):
+		camera.start_shake(duration, strength)
 
 
 func queue_exp_drops(enemy_position: Vector2, drop_count: int, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
@@ -1458,6 +1474,7 @@ func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: 
 
 
 func activate_dynamite() -> void:
+	shake_camera(0.28, 7.0)
 	dynamite_flash.color = Color(1.0, 0.92, 0.25, 0.85)
 	var enemies := get_tree().get_nodes_in_group("Enemy").duplicate()
 	dynamite_blast_active = true
@@ -1587,19 +1604,29 @@ func update_stats_label() -> void:
 	]
 
 
-func get_run_summary_text(unlock_text: String) -> String:
+func get_run_summary_text(unlocked_messages: Array[String]) -> String:
 	var lines: Array[String] = [
-		"Tank: %s  Level: %s" % [player.selected_tank_name, player.level],
-		"Time: %s  Seed: %s" % [get_formatted_run_time(), run_seed_text],
-		"Modifiers: %s" % run_modifier_summary,
-		"Events: %s" % get_run_event_summary_text(),
+		"RUN COMPLETE",
+		"Tank: %s  Level: %s  Time: %s" % [player.selected_tank_name, player.level, get_formatted_run_time()],
+		"Seed: %s" % run_seed_text,
+		"Run modifiers: %s" % run_modifier_summary,
+		"Run events: %s" % get_run_event_summary_text(),
+		"",
+		"Combat",
 		"Kills: %s  Elites: %s  Bosses: %s" % [enemies_defeated, elites_defeated, bosses_defeated],
-		"Damage Dealt: %s  Taken: %s  DPS: %.1f" % [total_damage_dealt, total_damage_taken, player_dps],
-		"Pressure: %s/%s  Skipped Spawns: %s" % [get_active_enemy_count(), get_active_enemy_cap(), spawn_skips_from_pressure],
-		"Build: %s" % get_build_summary_text(),
+		"Damage dealt: %s  Damage taken: %s  DPS: %.1f" % [total_damage_dealt, total_damage_taken, player_dps],
+		"Final pressure: %s/%s  Skipped spawns: %s" % [get_active_enemy_count(), get_active_enemy_cap(), spawn_skips_from_pressure],
+		"",
+		"Build",
+		get_build_summary_text(),
 	]
-	if unlock_text != "":
-		lines.append(unlock_text.strip_edges())
+	var evolution_names: Array[String] = []
+	if player.has_method("get_active_evolution_names"):
+		evolution_names = player.get_active_evolution_names()
+	if not evolution_names.is_empty():
+		lines.append("Evolutions: %s" % ", ".join(evolution_names))
+	lines.append("")
+	lines.append(get_unlock_manager().get_progress_report(unlocked_messages))
 	return "\n".join(lines)
 
 

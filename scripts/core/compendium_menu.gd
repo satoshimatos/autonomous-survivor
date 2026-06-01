@@ -1,0 +1,297 @@
+extends Control
+
+const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
+const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
+const MAIN_SCENE = preload("res://scenes/core/main.tscn")
+const UPGRADE_MENU = preload("res://scenes/ui/upgrade.tscn")
+const ABILITY_MENU = preload("res://scenes/ui/ability_menu.tscn")
+
+const CATEGORIES: Array[String] = [
+	"Tanks",
+	"Upgrades",
+	"Abilities",
+	"Enemies",
+	"Bosses",
+	"Modifiers",
+	"Unlock Goals",
+]
+
+@onready var category_selector: OptionButton = $MarginContainer/VBoxContainer/HeaderRow/CategorySelector
+@onready var entry_list: ItemList = $MarginContainer/VBoxContainer/ContentRow/EntryList
+@onready var detail_text: RichTextLabel = $MarginContainer/VBoxContainer/ContentRow/DetailText
+@onready var back_button: Button = $MarginContainer/VBoxContainer/FooterRow/BackButton
+
+var current_entries: Array[Dictionary] = []
+
+
+func _ready() -> void:
+	GamepadInputSetup.ensure_configured()
+	apply_visual_skin()
+	populate_categories()
+	show_category(0)
+	category_selector.grab_focus.call_deferred()
+
+
+func apply_visual_skin() -> void:
+	CartoonUiSkin.apply_label_pop($MarginContainer/VBoxContainer/TitleLabel, Color(1.0, 0.86, 0.24, 1.0))
+	CartoonUiSkin.apply_option_button(category_selector)
+	CartoonUiSkin.apply_button(back_button, Color(0.54, 0.18, 0.28, 1.0))
+
+
+func populate_categories() -> void:
+	category_selector.clear()
+	for category in CATEGORIES:
+		category_selector.add_item(category)
+
+
+func show_category(category_index: int) -> void:
+	current_entries = build_entries_for_category(CATEGORIES[category_index])
+	entry_list.clear()
+	for entry in current_entries:
+		entry_list.add_item(String(entry.get("name", "Unknown")))
+	if not current_entries.is_empty():
+		entry_list.select(0)
+		show_entry(0)
+	else:
+		detail_text.text = "No entries."
+
+
+func build_entries_for_category(category: String) -> Array[Dictionary]:
+	match category:
+		"Tanks":
+			return get_tank_entries()
+		"Upgrades":
+			return get_upgrade_entries()
+		"Abilities":
+			return get_ability_entries()
+		"Enemies":
+			return get_enemy_entries()
+		"Bosses":
+			return get_boss_entries()
+		"Modifiers":
+			return get_modifier_entries()
+		"Unlock Goals":
+			return get_unlock_goal_entries()
+	return []
+
+
+func get_tank_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	var run_config = get_run_config()
+	var unlock_manager = get_unlock_manager()
+	for tank in run_config.tank_archetypes:
+		var tank_id := String(tank.id)
+		var status := "Unlocked" if unlock_manager.is_tank_unlocked(tank_id) else "Locked"
+		entries.append({
+			"name": "%s [%s]" % [String(tank.name), status],
+			"detail": format_tank_detail(tank, status, unlock_manager.get_tank_unlock_hint(tank_id)),
+		})
+	return entries
+
+
+func format_tank_detail(tank: Dictionary, status: String, unlock_hint: String) -> String:
+	var lines: Array[String] = [
+		"[b]%s[/b]" % String(tank.name),
+		String(tank.summary),
+		"",
+		"Status: %s" % status,
+		"Unlock: %s" % unlock_hint,
+		"Speed x%.2f, damage x%.2f, fire interval x%.2f, health %+d" % [
+			float(tank.get("speed_multiplier", 1.0)),
+			float(tank.get("damage_multiplier", 1.0)),
+			float(tank.get("fire_interval_multiplier", 1.0)),
+			int(tank.get("health_bonus", 0)),
+		],
+	]
+	lines.append("Starting bonuses: %s" % format_nonzero_keys(tank, [
+		"speed_level", "damage_level", "fire_rate_level", "regeneration_level", "armor_level",
+		"magnet_level", "cannon_level", "exp_bonus_level", "splash_level", "capacitor_bank_level",
+		"landmine_level", "circular_saw_level", "footsoldier_level", "shock_field_level",
+		"artillery_level", "drone_swarm_level", "oil_slick_level", "freeze_pulse_level",
+		"chain_lightning_level", "flame_wave_level", "repair_beacon_level", "nanite_cloud_level",
+		"gravity_well_level",
+	]))
+	return "\n".join(lines)
+
+
+func get_upgrade_entries() -> Array[Dictionary]:
+	var menu = UPGRADE_MENU.instantiate()
+	var catalog: Dictionary = menu.upgrade_catalog
+	var ids := catalog.keys()
+	ids.sort()
+	var entries: Array[Dictionary] = []
+	for upgrade_id in ids:
+		var data: Dictionary = catalog[upgrade_id]
+		entries.append({
+			"name": String(data.get("title", upgrade_id)).replace("+ ", ""),
+			"detail": "[b]%s[/b]\nTag: %s\nRarity: %s\nEffect: %s\nSynergy hooks: %s" % [
+				String(data.get("title", upgrade_id)),
+				String(data.get("tag", "UPGRADE")),
+				menu.get_upgrade_rarity(String(upgrade_id)),
+				String(data.get("hint", "")),
+				", ".join(data.get("synergy", []) as Array),
+			],
+		})
+	menu.free()
+	return entries
+
+
+func get_ability_entries() -> Array[Dictionary]:
+	var menu = ABILITY_MENU.instantiate()
+	var entries: Array[Dictionary] = []
+	for ability in menu.ability_catalog:
+		var tags: Array = ability.get("tags", []) as Array
+		entries.append({
+			"name": String(ability.label).replace("+1 ", "").replace("+ ", ""),
+			"detail": "[b]%s[/b]\nRarity: %s\nBase weight: %.1f\nTags: %s\nUnlock status: %s\nLevel property: %s\nSynergy upgrades: %s\nSynergy abilities: %s" % [
+				String(ability.label),
+				String(ability.get("rarity", "Common")),
+				float(ability.get("base_weight", 1.0)),
+				", ".join(tags),
+				"Unlocked" if get_unlock_manager().is_ability_unlocked(String(ability.id)) else "Locked",
+				String(ability.get("level_property", "")),
+				", ".join(ability.get("synergy_upgrades", []) as Array),
+				", ".join(ability.get("synergy_abilities", []) as Array),
+			],
+		})
+	menu.free()
+	return entries
+
+
+func get_enemy_entries() -> Array[Dictionary]:
+	var main = MAIN_SCENE.instantiate()
+	var entries := format_combat_catalog(main.enemy_variant_catalog, false)
+	main.free()
+	return entries
+
+
+func get_boss_entries() -> Array[Dictionary]:
+	var main = MAIN_SCENE.instantiate()
+	var entries := format_combat_catalog(main.boss_variant_catalog, true)
+	main.free()
+	return entries
+
+
+func format_combat_catalog(catalog: Array[Dictionary], is_boss: bool) -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	for config in catalog:
+		var weight_text := "Weight %.1f, growth %.1f/min, cap %.1f" % [
+			float(config.get("weight", config.get("base_weight", 0.0))),
+			float(config.get("growth_per_minute", 0.0)),
+			float(config.get("max_weight", 0.0)),
+		]
+		var detail_lines: Array[String] = [
+			"[b]%s[/b]" % String(config.id).capitalize(),
+			"Appears after: %s" % format_seconds(float(config.get("unlock_seconds", 0.0))),
+			weight_text,
+			"Health: %s  Speed: %.1f  Contact damage: %s" % [int(config.get("health", 0)), float(config.get("speed", 0.0)), int(config.get("contact_damage", 0))],
+			"EXP drops: %s, min tier %s" % [int(config.get("exp_drop_count", 0)), int(config.get("exp_drop_min_tier", 1))],
+			"Scale: %.2f" % float(config.get("scale", 1.0)),
+		]
+		if is_boss:
+			detail_lines.append("Behavior: %s" % String(config.get("behavior", "boss")))
+			detail_lines.append("Phase thresholds: %s" % str(config.get("phase_thresholds", [])))
+			detail_lines.append("Ability modules: %s" % str(config.get("ability_modules", [])))
+		else:
+			detail_lines.append("Movement: %s" % String(config.get("movement_style", "chase")))
+		entries.append({
+			"name": String(config.id).capitalize(),
+			"detail": "\n".join(detail_lines),
+		})
+	return entries
+
+
+func get_modifier_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	for modifier in get_run_config().run_modifier_catalog:
+		var modifier_id := String(modifier.id)
+		var status := "Unlocked" if get_unlock_manager().is_modifier_unlocked(modifier_id) else "Locked"
+		entries.append({
+			"name": "%s [%s]" % [String(modifier.name), status],
+			"detail": "[b]%s[/b]\n%s\nStatus: %s\nEffects: %s" % [
+				String(modifier.name),
+				String(modifier.summary),
+				status,
+				format_modifier_effects(modifier),
+			],
+		})
+	return entries
+
+
+func get_unlock_goal_entries() -> Array[Dictionary]:
+	var unlock_manager = get_unlock_manager()
+	var entries: Array[Dictionary] = [{
+		"name": "Progress Summary",
+		"detail": unlock_manager.get_progress_report(),
+	}]
+	for goal in unlock_manager.challenge_goal_catalog:
+		var status := "Complete" if unlock_manager.completed_challenge_goals.has(String(goal.id)) else "Incomplete"
+		entries.append({
+			"name": "%s [%s]" % [String(goal.name), status],
+			"detail": "[b]%s[/b]\nMetric: %s\nTarget: %s\nReward: %s\nStatus: %s" % [
+				String(goal.name),
+				String(goal.metric),
+				str(goal.get("threshold", "")),
+				String(goal.reward_text),
+				status,
+			],
+		})
+	return entries
+
+
+func show_entry(index: int) -> void:
+	if index < 0 or index >= current_entries.size():
+		return
+	detail_text.text = String(current_entries[index].get("detail", ""))
+
+
+func format_nonzero_keys(data: Dictionary, keys: Array[String]) -> String:
+	var parts: Array[String] = []
+	for key in keys:
+		var value := int(data.get(key, 0))
+		if value != 0:
+			parts.append("%s %+d" % [key.replace("_level", "").replace("_", " ").capitalize(), value])
+	return ", ".join(parts) if not parts.is_empty() else "None"
+
+
+func format_modifier_effects(modifier: Dictionary) -> String:
+	var ignored := ["id", "name", "summary"]
+	var parts: Array[String] = []
+	for key in modifier.keys():
+		if ignored.has(String(key)):
+			continue
+		parts.append("%s: %s" % [String(key), str(modifier[key])])
+	return ", ".join(parts)
+
+
+func format_seconds(duration_seconds: float) -> String:
+	var total_seconds := int(floor(duration_seconds))
+	var minutes := int(float(total_seconds) / 60.0)
+	var seconds_remainder := total_seconds % 60
+	return "%02d:%02d" % [minutes, seconds_remainder]
+
+
+func _on_category_selector_item_selected(index: int) -> void:
+	show_category(index)
+
+
+func _on_entry_list_item_selected(index: int) -> void:
+	show_entry(index)
+
+
+func _on_back_button_pressed() -> void:
+	get_tree().change_scene_to_file("res://scenes/core/main_menu.tscn")
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("ui_cancel"):
+		_on_back_button_pressed()
+		get_viewport().set_input_as_handled()
+
+
+func get_run_config() -> Node:
+	return get_node("/root/RunConfig")
+
+
+func get_unlock_manager() -> Node:
+	return get_node("/root/UnlockManager")

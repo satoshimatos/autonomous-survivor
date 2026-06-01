@@ -682,10 +682,12 @@ func apply_selected_tank_archetype() -> void:
 	speed_level += int(tank.get("speed_level", 0))
 	damage_level += int(tank.get("damage_level", 0))
 	fire_rate_level += int(tank.get("fire_rate_level", 0))
+	regeneration_level += int(tank.get("regeneration_level", 0))
 	armor_level += int(tank.get("armor_level", 0))
 	magnet_level += int(tank.get("magnet_level", 0))
 	cannon_level += int(tank.get("cannon_level", 0))
 	exp_bonus_level += int(tank.get("exp_bonus_level", 0))
+	capacitor_bank_level += int(tank.get("capacitor_bank_level", 0))
 	
 	var tint: Color = tank.get("color", Color.WHITE) as Color
 	tank_base.modulate = tint
@@ -728,6 +730,30 @@ func apply_starting_ability_levels(tank: Dictionary) -> void:
 		upgrade_oil_slick()
 	for i in range(int(tank.get("freeze_pulse_level", 0))):
 		upgrade_freeze_pulse()
+	for i in range(int(tank.get("chain_lightning_level", 0))):
+		upgrade_chain_lightning()
+	for i in range(int(tank.get("guardian_satellite_level", 0))):
+		upgrade_guardian_satellite()
+	for i in range(int(tank.get("overdrive_core_level", 0))):
+		upgrade_overdrive_core()
+	for i in range(int(tank.get("flame_wave_level", 0))):
+		upgrade_flame_wave()
+	for i in range(int(tank.get("repair_beacon_level", 0))):
+		upgrade_repair_beacon()
+	for i in range(int(tank.get("missile_pod_level", 0))):
+		upgrade_missile_pod()
+	for i in range(int(tank.get("gravity_well_level", 0))):
+		upgrade_gravity_well()
+	for i in range(int(tank.get("railgun_orbiter_level", 0))):
+		upgrade_railgun_orbiter()
+	for i in range(int(tank.get("tesla_pylon_level", 0))):
+		upgrade_tesla_pylon()
+	for i in range(int(tank.get("nanite_cloud_level", 0))):
+		upgrade_nanite_cloud()
+	for i in range(int(tank.get("ricochet_rounds_level", 0))):
+		upgrade_ricochet_rounds()
+	for i in range(int(tank.get("chrono_burst_level", 0))):
+		upgrade_chrono_burst()
 	for i in range(int(tank.get("chain_lightning_level", 0))):
 		upgrade_chain_lightning()
 	for i in range(int(tank.get("guardian_satellite_level", 0))):

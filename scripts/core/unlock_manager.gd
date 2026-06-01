@@ -17,6 +17,8 @@ var challenge_goal_catalog: Array[Dictionary] = [
 	{"id": "elite_sweeper", "name": "Elite Sweeper", "metric": "elites_defeated", "threshold": 8, "reward_text": "+15% wrench drops", "rewards": {"wrench_drop_multiplier": 1.15}},
 	{"id": "heavy_build", "name": "Heavy Build", "metric": "build_sum", "build_keys": ["damage", "fire_rate", "cannon"], "threshold": 7, "reward_text": "+1 starting damage", "rewards": {"starting_damage_level": 1}},
 	{"id": "collector_build", "name": "Collector Build", "metric": "build_sum", "build_keys": ["magnet", "exp"], "threshold": 5, "reward_text": "+1 starting EXP", "rewards": {"starting_exp_level": 1}},
+	{"id": "storm_build", "name": "Storm Build", "metric": "build_sum", "build_keys": ["volt_coils", "field_amplifier", "capacitor_bank"], "threshold": 4, "reward_text": "+1 starting magnet", "rewards": {"starting_magnet_level": 1}},
+	{"id": "control_build", "name": "Control Build", "metric": "build_sum", "build_keys": ["gravity_anchor", "field_amplifier", "barbed_wire"], "threshold": 5, "reward_text": "+1 starting health", "rewards": {"starting_health_bonus": 1}},
 ]
 
 
@@ -91,6 +93,14 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 	if best_enemies_defeated >= 250:
 		try_unlock("tank", "engineer", "Engineer tank", unlocked_messages)
 		try_unlock("modifier", "salvage_field", "Salvage Field modifier", unlocked_messages)
+	if best_level >= 8:
+		try_unlock("tank", "storm_chaser", "Storm Chaser tank", unlocked_messages)
+	if best_survival_seconds >= 420:
+		try_unlock("tank", "pyroclast", "Pyroclast tank", unlocked_messages)
+	if total_bosses_defeated >= 3:
+		try_unlock("tank", "medic", "Medic tank", unlocked_messages)
+	if best_survival_seconds >= 900 and best_level >= 14:
+		try_unlock("tank", "singularity_rig", "Singularity Rig tank", unlocked_messages)
 	if best_level >= 10:
 		try_unlock("ability", "freeze_pulse", "Freeze Pulse ability", unlocked_messages)
 		try_unlock("modifier", "unstable_engine", "Unstable Engine modifier", unlocked_messages)
@@ -180,6 +190,79 @@ func get_meta_reward_multiplier(reward_key: String, default_value: float = 1.0) 
 		if rewards.has(reward_key):
 			multiplier *= float(rewards.get(reward_key, 1.0))
 	return multiplier
+
+
+func get_tank_unlock_hint(tank_id: String) -> String:
+	if is_tank_unlocked(tank_id):
+		return "Unlocked"
+	match tank_id:
+		"fortress":
+			return "Survive 2:00 in any run."
+		"collector":
+			return "Reach level 5 in any run."
+		"twin_cannon":
+			return "Defeat 1 boss across all runs."
+		"engineer":
+			return "Defeat 250 enemies across your best run record."
+		"storm_chaser":
+			return "Reach level 8 in any run."
+		"pyroclast":
+			return "Survive 7:00 in any run."
+		"medic":
+			return "Defeat 3 total bosses across runs."
+		"singularity_rig":
+			return "Survive 15:00 and reach level 14."
+	return "Progress further to reveal this unlock."
+
+
+func get_progress_report(recent_unlocks: Array[String] = []) -> String:
+	var lines: Array[String] = [
+		"Permanent Progress",
+		"Best time: %s  Best level: %s" % [format_seconds(best_survival_seconds), best_level],
+		"Best kills: %s  Total bosses: %s" % [best_enemies_defeated, total_bosses_defeated],
+		"Tanks: %s  Abilities: %s  Modifiers: %s" % [unlocked_tanks.size(), unlocked_abilities.size(), unlocked_modifiers.size()],
+	]
+	if not recent_unlocks.is_empty():
+		lines.append("New unlocks: %s" % ", ".join(recent_unlocks))
+
+	var next_goals := get_next_unlock_goal_lines()
+	if not next_goals.is_empty():
+		lines.append("Next goals:")
+		lines.append_array(next_goals.slice(0, 4))
+	return "\n".join(lines)
+
+
+func get_next_unlock_goal_lines() -> Array[String]:
+	var lines: Array[String] = []
+	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig"]:
+		if not is_tank_unlocked(tank_id):
+			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
+	for ability_goal in get_ability_goal_catalog():
+		if not is_ability_unlocked(String(ability_goal.id)):
+			lines.append("- Ability: %s" % String(ability_goal.hint))
+	for goal in challenge_goal_catalog:
+		if not completed_challenge_goals.has(String(goal.id)):
+			lines.append("- Challenge: %s for %s" % [String(goal.name), String(goal.reward_text)])
+	return lines
+
+
+func get_ability_goal_catalog() -> Array[Dictionary]:
+	return [
+		{"id": "freeze_pulse", "hint": "Reach level 10 to unlock Freeze Pulse."},
+		{"id": "overdrive_core", "hint": "Reach level 12 to unlock Overdrive Core."},
+		{"id": "flame_wave", "hint": "Survive 4:00 to unlock Flame Wave."},
+		{"id": "repair_beacon", "hint": "Survive 5:00 to unlock Repair Beacon."},
+		{"id": "chain_lightning", "hint": "Survive 10:00 to unlock Chain Lightning."},
+		{"id": "gravity_well", "hint": "Reach level 14 to unlock Gravity Well."},
+		{"id": "railgun_orbiter", "hint": "Defeat 2 total bosses to unlock Railgun Orbiter."},
+		{"id": "chrono_burst", "hint": "Survive 22:00 to unlock Chrono Burst."},
+	]
+
+
+func format_seconds(total_seconds: int) -> String:
+	var minutes := int(float(total_seconds) / 60.0)
+	var seconds_remainder := total_seconds % 60
+	return "%02d:%02d" % [minutes, seconds_remainder]
 
 
 func get_completed_challenge_goal_configs() -> Array[Dictionary]:

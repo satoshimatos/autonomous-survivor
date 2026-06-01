@@ -59,6 +59,7 @@ Completed setup:
   - #26 Upgrade card UI, pickup precision, and gamepad flow
   - #27 Fix full upgrade pause and tighten upgrade visuals
   - #28 Add rarity-colored cards and prerequisite-gated rolls
+  - #29 Progression communication, compendium, and juice polish pass
 
 Completed issues:
 
@@ -90,6 +91,7 @@ Completed issues:
 - #26 Upgrade card UI, pickup precision, and gamepad flow
 - #27 Fix full upgrade pause and tighten upgrade visuals
 - #28 Add rarity-colored cards and prerequisite-gated rolls
+- #29 Progression communication, compendium, and juice polish pass
 
 ### P1 - Replayability And Power Growth
 
@@ -108,3 +110,4 @@ Completed issues:
 
 - Visual identity pass is complete enough for the current scope: generated arena/menu art, cartoon sprites, chunky UI, cloud shadows, player lighting, projectile trails, hit pops, and richer bursts are in-game.
 - Continue improving individual power-specific animations after hands-on playtest feedback identifies weak effects.
+- First in-game compendium and permanent unlock communication pass is complete; future work should refine content presentation and add more visual thumbnails where useful.

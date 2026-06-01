@@ -183,6 +183,14 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Upgrade rolls now filter out dependent modifiers until the player owns the relevant build piece, such as pets before pet damage, powers before power amplifiers, and splash/area tools before splash boosters.
   - Ability rolls now gate advanced powers behind existing build prerequisites while leaving starter powers available.
   - Added `tools/generate_ability_icons.ps1` for regenerating the standardized ability icon set.
+- Expanded permanent progression communication and menu reference tools:
+  - Added Storm Chaser, Pyroclast, Medic, and Singularity Rig tanks with distinct starting stat and power identities.
+  - Tank selection now lets locked tanks be inspected and shows the exact unlock requirement while preventing locked starts.
+  - Added a main-menu compendium scene for tanks, upgrades, abilities, enemies, bosses, run modifiers, and unlock goals with detailed stats, weights, timings, synergies, and unlock status.
+  - Reworked the defeat screen into a detailed run report with combat stats, build summary, evolutions, new unlocks, permanent progress, and next goals.
+  - Hid debug buttons and the on-screen stat/inventory readouts from the player-facing HUD.
+  - Replaced the repeated oval cloud shadows with a full-screen drifting shader overlay.
+  - Added confetti and moving color bands to upgrade and ability choices, plus stronger camera shake for boss defeats, volatile elite bursts, and dynamite.
 
 ## Backlog
 

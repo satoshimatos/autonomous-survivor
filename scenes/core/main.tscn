@@ -8,9 +8,7 @@
 [ext_resource type="Script" uid="uid://co1aw411j2p46" path="res://scripts/ui/low_health_vignette.gd" id="6_wysh3"]
 [ext_resource type="Script" uid="uid://b612al6i45ogm" path="res://scripts/ui/status_bar.gd" id="7_m8b2t"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/wasteland_arena_generated.png" id="8_arena_bg"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/cloud_shadow_large.png" id="9_cloud_large"]
-[ext_resource type="Texture2D" path="res://assets/backgrounds/cloud_shadow_small.png" id="10_cloud_small"]
-[ext_resource type="Script" path="res://scripts/visual/cloud_shadow_layer.gd" id="11_cloud_script"]
+[ext_resource type="Shader" path="res://shaders/cloud_shadow_overlay.gdshader" id="9_cloud_shader"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_sgp6g"]
 size = Vector2(1940, 1250)
@@ -23,6 +21,13 @@ size = Vector2(64, 1058)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sugp2"]
 size = Vector2(1748, 64)
+
+[sub_resource type="ShaderMaterial" id="ShaderMaterial_cloud_overlay"]
+shader = ExtResource("9_cloud_shader")
+shader_parameter/shadow_color = Color(0.12, 0.1, 0.2, 0.2)
+shader_parameter/drift = Vector2(0.035, 0.018)
+shader_parameter/scale = 3.4
+shader_parameter/softness = 0.34
 
 [node name="Main" type="Node2D" unique_id=78506109]
 script = ExtResource("1_0wfyh")
@@ -53,20 +58,6 @@ visible = false
 script = ExtResource("3_wm82h")
 area_size = Vector2(1620, 930)
 
-[node name="CloudShadowLayer" type="Node2D" parent="."]
-z_index = 0
-modulate = Color(0.5, 0.45, 0.62, 0.46)
-script = ExtResource("11_cloud_script")
-
-[node name="CloudShadowLarge" type="Sprite2D" parent="CloudShadowLayer"]
-texture = ExtResource("9_cloud_large")
-metadata/base_offset = Vector2(-260, -120)
-
-[node name="CloudShadowSmall" type="Sprite2D" parent="CloudShadowLayer"]
-scale = Vector2(0.8, 0.8)
-texture = ExtResource("10_cloud_small")
-metadata/base_offset = Vector2(260, 90)
-
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1671463928]
 position = Vector2(576, 324)
 collision_mask = 2
@@ -94,6 +85,17 @@ position = Vector2(576, 324)
 script = ExtResource("5_m2b0t")
 
 [node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1655309931]
+
+[node name="CloudShadowOverlay" type="ColorRect" parent="CanvasLayer"]
+z_index = 1
+material = SubResource("ShaderMaterial_cloud_overlay")
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+color = Color(1, 1, 1, 1)
 
 [node name="MagnetIndicator" type="Control" parent="CanvasLayer" unique_id=1368073775]
 z_index = 4
@@ -227,14 +229,14 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -173.0
-offset_top = -205.0
+offset_top = -282.0
 offset_right = 173.0
-offset_bottom = -73.0
+offset_bottom = -216.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_colors/font_color = Color(1, 0, 0, 1)
-theme_override_font_sizes/font_size = 96
-text = "DEFEAT"
+theme_override_font_sizes/font_size = 58
+text = "RUN OVER"
 
 [node name="ResultLabel" type="Label" parent="CanvasLayer/DefeatControl" unique_id=2049240300]
 unique_name_in_owner = true
@@ -245,14 +247,15 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -380.0
-offset_top = -86.0
+offset_top = -206.0
 offset_right = 380.0
-offset_bottom = 122.0
+offset_bottom = 188.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_font_sizes/font_size = 16
+theme_override_font_sizes/font_size = 14
 text = "Enemies Defeated: 0"
 horizontal_alignment = 1
+vertical_alignment = 1
 
 [node name="RestartButton" type="Button" parent="CanvasLayer/DefeatControl" unique_id=688214637]
 custom_minimum_size = Vector2(128, 48)
@@ -263,9 +266,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -64.0
-offset_top = 134.0
+offset_top = 206.0
 offset_right = 64.0
-offset_bottom = 182.0
+offset_bottom = 254.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_font_sizes/font_size = 24
@@ -320,6 +323,7 @@ theme_override_font_sizes/font_size = 20
 text = "PAUSE"
 
 [node name="DebugDynamiteButton" type="Button" parent="CanvasLayer" unique_id=405154647]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -330,6 +334,7 @@ theme_override_font_sizes/font_size = 13
 text = "SPAWN DYNAMITE"
 
 [node name="DebugBossButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -340,6 +345,7 @@ theme_override_font_sizes/font_size = 13
 text = "SPAWN BOSS"
 
 [node name="DebugGreenSupplyButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -350,6 +356,7 @@ theme_override_font_sizes/font_size = 13
 text = "SPAWN GREEN BOX"
 
 [node name="DebugBlueSupplyButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -360,6 +367,7 @@ theme_override_font_sizes/font_size = 13
 text = "SPAWN BLUE BOX"
 
 [node name="DebugAllAiButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -370,6 +378,7 @@ theme_override_font_sizes/font_size = 13
 text = "ALL AI: OFF"
 
 [node name="DebugAutoMoveButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -380,6 +389,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI MOVE: OFF"
 
 [node name="DebugEnemyAvoidanceButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -390,6 +400,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI AVOID: OFF"
 
 [node name="DebugExpSeekButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -400,6 +411,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI EXP: OFF"
 
 [node name="DebugWrenchSeekButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -410,6 +422,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI WRENCH: OFF"
 
 [node name="DebugPowerupSeekButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -420,6 +433,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI POWER: OFF"
 
 [node name="DebugSupplySeekButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -430,6 +444,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI BOX: OFF"
 
 [node name="DebugUpgradePickButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -440,6 +455,7 @@ theme_override_font_sizes/font_size = 13
 text = "AI PICK: OFF"
 
 [node name="DebugTimeScaleButton" type="Button" parent="CanvasLayer"]
+visible = false
 process_mode = 3
 z_index = 7
 offset_left = 16.0
@@ -450,6 +466,7 @@ theme_override_font_sizes/font_size = 13
 text = "SPEED: 1x"
 
 [node name="StatsLabel" type="Label" parent="CanvasLayer" unique_id=1055227557]
+visible = false
 z_index = 2
 anchors_preset = 1
 anchor_left = 1.0
@@ -474,6 +491,7 @@ EXP Mult: 100%"
 horizontal_alignment = 2
 
 [node name="UpgradeInventoryLabel" type="Label" parent="CanvasLayer"]
+visible = false
 z_index = 2
 anchors_preset = 3
 anchor_left = 1.0
