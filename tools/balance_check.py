@@ -11,7 +11,7 @@ from __future__ import annotations
 BASE_ACTIVE_ENEMY_CAP = 85
 MAX_ACTIVE_ENEMY_CAP = 225
 ACTIVE_ENEMY_CAP_GROWTH_PER_MINUTE = 8.0
-SAMPLE_SECONDS = [0.0, 120.0, 300.0, 600.0, 900.0, 1200.0, 1500.0, 1800.0, 2100.0, 2400.0]
+SAMPLE_SECONDS = [0.0, 120.0, 300.0, 600.0, 900.0, 1200.0, 1500.0, 1800.0, 2100.0, 2400.0, 2700.0, 3000.0]
 
 ENEMIES = [
     {"id": "scout", "unlock": 0.0, "weight": 100.0, "growth": -7.0, "min": 4.0, "max": 100.0, "hp": 12.0},
@@ -29,6 +29,11 @@ ENEMIES = [
     {"id": "mirage", "unlock": 1200.0, "weight": 20.0, "growth": 2.1, "min": 0.0, "max": 42.0, "hp": 32.0},
     {"id": "reaper", "unlock": 1440.0, "weight": 14.0, "growth": 1.7, "min": 0.0, "max": 34.0, "hp": 92.0},
     {"id": "comet", "unlock": 1680.0, "weight": 18.0, "growth": 2.0, "min": 0.0, "max": 40.0, "hp": 72.0},
+    {"id": "viper", "unlock": 1860.0, "weight": 16.0, "growth": 2.0, "min": 0.0, "max": 38.0, "hp": 68.0},
+    {"id": "bulldozer", "unlock": 1980.0, "weight": 10.0, "growth": 1.2, "min": 0.0, "max": 26.0, "hp": 180.0},
+    {"id": "specter", "unlock": 2100.0, "weight": 18.0, "growth": 2.2, "min": 0.0, "max": 42.0, "hp": 58.0},
+    {"id": "sapper", "unlock": 2220.0, "weight": 14.0, "growth": 1.8, "min": 0.0, "max": 34.0, "hp": 76.0},
+    {"id": "voidling", "unlock": 2340.0, "weight": 20.0, "growth": 2.4, "min": 0.0, "max": 44.0, "hp": 88.0},
 ]
 
 BOSSES = [
@@ -40,6 +45,8 @@ BOSSES = [
     {"id": "monarch", "unlock": 1800.0, "weight": 64.0, "growth": 1.4, "min": 0.0, "max": 86.0},
     {"id": "tempest", "unlock": 2100.0, "weight": 68.0, "growth": 1.5, "min": 0.0, "max": 88.0},
     {"id": "bastion", "unlock": 2400.0, "weight": 72.0, "growth": 1.2, "min": 0.0, "max": 92.0},
+    {"id": "overlord", "unlock": 2700.0, "weight": 76.0, "growth": 1.2, "min": 0.0, "max": 94.0},
+    {"id": "singularity", "unlock": 3000.0, "weight": 80.0, "growth": 1.1, "min": 0.0, "max": 96.0},
 ]
 
 

@@ -120,16 +120,21 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Chain Lightning provides chaining damage and brief slows, Guardian Satellite adds orbiting defensive contact damage, and Overdrive Core buffs damage and mobility.
   - Added Storm Grid and Guardian Protocol evolutions for late-game synergy spikes.
   - New powers are unlockable through level and survival progression and are surfaced in ability rolls, inventory, build summaries, unlocks, and the compendium.
+- Reached the requested enemy and boss catalog counts:
+  - Added Viper, Bulldozer, Specter, Sapper, and Voidling, bringing the enemy catalog to 20 weighted types.
+  - Added Overlord and Singularity, bringing the boss catalog to 10 weighted types.
+  - New entries extend the weighted progression through 50 minutes while preserving shared scenes and lightweight config-driven behavior.
+  - Updated the compendium and balance projection data for the full 20 enemy / 10 boss catalog.
 
 ## Backlog
 
 ### Next
 
-- Add another enemy and boss batch toward 20 enemies and 10 bosses.
+- Add more powers and upgrade branches toward 20 powers and 50 unique upgrades.
 
 ### Content
 
-- Add another enemy and boss batch toward 20 enemies and 10 bosses.
+- Add more powers and upgrade branches toward 20 powers and 50 unique upgrades.
 
 ### Systems
 

@@ -184,6 +184,11 @@ clamp(base_weight + minutes_since_unlock * growth_per_minute, min_weight, max_we
 | Mirage | 1200s | weaver | 32 | 90 | 4 | 3 tier 3+ | 20 base, +2.1/min, max 42 |
 | Reaper | 1440s | stalker | 92 | 64 | 7 | 7 tier 4+ | 14 base, +1.7/min, max 34 |
 | Comet | 1680s | drifter | 72 | 112 | 6 | 5 tier 4+ | 18 base, +2/min, max 40 |
+| Viper | 1860s | zigzag | 68 | 118 | 7 | 5 tier 4+ | 16 base, +2/min, max 38 |
+| Bulldozer | 1980s | chase | 180 | 24 | 9 | 8 tier 4+ | 10 base, +1.2/min, max 26 |
+| Specter | 2100s | orbiter | 58 | 98 | 6 | 5 tier 4+ | 18 base, +2.2/min, max 42 |
+| Sapper | 2220s | stalker | 76 | 74 | 8 | 6 tier 4+ | 14 base, +1.8/min, max 34 |
+| Voidling | 2340s | weaver | 88 | 84 | 8 | 7 tier 4+ | 20 base, +2.4/min, max 44 |
 
 ### Enemy Movement Styles
 
@@ -223,6 +228,8 @@ Only one boss can be alive at a time. Bosses normally spawn every 420s, modified
 | Monarch | 1800s | monarch | 2400 | 22 | 10 | 68 tier 4+ | 64 base, +1.4/min, max 86 | Phases at 66% and 33%, alternates larger minion calls with player-targeted hazards. |
 | Tempest | 2100s | tempest | 2050 | 38 | 8 | 74 tier 4+ | 68 base, +1.5/min, max 88 | Phases at 72%, 44%, and 20%, rotates rapidly, pulses speed, and layers hazard rings with targeted strikes. |
 | Bastion | 2400s | bastion | 3200 | 13 | 14 | 84 tier 4+ | 72 base, +1.2/min, max 92 | Phases at 75%, 50%, and 25%, uses large hazard rings and bounded support waves. |
+| Overlord | 2700s | overlord | 3600 | 20 | 15 | 92 tier 4+ | 76 base, +1.2/min, max 94 | Phases at 78%, 55%, 32%, and 16%, combining minion calls, hazard rings, and targeted hazards. |
+| Singularity | 3000s | singularity | 2950 | 32 | 13 | 100 tier 4+ | 80 base, +1.1/min, max 96 | Phases at 70%, 45%, and 22%, fades and pulses while layering rapid targeted hazards with dense rings. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
