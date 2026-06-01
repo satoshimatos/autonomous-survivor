@@ -102,14 +102,21 @@ func roll_upgrade_options() -> void:
 	for i in range(buttons.size()):
 		if i < displayed_upgrades.size():
 			buttons[i].visible = true
-			buttons[i].text = get_upgrade_label(displayed_upgrades[i])
-			buttons[i].tooltip_text = get_upgrade_tooltip(displayed_upgrades[i])
-			buttons[i].icon = get_upgrade_icon(displayed_upgrades[i])
+			configure_card_button(buttons[i], displayed_upgrades[i])
 		else:
 			buttons[i].visible = false
-			buttons[i].icon = null
 
 	update_detail_for_slot(0)
+
+
+func configure_card_button(button: Button, upgrade_id: String) -> void:
+	var data: Dictionary = upgrade_catalog.get(upgrade_id, {}) as Dictionary
+	button.text = ""
+	button.tooltip_text = ""
+	button.icon = null
+	(button.get_node("NameLabel") as Label).text = String(data.get("title", "UNKNOWN")).replace("+ ", "")
+	(button.get_node("TagLabel") as Label).text = "[%s]" % String(data.get("tag", "UPGRADE"))
+	(button.get_node("Icon") as TextureRect).texture = get_upgrade_icon(upgrade_id)
 
 
 func get_upgrade_label(upgrade_id: String) -> String:
@@ -473,7 +480,7 @@ func highlight_ai_selection(slot_index: int) -> void:
 	selected_style.set_border_width_all(3)
 	selected_button.add_theme_stylebox_override("normal", selected_style)
 	selected_button.add_theme_stylebox_override("disabled", selected_style)
-	selected_button.text = "%s  [AI]" % selected_button.text
+	(selected_button.get_node("TagLabel") as Label).text = "[AI PICK]"
 
 
 func get_ai_upgrade_slot_index() -> int:

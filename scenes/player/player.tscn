@@ -71,6 +71,7 @@ text = "AI: off"
 horizontal_alignment = 1
 
 [node name="Camera2D" type="Camera2D" parent="." unique_id=1211628420]
+zoom = Vector2(0.88, 0.88)
 script = ExtResource("2_3vyb7")
 
 [node name="Control" type="Control" parent="." unique_id=1022400495]

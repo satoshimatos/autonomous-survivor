@@ -12,13 +12,13 @@ var is_active: bool = true
 
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_INHERIT
 
 
 func configure(count: int, color: Color, speed: float, duration: float, size_range: Vector2, should_shrink: bool) -> void:
 	is_active = true
 	visible = true
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_INHERIT
 	age = 0.0
 	particle_color = color
 	lifetime = duration

@@ -15,6 +15,8 @@ var main: Node2D
 var is_defeated: bool = false
 var hit_flash_timer: float = 0.0
 var juice_pop_timer: float = 0.0
+var visual_scene_scale: Vector2 = Vector2.ONE
+var collision_scene_scale: Vector2 = Vector2.ONE
 var visual_base_scale: Vector2 = Vector2.ONE
 var base_modulate: Color = Color.WHITE
 var base_health: int = 14
@@ -38,6 +40,8 @@ func _ready() -> void:
 	base_health = health
 	max_health = health
 	movement_seed = randf() * TAU
+	visual_scene_scale = mesh_instance.scale
+	collision_scene_scale = collision_shape.scale
 	apply_variant_visuals()
 	base_modulate = mesh_instance.modulate
 	visual_base_scale = mesh_instance.scale
@@ -86,9 +90,8 @@ func configure_variant(config: Dictionary) -> void:
 func apply_variant_visuals() -> void:
 	if variant_color != Color.WHITE:
 		mesh_instance.modulate = variant_color
-	if not is_equal_approx(variant_scale, 1.0):
-		mesh_instance.scale = Vector2.ONE * variant_scale
-		collision_shape.scale = Vector2.ONE * variant_scale
+	mesh_instance.scale = visual_scene_scale * variant_scale
+	collision_shape.scale = collision_scene_scale * variant_scale
 
 
 func get_movement_vector(delta: float) -> Vector2:

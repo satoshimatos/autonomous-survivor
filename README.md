@@ -171,6 +171,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Regenerated all 50 upgrade icons with a standardized black-outline style, category colors, recurring motifs, and a shared green plus badge language.
   - Added runtime gamepad mappings for movement, UI navigation, tank selection cycling, pause/resume, and defeat-screen restart.
   - Upgrade and ability choices continue to fully pause gameplay; AI upgrade picking uses pause-safe timers so it can choose while the background stays stopped.
+- Tightened the upgrade and scale pass after playtest feedback:
+  - Moved paused input handling into a focused always-processing router so the main gameplay tree remains pausable during upgrade selection.
+  - Shrank the upgrade panel and replaced stretched button icons with owned card labels/icons/tags plus one dedicated description field.
+  - Removed upgrade hover tooltip content so descriptions are not duplicated.
+  - Preserved authored enemy sprite scale when applying data-driven variant scales, reducing oversized enemy visuals and improving collision readability.
+  - Zoomed the camera out modestly and expanded the arena/bounds to keep the map from feeling cramped.
 
 ## Backlog
 

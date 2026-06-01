@@ -6,7 +6,7 @@ var shake_strength: float = 4.0
 
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
+	process_mode = Node.PROCESS_MODE_INHERIT
 
 
 func _process(delta: float) -> void:

@@ -57,6 +57,7 @@ Completed setup:
   - #24 Run 30-minute progression balance pass
   - #25 Visual identity and juice pass
   - #26 Upgrade card UI, pickup precision, and gamepad flow
+  - #27 Fix full upgrade pause and tighten upgrade visuals
 
 Completed issues:
 
@@ -86,6 +87,7 @@ Completed issues:
 - #24 Run 30-minute progression balance pass
 - #25 Visual identity and juice pass
 - #26 Upgrade card UI, pickup precision, and gamepad flow
+- #27 Fix full upgrade pause and tighten upgrade visuals
 
 ### P1 - Replayability And Power Growth
 

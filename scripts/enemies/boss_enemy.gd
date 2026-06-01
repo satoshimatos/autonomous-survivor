@@ -19,6 +19,8 @@ var main: Node2D
 var is_defeated: bool = false
 var hit_flash_timer: float = 0.0
 var juice_pop_timer: float = 0.0
+var visual_scene_scale: Vector2 = Vector2.ONE
+var collision_scene_scale: Vector2 = Vector2.ONE
 var visual_base_scale: Vector2 = Vector2.ONE
 var base_modulate: Color = Color.WHITE
 var base_health: int = 1000
@@ -43,6 +45,8 @@ func _ready() -> void:
 	speed = base_speed
 	base_health = health
 	max_health = health
+	visual_scene_scale = mesh_instance.scale
+	collision_scene_scale = collision_shape.scale
 	apply_variant_visuals()
 	base_modulate = mesh_instance.modulate
 	visual_base_scale = mesh_instance.scale
@@ -118,9 +122,8 @@ func get_typed_phase_thresholds(raw_thresholds: Variant) -> Array[float]:
 func apply_variant_visuals() -> void:
 	if variant_color != Color.WHITE:
 		mesh_instance.modulate = variant_color
-	if not is_equal_approx(variant_scale, 1.0):
-		mesh_instance.scale = Vector2.ONE * variant_scale
-		collision_shape.scale = Vector2.ONE * variant_scale
+	mesh_instance.scale = visual_scene_scale * variant_scale
+	collision_shape.scale = collision_scene_scale * variant_scale
 
 
 func apply_slow(duration: float, multiplier: float) -> void:
@@ -152,7 +155,7 @@ func update_behavior_effect(delta: float) -> void:
 		"sprinter":
 			speed = base_speed * (1.0 + max(0.0, sin(pulse_timer * 2.5)) * 0.75) * get_status_speed_multiplier()
 		"crusher":
-			mesh_instance.scale = Vector2.ONE * variant_scale * (1.0 + sin(pulse_timer * 6.0) * 0.035)
+			mesh_instance.scale = visual_scene_scale * variant_scale * (1.0 + sin(pulse_timer * 6.0) * 0.035)
 		"wraith":
 			mesh_instance.modulate.a = 0.72 + abs(sin(pulse_timer * 2.0)) * 0.28
 		"monarch":
@@ -162,13 +165,13 @@ func update_behavior_effect(delta: float) -> void:
 			mesh_instance.rotation += delta * 1.2
 			speed = base_speed * (1.0 + max(0.0, sin(pulse_timer * 3.3)) * 0.55) * get_status_speed_multiplier()
 		"bastion":
-			mesh_instance.scale = Vector2.ONE * variant_scale * (1.0 + sin(pulse_timer * 3.2) * 0.025)
+			mesh_instance.scale = visual_scene_scale * variant_scale * (1.0 + sin(pulse_timer * 3.2) * 0.025)
 		"overlord":
 			mesh_instance.rotation += delta * 0.5
 			speed = base_speed * (0.88 + abs(sin(pulse_timer * 1.8)) * 0.28) * get_status_speed_multiplier()
 		"singularity":
 			mesh_instance.modulate.a = 0.62 + abs(sin(pulse_timer * 3.4)) * 0.38
-			mesh_instance.scale = Vector2.ONE * variant_scale * (1.0 + sin(pulse_timer * 4.6) * 0.045)
+			mesh_instance.scale = visual_scene_scale * variant_scale * (1.0 + sin(pulse_timer * 4.6) * 0.045)
 		_:
 			pass
 

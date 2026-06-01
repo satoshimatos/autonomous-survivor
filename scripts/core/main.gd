@@ -1,8 +1,10 @@
 extends Node2D
 
 const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
+const PauseInputRouter = preload("res://scripts/core/pause_input_router.gd")
 
 var player: CharacterBody2D
+var pause_input_router: PauseInputRouter
 
 var spawn_interval: float = 1.5
 var spawn_timer: float = 0.0
@@ -234,8 +236,8 @@ const DEBUG_TIME_SCALES: Array[float] = [1.0, 2.0, 4.0, 8.0]
 
 
 func _ready() -> void:
-	process_mode = Node.PROCESS_MODE_ALWAYS
 	GamepadInputSetup.ensure_configured()
+	setup_pause_input_router()
 	configure_run_seed_and_modifiers()
 	set_debug_time_scale_index(0)
 	is_startup_loading = true
@@ -303,6 +305,14 @@ func get_run_config() -> Node:
 
 func get_unlock_manager() -> Node:
 	return get_node("/root/UnlockManager")
+
+
+func setup_pause_input_router() -> void:
+	pause_input_router = PauseInputRouter.new()
+	pause_input_router.name = "PauseInputRouter"
+	pause_input_router.pause_requested.connect(_on_pause_input_requested)
+	pause_input_router.restart_requested.connect(_on_restart_input_requested)
+	add_child(pause_input_router)
 
 
 func setup_pickup_pools() -> void:
@@ -400,7 +410,7 @@ func run_startup_loading() -> void:
 	await fade_loading_overlay()
 	loading_overlay.visible = false
 	is_startup_loading = false
-	if not is_player_paused and not %DefeatControl.visible:
+	if not is_player_paused and not %DefeatControl.visible and not player.upgrade_selection_active and not player.ability_selection_active:
 		get_tree().paused = false
 
 
@@ -1895,13 +1905,13 @@ func _on_restart_button_pressed() -> void:
 		get_tree().reload_current_scene()
 
 
-func _unhandled_input(event: InputEvent) -> void:
-	if event.is_action_pressed("pause_game"):
-		_on_pause_button_pressed()
-		get_viewport().set_input_as_handled()
-	elif %DefeatControl.visible and event.is_action_pressed("restart_run"):
+func _on_pause_input_requested() -> void:
+	_on_pause_button_pressed()
+
+
+func _on_restart_input_requested() -> void:
+	if %DefeatControl.visible:
 		_on_restart_button_pressed()
-		get_viewport().set_input_as_handled()
 
 
 func _on_pause_button_pressed() -> void:

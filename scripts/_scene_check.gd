@@ -45,7 +45,18 @@ func _init() -> void:
 			push_error("Could not instantiate scene: %s" % scene_path)
 			quit(1)
 			return
-		
+
+		if scene_path == "res://scenes/core/main.tscn" and instance.process_mode == Node.PROCESS_MODE_ALWAYS:
+			push_error("Main scene must stay pausable; use focused always-processing helpers for paused input.")
+			quit(1)
+			return
+
+		if scene_path == "res://scenes/ui/upgrade.tscn":
+			if instance.get_node_or_null("CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton1/Icon") == null:
+				push_error("Upgrade menu cards need owned icon nodes, not stretched button icons.")
+				quit(1)
+				return
+
 		if scene_path == "res://scenes/enemies/boss_enemy.tscn":
 			instance.configure_variant({
 				"phase_thresholds": [0.65, 0.32],
