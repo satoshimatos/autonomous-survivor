@@ -29,6 +29,7 @@ func _init() -> void:
 		"res://scenes/abilities/ricochet_rounds.tscn",
 		"res://scenes/abilities/chrono_burst.tscn",
 		"res://scenes/effects/boss_hazard.tscn",
+		"res://scenes/ui/upgrade.tscn",
 		"res://scenes/ui/ability_menu.tscn",
 	]
 	

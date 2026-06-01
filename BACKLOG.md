@@ -56,6 +56,7 @@ Completed setup:
   - #23 Add final power batch toward 20 powers
   - #24 Run 30-minute progression balance pass
   - #25 Visual identity and juice pass
+  - #26 Upgrade card UI, pickup precision, and gamepad flow
 
 Completed issues:
 
@@ -84,6 +85,7 @@ Completed issues:
 - #23 Add final power batch toward 20 powers
 - #24 Run 30-minute progression balance pass
 - #25 Visual identity and juice pass
+- #26 Upgrade card UI, pickup precision, and gamepad flow
 
 ### P1 - Replayability And Power Growth
 

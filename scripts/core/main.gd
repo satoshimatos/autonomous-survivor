@@ -1,5 +1,7 @@
 extends Node2D
 
+const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
+
 var player: CharacterBody2D
 
 var spawn_interval: float = 1.5
@@ -232,6 +234,8 @@ const DEBUG_TIME_SCALES: Array[float] = [1.0, 2.0, 4.0, 8.0]
 
 
 func _ready() -> void:
+	process_mode = Node.PROCESS_MODE_ALWAYS
+	GamepadInputSetup.ensure_configured()
 	configure_run_seed_and_modifiers()
 	set_debug_time_scale_index(0)
 	is_startup_loading = true
@@ -256,6 +260,7 @@ func _ready() -> void:
 		low_health_vignette.set_low_health_active(false)
 		get_tree().paused = true
 		%DefeatControl.visible = true
+		%DefeatControl.get_node("RestartButton").grab_focus.call_deferred()
 		var unlocked_messages: Array[String] = get_unlock_manager().record_run_result({
 			"survival_seconds": int(floor(run_time)),
 			"level": player.level,
@@ -1216,29 +1221,29 @@ func get_random_exp_orb_data(min_tier: int = BLUE_ORB_TIER) -> Dictionary:
 	if min_tier >= ORANGE_ORB_TIER:
 		var advanced_total: float = violet_orb_drop_chance + purple_orb_drop_chance + orange_orb_drop_chance
 		if advanced_total <= 0.0:
-			return {"value": 4, "radius": 7.0, "texture": BLUE_EXP_CRYSTAL, "visual_scale": 0.5}
+			return {"value": 4, "radius": 10.0, "texture": BLUE_EXP_CRYSTAL, "visual_scale": 0.31}
 		
 		var advanced_roll := randf() * advanced_total
 		if advanced_roll < violet_orb_drop_chance:
 			return get_violet_exp_orb_data()
 		if advanced_roll < violet_orb_drop_chance + purple_orb_drop_chance:
-			return {"value": 9, "radius": 10.0, "texture": RED_EXP_CRYSTAL, "visual_scale": 0.36}
+			return {"value": 9, "radius": 13.0, "texture": RED_EXP_CRYSTAL, "visual_scale": 0.41}
 		
-		return {"value": 4, "radius": 7.0, "texture": BLUE_EXP_CRYSTAL, "visual_scale": 0.5}
+		return {"value": 4, "radius": 10.0, "texture": BLUE_EXP_CRYSTAL, "visual_scale": 0.31}
 	
 	var orb_roll := randf()
 	if orb_roll < violet_orb_drop_chance:
 		return get_violet_exp_orb_data()
 	elif orb_roll < violet_orb_drop_chance + purple_orb_drop_chance:
-		return {"value": 9, "radius": 10.0, "texture": RED_EXP_CRYSTAL, "visual_scale": 0.36}
+		return {"value": 9, "radius": 13.0, "texture": RED_EXP_CRYSTAL, "visual_scale": 0.41}
 	elif orb_roll < violet_orb_drop_chance + purple_orb_drop_chance + orange_orb_drop_chance:
-		return {"value": 4, "radius": 7.0, "texture": BLUE_EXP_CRYSTAL, "visual_scale": 0.5}
+		return {"value": 4, "radius": 10.0, "texture": BLUE_EXP_CRYSTAL, "visual_scale": 0.31}
 	
-	return {"value": 2, "radius": 5.0, "texture": GREEN_EXP_CRYSTAL}
+	return {"value": 2, "radius": 8.0, "texture": GREEN_EXP_CRYSTAL, "visual_scale": 0.25}
 
 
 func get_violet_exp_orb_data() -> Dictionary:
-	return {"value": 18, "radius": 12.0, "texture": PURPLE_EXP_CRYSTAL, "visual_scale": 0.5}
+	return {"value": 18, "radius": 15.0, "texture": PURPLE_EXP_CRYSTAL, "visual_scale": 0.47}
 
 
 func merge_exp_into_existing_orb(additional_value: int) -> void:
@@ -1888,6 +1893,15 @@ func _on_restart_button_pressed() -> void:
 		Engine.time_scale = 1.0
 		get_tree().paused = false
 		get_tree().reload_current_scene()
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("pause_game"):
+		_on_pause_button_pressed()
+		get_viewport().set_input_as_handled()
+	elif %DefeatControl.visible and event.is_action_pressed("restart_run"):
+		_on_restart_button_pressed()
+		get_viewport().set_input_as_handled()
 
 
 func _on_pause_button_pressed() -> void:

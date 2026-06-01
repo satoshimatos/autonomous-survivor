@@ -1,6 +1,7 @@
 extends Control
 
 const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
+const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
 
 @onready var tank_selector: OptionButton = $CenterContainer/VBoxContainer/TankSelector
 @onready var tank_summary_label: Label = $CenterContainer/VBoxContainer/TankSummaryLabel
@@ -11,8 +12,10 @@ const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
 
 
 func _ready() -> void:
+	GamepadInputSetup.ensure_configured()
 	apply_visual_skin()
 	populate_tank_selector()
+	play_button.grab_focus.call_deferred()
 
 
 func apply_visual_skin() -> void:
@@ -66,6 +69,28 @@ func update_selected_tank(index: int) -> void:
 
 func _on_tank_selector_item_selected(index: int) -> void:
 	update_selected_tank(index)
+
+
+func _unhandled_input(event: InputEvent) -> void:
+	if event.is_action_pressed("menu_previous") or event.is_action_pressed("ui_left"):
+		select_relative_unlocked_tank(-1)
+		get_viewport().set_input_as_handled()
+	elif event.is_action_pressed("menu_next") or event.is_action_pressed("ui_right"):
+		select_relative_unlocked_tank(1)
+		get_viewport().set_input_as_handled()
+
+
+func select_relative_unlocked_tank(direction: int) -> void:
+	if tank_selector.item_count <= 0:
+		return
+
+	var index := tank_selector.selected
+	for step in range(tank_selector.item_count):
+		index = wrapi(index + direction, 0, tank_selector.item_count)
+		if not tank_selector.is_item_disabled(index):
+			tank_selector.select(index)
+			update_selected_tank(index)
+			return
 
 
 func get_run_config() -> Node:

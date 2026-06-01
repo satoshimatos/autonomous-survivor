@@ -45,12 +45,15 @@ var ability_catalog: Array[Dictionary] = [
 func _ready() -> void:
 	apply_visual_skin()
 	roll_ability_options()
+	if not ability_buttons.is_empty() and ability_buttons[0].visible:
+		ability_buttons[0].grab_focus.call_deferred()
 
 
 func apply_visual_skin() -> void:
 	CartoonUiSkin.apply_label_pop($CanvasLayer/ColorRect/Label, Color(0.74, 0.92, 1.0, 1.0))
 	for button in ability_buttons:
 		CartoonUiSkin.apply_button(button, Color(0.22, 0.34, 0.62, 1.0))
+		button.focus_mode = Control.FOCUS_ALL
 
 
 func roll_ability_options() -> void:

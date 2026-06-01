@@ -21,10 +21,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -270.0
-offset_top = -270.0
-offset_right = 270.0
-offset_bottom = 270.0
+offset_left = -520.0
+offset_top = -260.0
+offset_right = 520.0
+offset_bottom = 260.0
 grow_horizontal = 2
 grow_vertical = 2
 modulate = Color(0.82, 1, 0.86, 1)
@@ -52,8 +52,8 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 102.0
-offset_bottom = -61.0
+offset_top = 84.0
+offset_bottom = -36.0
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_constants/margin_left = 48
@@ -61,27 +61,50 @@ theme_override_constants/margin_right = 48
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ColorRect/MarginContainer" unique_id=2088481364]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 18
 alignment = 1
 
-[node name="OptionButton1" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer" unique_id=1880267085]
-custom_minimum_size = Vector2(0, 64)
+[node name="OptionsRow" type="HBoxContainer" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+theme_override_constants/separation = 18
+alignment = 1
+
+[node name="OptionButton1" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow" unique_id=1880267085]
+custom_minimum_size = Vector2(280, 210)
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "OPTION 1"
+icon_alignment = 1
+expand_icon = true
 
-[node name="OptionButton2" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer" unique_id=773109829]
-custom_minimum_size = Vector2(0, 64)
+[node name="OptionButton2" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow" unique_id=773109829]
+custom_minimum_size = Vector2(280, 210)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "OPTION 2"
+icon_alignment = 1
+expand_icon = true
 
-[node name="OptionButton3" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer" unique_id=1005646685]
-custom_minimum_size = Vector2(0, 64)
+[node name="OptionButton3" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow" unique_id=1005646685]
+custom_minimum_size = Vector2(280, 210)
 layout_mode = 2
-theme_override_font_sizes/font_size = 16
+size_flags_horizontal = 3
+theme_override_font_sizes/font_size = 18
 text = "OPTION 3"
+icon_alignment = 1
+expand_icon = true
 
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton1" to="." method="_on_option_button_1_pressed"]
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton2" to="." method="_on_option_button_2_pressed"]
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton3" to="." method="_on_option_button_3_pressed"]
+[node name="DetailLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 96)
+layout_mode = 2
+theme_override_font_sizes/font_size = 18
+text = "Highlight an upgrade to inspect its effect."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
+
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton1" to="." method="_on_option_button_1_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton2" to="." method="_on_option_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton3" to="." method="_on_option_button_3_pressed"]

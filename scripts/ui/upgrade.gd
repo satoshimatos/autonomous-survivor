@@ -63,21 +63,34 @@ var upgrade_catalog: Dictionary = {
 }
 
 @onready var buttons: Array[Button] = [
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton1,
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton2,
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionButton3,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton1,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton2,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton3,
 ]
+@onready var detail_label: Label = $CanvasLayer/ColorRect/MarginContainer/VBoxContainer/DetailLabel
 
 
 func _ready() -> void:
 	apply_visual_skin()
+	connect_focus_updates()
 	roll_upgrade_options()
+	if not buttons.is_empty() and buttons[0].visible:
+		buttons[0].grab_focus.call_deferred()
 
 
 func apply_visual_skin() -> void:
 	CartoonUiSkin.apply_label_pop($CanvasLayer/ColorRect/Label, Color(1.0, 0.9, 0.28, 1.0))
+	CartoonUiSkin.apply_label_pop(detail_label, Color(0.95, 1.0, 0.93, 1.0))
 	for button in buttons:
 		CartoonUiSkin.apply_button(button, Color(0.18, 0.46, 0.34, 1.0))
+		button.focus_mode = Control.FOCUS_ALL
+
+
+func connect_focus_updates() -> void:
+	for i in range(buttons.size()):
+		var slot_index := i
+		buttons[i].focus_entered.connect(func(): update_detail_for_slot(slot_index))
+		buttons[i].mouse_entered.connect(func(): update_detail_for_slot(slot_index))
 
 
 func roll_upgrade_options() -> void:
@@ -91,8 +104,12 @@ func roll_upgrade_options() -> void:
 			buttons[i].visible = true
 			buttons[i].text = get_upgrade_label(displayed_upgrades[i])
 			buttons[i].tooltip_text = get_upgrade_tooltip(displayed_upgrades[i])
+			buttons[i].icon = get_upgrade_icon(displayed_upgrades[i])
 		else:
 			buttons[i].visible = false
+			buttons[i].icon = null
+
+	update_detail_for_slot(0)
 
 
 func get_upgrade_label(upgrade_id: String) -> String:
@@ -103,10 +120,9 @@ func get_upgrade_label(upgrade_id: String) -> String:
 	var synergy_text := get_synergy_text(upgrade_id)
 	if synergy_text != "":
 		synergy_text = "\nSYNC: %s" % synergy_text
-	return "%s  [%s]\n%s%s" % [
+	return "%s\n[%s]%s" % [
 		String(data.title),
 		String(data.tag),
-		String(data.hint),
 		synergy_text,
 	]
 
@@ -116,6 +132,33 @@ func get_upgrade_tooltip(upgrade_id: String) -> String:
 	if data.is_empty():
 		return ""
 	return "%s\n%s" % [String(data.hint), get_synergy_text(upgrade_id)]
+
+
+func get_upgrade_icon(upgrade_id: String) -> Texture2D:
+	var icon_path := "res://assets/ui/icons/upgrades/icon_upgrade_%s.png" % upgrade_id
+	if ResourceLoader.exists(icon_path):
+		return load(icon_path)
+	return null
+
+
+func update_detail_for_slot(slot_index: int) -> void:
+	if slot_index < 0 or slot_index >= displayed_upgrades.size():
+		detail_label.text = ""
+		return
+
+	var upgrade_id := displayed_upgrades[slot_index]
+	var data: Dictionary = upgrade_catalog.get(upgrade_id, {}) as Dictionary
+	if data.is_empty():
+		detail_label.text = ""
+		return
+
+	var synergy_text := get_synergy_text(upgrade_id)
+	var current_level := get_synergy_level(upgrade_id)
+	var level_text := "Current level: %s" % current_level
+	if synergy_text != "":
+		detail_label.text = "%s\n%s. %s." % [String(data.hint), level_text, synergy_text.capitalize()]
+	else:
+		detail_label.text = "%s\n%s." % [String(data.hint), level_text]
 
 
 func get_synergy_text(upgrade_id: String) -> String:
@@ -422,6 +465,7 @@ func highlight_ai_selection(slot_index: int) -> void:
 	if slot_index >= buttons.size():
 		return
 	
+	update_detail_for_slot(slot_index)
 	var selected_button: Button = buttons[slot_index]
 	var selected_style := StyleBoxFlat.new()
 	selected_style.bg_color = AI_SELECTION_FLASH_COLOR

@@ -165,6 +165,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Skinned the main menu, upgrade menu, and ability menu with chunky outlined button styles and generated panel art while keeping Godot's default font.
   - Added projectile trails, enemy/boss hit pops, extra impact bursts, richer explosion rings, boss defeat flashes, player damage screen modulation, and juicier EXP pickup particles.
   - Added `tools/generate_visual_identity_assets.ps1` so this visual identity asset set can be regenerated from the source background image.
+- Improved upgrade readability and controller play:
+  - Rescaled EXP orb tiers so crystal collision radius matches visible size, with green crystals reduced from oversized sprites to tighter pickups.
+  - Converted upgrade selection into horizontal icon cards with a focused description field for mouse, keyboard, and gamepad highlighting.
+  - Regenerated all 50 upgrade icons with a standardized black-outline style, category colors, recurring motifs, and a shared green plus badge language.
+  - Added runtime gamepad mappings for movement, UI navigation, tank selection cycling, pause/resume, and defeat-screen restart.
+  - Upgrade and ability choices continue to fully pause gameplay; AI upgrade picking uses pause-safe timers so it can choose while the background stays stopped.
 
 ## Backlog
 
