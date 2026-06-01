@@ -45,6 +45,7 @@ Completed setup:
   - #20 Add another power batch toward 20 powers
   - #21 Add another upgrade branch batch toward 50 unique upgrades
   - #22 Add final upgrade batch toward 50 unique upgrades
+  - #23 Add final power batch toward 20 powers
 
 Completed issues:
 
@@ -69,11 +70,12 @@ Completed issues:
 - #19 Add upgrade branch batch toward 50 unique upgrades
 - #20 Add another power batch toward 20 powers
 - #21 Add another upgrade branch batch toward 50 unique upgrades
+- #22 Add final upgrade batch toward 50 unique upgrades
 
 ### P1 - Replayability And Power Growth
 
-- #22 Add final upgrade batch toward 50 unique upgrades.
-- Add more upgrade and power branches until the project reaches at least 50 unique upgrades and 20 powers. Current counts: 41/50 unique upgrades, 16/20 powers.
+- #23 Add final power batch toward 20 powers.
+- Add more power branches until the project reaches at least 20 powers, then run a 30-minute progression pass. Current counts: 50/50 unique upgrades, 16/20 powers.
 
 ### P1 - Enemies And Bosses
 

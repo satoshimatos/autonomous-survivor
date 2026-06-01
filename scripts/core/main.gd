@@ -1639,6 +1639,15 @@ func get_build_level_snapshot() -> Dictionary:
 		"crystal_lens": player.crystal_lens_level,
 		"munition_printer": player.munition_printer_level,
 		"stabilized_chassis": player.stabilized_chassis_level,
+		"vector_thrusters": player.vector_thrusters_level,
+		"impact_fuse": player.impact_fuse_level,
+		"armor_piercers": player.armor_piercers_level,
+		"weakpoint_scanner": player.weakpoint_scanner_level,
+		"med_pump": player.med_pump_level,
+		"orbit_gears": player.orbit_gears_level,
+		"mine_dispenser": player.mine_dispenser_level,
+		"drone_command": player.drone_command_level,
+		"lucky_core": player.lucky_core_level,
 		"piercing": player.piercing_level,
 		"splash": player.splash_level,
 		"magnet": player.magnet_level,
@@ -1700,6 +1709,15 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Crystal Lens", player.crystal_lens_level)
 	add_build_entry(entries, "Munition Printer", player.munition_printer_level)
 	add_build_entry(entries, "Stabilized Chassis", player.stabilized_chassis_level)
+	add_build_entry(entries, "Vector Thrusters", player.vector_thrusters_level)
+	add_build_entry(entries, "Impact Fuse", player.impact_fuse_level)
+	add_build_entry(entries, "Armor Piercers", player.armor_piercers_level)
+	add_build_entry(entries, "Weakpoint Scanner", player.weakpoint_scanner_level)
+	add_build_entry(entries, "Med Pump", player.med_pump_level)
+	add_build_entry(entries, "Orbit Gears", player.orbit_gears_level)
+	add_build_entry(entries, "Mine Dispenser", player.mine_dispenser_level)
+	add_build_entry(entries, "Drone Command", player.drone_command_level)
+	add_build_entry(entries, "Lucky Core", player.lucky_core_level)
 	add_build_entry(entries, "Piercing", player.piercing_level)
 	add_build_entry(entries, "Splash", player.splash_level)
 	add_build_entry(entries, "Magnet", player.magnet_level)
@@ -1791,6 +1809,15 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Crystal Lens", player.crystal_lens_level),
 		format_upgrade_inventory_row("Munition Print", player.munition_printer_level),
 		format_upgrade_inventory_row("Stabilized Chassis", player.stabilized_chassis_level),
+		format_upgrade_inventory_row("Vector Thrusters", player.vector_thrusters_level),
+		format_upgrade_inventory_row("Impact Fuse", player.impact_fuse_level),
+		format_upgrade_inventory_row("Armor Piercers", player.armor_piercers_level),
+		format_upgrade_inventory_row("Weakpoint Scan", player.weakpoint_scanner_level),
+		format_upgrade_inventory_row("Med Pump", player.med_pump_level),
+		format_upgrade_inventory_row("Orbit Gears", player.orbit_gears_level),
+		format_upgrade_inventory_row("Mine Dispenser", player.mine_dispenser_level),
+		format_upgrade_inventory_row("Drone Command", player.drone_command_level),
+		format_upgrade_inventory_row("Lucky Core", player.lucky_core_level),
 		"",
 		"Abilities",
 		format_upgrade_inventory_row("Landmine", player.landmine_level),

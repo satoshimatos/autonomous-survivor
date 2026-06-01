@@ -89,7 +89,9 @@ func get_damage() -> float:
 	if player == null:
 		return 0.0
 	var multiplier := 1.0
-	if player.has_method("get_power_damage_multiplier"):
+	if player.has_method("get_contact_power_damage_multiplier"):
+		multiplier = player.get_contact_power_damage_multiplier()
+	elif player.has_method("get_power_damage_multiplier"):
 		multiplier = player.get_power_damage_multiplier()
 	return player.attack_damage * DAMAGE_MULTIPLIER * pow(1.08, float(satellite_level - 1)) * multiplier
 

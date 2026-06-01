@@ -68,6 +68,15 @@ var repair_drones_level: int = 0
 var crystal_lens_level: int = 0
 var munition_printer_level: int = 0
 var stabilized_chassis_level: int = 0
+var vector_thrusters_level: int = 0
+var impact_fuse_level: int = 0
+var armor_piercers_level: int = 0
+var weakpoint_scanner_level: int = 0
+var med_pump_level: int = 0
+var orbit_gears_level: int = 0
+var mine_dispenser_level: int = 0
+var drone_command_level: int = 0
+var lucky_core_level: int = 0
 var emergency_repair_timer: float = 0.0
 var barbed_wire_cooldowns := {}
 var selected_tank_id: String = "vanguard"
@@ -196,6 +205,18 @@ var evolution_catalog: Array[Dictionary] = [
 		"requirements": {"repair_drones": 3, "repair_beacon": 3, "nanobots": 3},
 		"effects": {"repair_beacon_level_bonus": 2, "heal_multiplier_bonus": 0.18, "armor_reduction_bonus": 0.03},
 	},
+	{
+		"id": "death_orbit",
+		"name": "Death Orbit",
+		"requirements": {"orbit_gears": 3, "circular_saw": 3, "guardian_satellite": 3},
+		"effects": {"guardian_satellite_level_bonus": 2, "barbed_wire_radius_bonus": 18.0, "power_contact_damage_bonus": 0.18},
+	},
+	{
+		"id": "breach_rounds",
+		"name": "Breach Rounds",
+		"requirements": {"armor_piercers": 3, "weakpoint_scanner": 3, "railgun_orbiter": 2},
+		"effects": {"railgun_orbiter_level_bonus": 2, "projectile_damage_multiplier": 1.16, "crit_multiplier_bonus": 0.25},
+	},
 ]
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
@@ -274,6 +295,23 @@ const CRYSTAL_LENS_EXP_PER_LEVEL: float = 0.05
 const CRYSTAL_LENS_CRIT_CHANCE_PER_LEVEL: float = 0.02
 const STABILIZED_CHASSIS_ARMOR_PER_LEVEL: float = 0.025
 const STABILIZED_CHASSIS_ROTATION_MULTIPLIER: float = 1.06
+const VECTOR_THRUSTERS_SPEED_MULTIPLIER: float = 1.07
+const VECTOR_THRUSTERS_PROJECTILE_SPEED_PER_LEVEL: float = 0.035
+const VECTOR_THRUSTERS_ROTATION_MULTIPLIER: float = 1.04
+const IMPACT_FUSE_RADIUS_PER_LEVEL: float = 3.0
+const IMPACT_FUSE_DAMAGE_PER_LEVEL: float = 0.035
+const ARMOR_PIERCERS_DAMAGE_PER_LEVEL: float = 0.045
+const ARMOR_PIERCERS_PIERCE_PER_TWO_LEVELS: int = 1
+const WEAKPOINT_SCANNER_CRIT_CHANCE_PER_LEVEL: float = 0.018
+const WEAKPOINT_SCANNER_CRIT_MULTIPLIER_PER_LEVEL: float = 0.06
+const MED_PUMP_HEAL_BONUS_PER_LEVEL: float = 0.07
+const MED_PUMP_EMERGENCY_INTERVAL_REDUCTION: float = 0.35
+const ORBIT_GEARS_CONTACT_DAMAGE_PER_LEVEL: float = 0.08
+const MINE_DISPENSER_INTERVAL_REDUCTION: float = 0.18
+const MINE_DISPENSER_DAMAGE_PER_LEVEL: float = 0.08
+const DRONE_COMMAND_PET_DAMAGE_PER_LEVEL: float = 0.07
+const LUCKY_CORE_EXP_PER_LEVEL: float = 0.03
+const LUCKY_CORE_CRIT_CHANCE_PER_LEVEL: float = 0.01
 
 @onready var camera: Camera2D = $Camera2D
 @onready var tank_base: Sprite2D = $TankBase
@@ -865,11 +903,11 @@ func cleanup_active_landmines() -> void:
 
 
 func get_landmine_interval() -> float:
-	return max(LANDMINE_BASE_INTERVAL - float(landmine_level - 1) * LANDMINE_INTERVAL_STEP, LANDMINE_MIN_INTERVAL)
+	return max(LANDMINE_BASE_INTERVAL - float(landmine_level - 1) * LANDMINE_INTERVAL_STEP - float(mine_dispenser_level) * MINE_DISPENSER_INTERVAL_REDUCTION, LANDMINE_MIN_INTERVAL)
 
 
 func get_landmine_damage_multiplier() -> float:
-	return LANDMINE_BASE_DAMAGE_MULTIPLIER * pow(LANDMINE_DAMAGE_LEVEL_MULTIPLIER, float(max(landmine_level - 1, 0))) * get_area_damage_multiplier()
+	return LANDMINE_BASE_DAMAGE_MULTIPLIER * pow(LANDMINE_DAMAGE_LEVEL_MULTIPLIER, float(max(landmine_level - 1, 0))) * (1.0 + float(mine_dispenser_level) * MINE_DISPENSER_DAMAGE_PER_LEVEL) * get_area_damage_multiplier()
 
 
 func get_valid_upgrade_ids() -> Array[String]:
@@ -914,6 +952,15 @@ func get_valid_upgrade_ids() -> Array[String]:
 		"crystal_lens",
 		"munition_printer",
 		"stabilized_chassis",
+		"vector_thrusters",
+		"impact_fuse",
+		"armor_piercers",
+		"weakpoint_scanner",
+		"med_pump",
+		"orbit_gears",
+		"mine_dispenser",
+		"drone_command",
+		"lucky_core",
 	]
 	if can_upgrade_regeneration():
 		valid_upgrades.append("regeneration")
@@ -1018,6 +1065,28 @@ func apply_upgrade_by_id(upgrade_id: String) -> void:
 			munition_printer_level += 1
 		"stabilized_chassis":
 			upgrade_stabilized_chassis()
+		"vector_thrusters":
+			upgrade_vector_thrusters()
+		"impact_fuse":
+			impact_fuse_level += 1
+		"armor_piercers":
+			armor_piercers_level += 1
+		"weakpoint_scanner":
+			weakpoint_scanner_level += 1
+			update_power_level("railgun_orbiter")
+		"med_pump":
+			med_pump_level += 1
+		"orbit_gears":
+			orbit_gears_level += 1
+			update_power_level("guardian_satellite")
+		"mine_dispenser":
+			mine_dispenser_level += 1
+		"drone_command":
+			drone_command_level += 1
+			update_power_level("drone_swarm")
+			update_power_level("guardian_satellite")
+		"lucky_core":
+			lucky_core_level += 1
 	update_evolutions()
 
 
@@ -1031,7 +1100,7 @@ func upgrade_exp() -> void:
 
 
 func get_exp_value(base_exp_value: int) -> int:
-	return int(ceil(float(base_exp_value) * (1.0 + float(exp_bonus_level) * 0.25 + float(salvage_magnet_level) * SALVAGE_MAGNET_EXP_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_EXP_PER_LEVEL)))
+	return int(ceil(float(base_exp_value) * (1.0 + float(exp_bonus_level) * 0.25 + float(salvage_magnet_level) * SALVAGE_MAGNET_EXP_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_EXP_PER_LEVEL + float(lucky_core_level) * LUCKY_CORE_EXP_PER_LEVEL)))
 
 
 func upgrade_splash() -> void:
@@ -1046,7 +1115,7 @@ func get_splash_radius() -> float:
 	if splash_level > 0:
 		upgrade_radius = 10.0 + float(splash_level - 1) * 5.0
 
-	return upgrade_radius + get_payload_splash_radius_bonus() + float(shatter_rounds_level) * SHATTER_ROUNDS_RADIUS_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_RADIUS_PER_LEVEL + float(missile_guidance_level) * MISSILE_GUIDANCE_RADIUS_PER_LEVEL + get_evolution_effect_value("splash_radius_bonus")
+	return upgrade_radius + get_payload_splash_radius_bonus() + float(shatter_rounds_level) * SHATTER_ROUNDS_RADIUS_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_RADIUS_PER_LEVEL + float(missile_guidance_level) * MISSILE_GUIDANCE_RADIUS_PER_LEVEL + float(impact_fuse_level) * IMPACT_FUSE_RADIUS_PER_LEVEL + get_evolution_effect_value("splash_radius_bonus")
 
 
 func get_payload_splash_radius_bonus() -> float:
@@ -1054,7 +1123,7 @@ func get_payload_splash_radius_bonus() -> float:
 
 
 func get_splash_damage_multiplier() -> float:
-	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL + float(shatter_rounds_level) * SHATTER_ROUNDS_DAMAGE_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_DAMAGE_PER_LEVEL) * get_area_damage_multiplier() * get_evolution_effect_multiplier("splash_damage_multiplier")
+	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL + float(shatter_rounds_level) * SHATTER_ROUNDS_DAMAGE_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_DAMAGE_PER_LEVEL + float(impact_fuse_level) * IMPACT_FUSE_DAMAGE_PER_LEVEL) * get_area_damage_multiplier() * get_evolution_effect_multiplier("splash_damage_multiplier")
 
 
 func spawn_muzzle_burst() -> void:
@@ -1124,21 +1193,21 @@ func increase_max_health_from_level() -> void:
 
 
 func get_projectile_hp() -> int:
-	return piercing_level + 1 + int(floor(float(phase_core_level) / 2.0)) * PHASE_CORE_PIERCE_PER_TWO_LEVELS + int(get_evolution_effect_value("piercing_bonus"))
+	return piercing_level + 1 + int(floor(float(phase_core_level) / 2.0)) * PHASE_CORE_PIERCE_PER_TWO_LEVELS + int(floor(float(armor_piercers_level) / 2.0)) * ARMOR_PIERCERS_PIERCE_PER_TWO_LEVELS + int(get_evolution_effect_value("piercing_bonus"))
 
 
 func get_projectile_speed() -> float:
-	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL + float(phase_core_level) * PHASE_CORE_SPEED_PER_LEVEL)
+	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL + float(phase_core_level) * PHASE_CORE_SPEED_PER_LEVEL + float(vector_thrusters_level) * VECTOR_THRUSTERS_PROJECTILE_SPEED_PER_LEVEL)
 
 
 func get_crit_chance() -> float:
-	return min(float(targeting_array_level) * TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL + float(rail_stabilizer_level) * RAIL_STABILIZER_CRIT_CHANCE_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_CRIT_CHANCE_PER_LEVEL + get_evolution_effect_value("crit_chance_bonus"), 0.75)
+	return min(float(targeting_array_level) * TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL + float(rail_stabilizer_level) * RAIL_STABILIZER_CRIT_CHANCE_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_CRIT_CHANCE_PER_LEVEL + float(weakpoint_scanner_level) * WEAKPOINT_SCANNER_CRIT_CHANCE_PER_LEVEL + float(lucky_core_level) * LUCKY_CORE_CRIT_CHANCE_PER_LEVEL + get_evolution_effect_value("crit_chance_bonus"), 0.75)
 
 
 func get_crit_multiplier() -> float:
 	if targeting_array_level <= 0:
 		return 1.0
-	return TARGETING_ARRAY_CRIT_MULTIPLIER + get_evolution_effect_value("crit_multiplier_bonus")
+	return TARGETING_ARRAY_CRIT_MULTIPLIER + float(weakpoint_scanner_level) * WEAKPOINT_SCANNER_CRIT_MULTIPLIER_PER_LEVEL + get_evolution_effect_value("crit_multiplier_bonus")
 
 
 func fire_projectile_volley(target_direction: Vector2) -> void:
@@ -1149,7 +1218,7 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 		var direction := target_direction.rotated((float(i) - middle_index) * spread_radians).normalized()
 		var projectile_config := {
 			"direction": direction,
-		"damage": attack_damage * get_power_damage_multiplier() * get_evolution_effect_multiplier("projectile_damage_multiplier"),
+		"damage": attack_damage * get_projectile_damage_multiplier(),
 			"splash_radius": get_splash_radius(),
 			"splash_damage_multiplier": get_splash_damage_multiplier(),
 			"max_piercing_hp": get_projectile_hp(),
@@ -1178,6 +1247,8 @@ func get_projectile_count() -> int:
 	if ammo_synthesizer_level % 2 == 1 and randf() < 0.5:
 		projectile_count += 1
 	if munition_printer_level % 3 != 0 and randf() < 0.33:
+		projectile_count += 1
+	if lucky_core_level > 0 and randf() < min(float(lucky_core_level) * 0.025, 0.25):
 		projectile_count += 1
 	return projectile_count
 
@@ -1233,6 +1304,12 @@ func upgrade_stabilized_chassis() -> void:
 	rotation_speed *= STABILIZED_CHASSIS_ROTATION_MULTIPLIER
 
 
+func upgrade_vector_thrusters() -> void:
+	vector_thrusters_level += 1
+	speed *= VECTOR_THRUSTERS_SPEED_MULTIPLIER
+	rotation_speed *= VECTOR_THRUSTERS_ROTATION_MULTIPLIER
+
+
 func try_recycler_heal(is_boss: bool = false) -> void:
 	if recycler_level <= 0 or is_dead or health >= max_health:
 		return
@@ -1254,11 +1331,15 @@ func process_emergency_repairs(delta: float) -> void:
 		return
 
 	emergency_repair_timer += delta
-	if emergency_repair_timer < EMERGENCY_REPAIRS_INTERVAL:
+	if emergency_repair_timer < get_emergency_repairs_interval():
 		return
 
 	emergency_repair_timer = 0.0
 	heal(emergency_repairs_level)
+
+
+func get_emergency_repairs_interval() -> float:
+	return max(EMERGENCY_REPAIRS_INTERVAL - float(med_pump_level) * MED_PUMP_EMERGENCY_INTERVAL_REDUCTION, 3.0)
 
 
 func update_evolutions() -> Array[String]:
@@ -1370,6 +1451,24 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return munition_printer_level
 		"stabilized_chassis":
 			return stabilized_chassis_level
+		"vector_thrusters":
+			return vector_thrusters_level
+		"impact_fuse":
+			return impact_fuse_level
+		"armor_piercers":
+			return armor_piercers_level
+		"weakpoint_scanner":
+			return weakpoint_scanner_level
+		"med_pump":
+			return med_pump_level
+		"orbit_gears":
+			return orbit_gears_level
+		"mine_dispenser":
+			return mine_dispenser_level
+		"drone_command":
+			return drone_command_level
+		"lucky_core":
+			return lucky_core_level
 		"landmine":
 			return landmine_level
 		"circular_saw":
@@ -1446,11 +1545,11 @@ func get_effective_ability_level(ability_id: String) -> int:
 		"artillery":
 			return artillery_level + int(floor(float(ordnance_bay_level) / 2.0))
 		"drone_swarm":
-			return drone_swarm_level + int(get_evolution_effect_value("drone_swarm_level_bonus"))
+			return drone_swarm_level + int(get_evolution_effect_value("drone_swarm_level_bonus")) + int(floor(float(drone_command_level) / 2.0))
 		"chain_lightning":
 			return chain_lightning_level + int(get_evolution_effect_value("chain_lightning_level_bonus")) + int(floor(float(volt_coils_level) / 2.0))
 		"guardian_satellite":
-			return guardian_satellite_level + int(get_evolution_effect_value("guardian_satellite_level_bonus"))
+			return guardian_satellite_level + int(get_evolution_effect_value("guardian_satellite_level_bonus")) + int(floor(float(orbit_gears_level + drone_command_level) / 2.0))
 		"flame_wave":
 			return flame_wave_level + int(get_evolution_effect_value("flame_wave_level_bonus")) + int(floor(float(field_amplifier_level) / 2.0))
 		"repair_beacon":
@@ -1460,8 +1559,12 @@ func get_effective_ability_level(ability_id: String) -> int:
 		"gravity_well":
 			return gravity_well_level + int(get_evolution_effect_value("gravity_well_level_bonus")) + int(floor(float(field_amplifier_level + gravity_anchor_level) / 2.0))
 		"railgun_orbiter":
-			return railgun_orbiter_level + int(get_evolution_effect_value("railgun_orbiter_level_bonus")) + int(floor(float(rail_stabilizer_level) / 2.0))
+			return railgun_orbiter_level + int(get_evolution_effect_value("railgun_orbiter_level_bonus")) + int(floor(float(rail_stabilizer_level + weakpoint_scanner_level) / 2.0))
 	return get_build_level_for_evolution(ability_id)
+
+
+func get_projectile_damage_multiplier() -> float:
+	return get_power_damage_multiplier() * (1.0 + float(armor_piercers_level) * ARMOR_PIERCERS_DAMAGE_PER_LEVEL) * get_evolution_effect_multiplier("projectile_damage_multiplier")
 
 
 func get_power_damage_multiplier() -> float:
@@ -1469,6 +1572,14 @@ func get_power_damage_multiplier() -> float:
 	if is_instance_valid(overdrive_core) and overdrive_core.has_method("get_damage_multiplier"):
 		multiplier *= overdrive_core.get_damage_multiplier()
 	return multiplier
+
+
+func get_contact_power_damage_multiplier() -> float:
+	return get_power_damage_multiplier() * (1.0 + float(orbit_gears_level) * ORBIT_GEARS_CONTACT_DAMAGE_PER_LEVEL + get_evolution_effect_value("power_contact_damage_bonus"))
+
+
+func get_pet_damage_multiplier() -> float:
+	return get_power_damage_multiplier() * (1.0 + float(drone_command_level) * DRONE_COMMAND_PET_DAMAGE_PER_LEVEL)
 
 
 func get_power_speed_multiplier() -> float:
@@ -1671,7 +1782,7 @@ func heal(heal_amount: int) -> int:
 
 
 func get_heal_multiplier() -> float:
-	return 1.0 + float(nanobots_level) * NANOBOTS_HEAL_BONUS_PER_LEVEL + float(repair_drones_level) * REPAIR_DRONES_HEAL_BONUS_PER_LEVEL + get_evolution_effect_value("heal_multiplier_bonus")
+	return 1.0 + float(nanobots_level) * NANOBOTS_HEAL_BONUS_PER_LEVEL + float(repair_drones_level) * REPAIR_DRONES_HEAL_BONUS_PER_LEVEL + float(med_pump_level) * MED_PUMP_HEAL_BONUS_PER_LEVEL + get_evolution_effect_value("heal_multiplier_bonus")
 
 
 func update_invincibility_visual() -> void:

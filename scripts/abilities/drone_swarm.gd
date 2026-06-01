@@ -66,7 +66,10 @@ func fire_drones() -> void:
 func get_damage() -> float:
 	if player == null:
 		return 0.0
-	return player.attack_damage * DAMAGE_MULTIPLIER * pow(1.08, float(drone_level - 1))
+	var multiplier := 1.0
+	if player.has_method("get_pet_damage_multiplier"):
+		multiplier = player.get_pet_damage_multiplier()
+	return player.attack_damage * DAMAGE_MULTIPLIER * pow(1.08, float(drone_level - 1)) * multiplier
 
 
 func get_nearest_enemy(from_position: Vector2) -> Node2D:

@@ -208,9 +208,12 @@ func fire_at_current_target() -> void:
 	if direction.is_zero_approx():
 		return
 	
+	var damage_multiplier := 1.0
+	if player.has_method("get_pet_damage_multiplier"):
+		damage_multiplier = player.get_pet_damage_multiplier()
 	var projectile_config := {
 		"direction": direction,
-		"damage": floor(player.attack_damage * 0.3125),
+		"damage": floor(player.attack_damage * 0.3125 * damage_multiplier),
 		"splash_radius": 0.0,
 		"max_piercing_hp": 1,
 		"projectile_scale": 1.0 / 3.0,

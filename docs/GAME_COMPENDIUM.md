@@ -148,6 +148,15 @@ Accessories are part of the normal 3-choice upgrade pool. They are lightweight s
 | Crystal Lens | Improves economy and crit builds. | +5% EXP value and +2% crit chance per level. | EXP, Salvage Magnet, Targeting Array |
 | Munition Printer | Improves multishot builds. | +1 guaranteed shot every 3 levels; non-multiple levels have a 33% chance to add one extra shot. | Cannon, Ammo Synthesizer, Ordnance Bay |
 | Stabilized Chassis | Improves defense and aiming control. | +2.5% armor reduction and *1.06 rotation speed per level. | Armor, Gyro Stabilizer, Reactive Shield |
+| Vector Thrusters | Improves mobility and projectile delivery. | Move speed *1.07, rotation speed *1.04, and projectile speed +3.5% per level. | Speed, Accelerator, Kinetic Treads |
+| Impact Fuse | Improves explosive consistency. | +3px splash radius and +3.5% splash damage per level. | Splash, Shatter Rounds, Ordnance Bay |
+| Armor Piercers | Improves projectile damage and penetration. | +4.5% projectile damage per level and +1 pierce every 2 levels. | Piercing, Phase Core, Weakpoint Scanner |
+| Weakpoint Scanner | Improves precision damage and rail beams. | +1.8% crit chance and +0.06 crit multiplier per level; Railgun Orbiter gains +1 effective level every 2 combined Rail Stabilizer/Weakpoint Scanner levels. | Targeting Array, Rail Stabilizer, Railgun Orbiter |
+| Med Pump | Improves sustain uptime. | +7% healing received per level; Emergency Repairs interval is reduced by 0.35s per level to a 3s floor. | Nanobots, Repair Drones, Emergency Repairs |
+| Orbit Gears | Improves orbit-contact builds. | +8% contact power damage per level; Guardian Satellite gains effective levels from Orbit Gears plus Drone Command. | Circular Saw, Guardian Satellite, Barbed Wire |
+| Mine Dispenser | Improves mine cadence and damage. | Landmine interval is reduced by 0.18s per level; landmine damage gains +8% per level. | Landmine, Combustion Mix, Impact Fuse |
+| Drone Command | Improves pet builds. | +7% pet damage per level; Drone Swarm gains +1 effective level every 2 levels and Guardian Satellite shares effective-level scaling with Orbit Gears. | Footsoldier, Drone Swarm, Guardian Satellite |
+| Lucky Core | Adds replayable luck scaling. | +3% EXP value and +1% crit chance per level; each level adds 2.5% chance, capped at 25%, for one extra projectile per volley. | Crystal Lens, Targeting Array, Munition Printer |
 
 ## Abilities
 
@@ -191,6 +200,8 @@ Evolutions are checked after upgrade and ability picks. Active evolutions appear
 | Coil Reactor | Volt Coils 3, Capacitor Bank 3, Chain Lightning 3 | Chain Lightning effective level +2, Shock Field effective level +1, and power damage +8 percentage points. |
 | War Factory | Ordnance Bay 3, Missile Guidance 3, Munition Printer 3 | Missile Pod effective level +2, cannon projectile bonus +1, and splash damage *1.14. |
 | Recovery Swarm | Repair Drones 3, Repair Beacon 3, Nanobots 3 | Repair Beacon effective level +2, healing received +18 percentage points, and armor reduction +3 percentage points. |
+| Death Orbit | Orbit Gears 3, Circular Saw 3, Guardian Satellite 3 | Guardian Satellite effective level +2, Barbed Wire radius +18, and contact power damage +18 percentage points. |
+| Breach Rounds | Armor Piercers 3, Weakpoint Scanner 3, Railgun Orbiter 2 | Railgun Orbiter effective level +2, projectile damage *1.16, and crit multiplier +0.25. |
 
 Projectile damage multipliers from active evolutions multiply together. Projectile scale uses the largest active scale bonus.
 

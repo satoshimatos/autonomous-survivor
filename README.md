@@ -138,16 +138,20 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Heat Sinks, Overclocked Barrel, Rail Stabilizer, Missile Guidance, Ordnance Bay, Field Amplifier, Volt Coils, Gravity Anchor, Repair Drones, Crystal Lens, Munition Printer, and Stabilized Chassis.
   - The unique upgrade catalog is now 41/50, with new branches for tempo, precision, missile/siege scaling, field/aura scaling, electric power damage, control-area damage, healing, economy/crit, multishot, and defensive control.
   - Added Coil Reactor, War Factory, and Recovery Swarm evolutions to connect the new upgrades into late-game synergy spikes.
+- Reached the requested unique-upgrade count:
+  - Added Vector Thrusters, Impact Fuse, Armor Piercers, Weakpoint Scanner, Med Pump, Orbit Gears, Mine Dispenser, Drone Command, and Lucky Core.
+  - The unique upgrade catalog is now 50/50, covering mobility, area damage, pierce, crit, sustain, orbit/contact damage, mines, pets, and luck-driven replayability.
+  - Added Death Orbit and Breach Rounds evolutions to deepen orbit and precision late-game builds.
 
 ## Backlog
 
 ### Next
 
-- Add the final 9 upgrades toward 50 unique upgrades, finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
+- Finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
 
 ### Content
 
-- Add the final 9 upgrades toward 50 unique upgrades, finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
+- Finish the last 4 powers toward 20 total, then run a 30-minute progression balance pass.
 
 ### Systems
 

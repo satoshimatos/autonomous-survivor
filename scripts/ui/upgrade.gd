@@ -50,6 +50,15 @@ var upgrade_catalog: Dictionary = {
 	"crystal_lens": {"title": "+ CRYSTAL LENS", "tag": "ECONOMY", "hint": "Adds EXP value and crit chance.", "synergy": ["exp", "salvage_magnet", "targeting_array"]},
 	"munition_printer": {"title": "+ MUNITION PRINTER", "tag": "MULTISHOT", "hint": "Adds periodic extra shots to volleys.", "synergy": ["cannon", "ammo_synthesizer", "ordnance_bay"]},
 	"stabilized_chassis": {"title": "+ STABILIZED CHASSIS", "tag": "DEFENSE", "hint": "Adds armor reduction and rotation control.", "synergy": ["armor", "gyro_stabilizer", "reactive_shield"]},
+	"vector_thrusters": {"title": "+ VECTOR THRUSTERS", "tag": "MOBILITY", "hint": "Boosts movement, rotation, and projectile speed.", "synergy": ["speed", "accelerator", "kinetic_treads"]},
+	"impact_fuse": {"title": "+ IMPACT FUSE", "tag": "AREA", "hint": "Adds blast radius and splash damage.", "synergy": ["splash", "shatter_rounds", "ordnance_bay"]},
+	"armor_piercers": {"title": "+ ARMOR PIERCERS", "tag": "CLEAR", "hint": "Adds projectile damage and periodic pierce.", "synergy": ["piercing", "phase_core", "weakpoint_scanner"]},
+	"weakpoint_scanner": {"title": "+ WEAKPOINT SCANNER", "tag": "PRECISION", "hint": "Adds crit power and boosts rail beams.", "synergy": ["targeting_array", "rail_stabilizer", "railgun_orbiter_level"]},
+	"med_pump": {"title": "+ MED PUMP", "tag": "SUSTAIN", "hint": "Improves healing and emergency repair cadence.", "synergy": ["nanobots", "repair_drones", "emergency_repairs"]},
+	"orbit_gears": {"title": "+ ORBIT GEARS", "tag": "CONTACT", "hint": "Boosts orbit contact damage and satellite levels.", "synergy": ["circular_saw_level", "guardian_satellite_level", "barbed_wire"]},
+	"mine_dispenser": {"title": "+ MINE DISPENSER", "tag": "DEVICE", "hint": "Places stronger mines more often.", "synergy": ["landmine_level", "combustion_mix", "impact_fuse"]},
+	"drone_command": {"title": "+ DRONE COMMAND", "tag": "PET", "hint": "Boosts pet damage and drone-style power levels.", "synergy": ["footsoldier_level", "drone_swarm_level", "guardian_satellite_level"]},
+	"lucky_core": {"title": "+ LUCKY CORE", "tag": "LUCK", "hint": "Adds EXP, crit chance, and occasional extra shots.", "synergy": ["crystal_lens", "targeting_array", "munition_printer"]},
 }
 
 @onready var buttons: Array[Button] = [
@@ -204,6 +213,24 @@ func get_synergy_level(synergy_id: String) -> int:
 			return player.munition_printer_level
 		"stabilized_chassis":
 			return player.stabilized_chassis_level
+		"vector_thrusters":
+			return player.vector_thrusters_level
+		"impact_fuse":
+			return player.impact_fuse_level
+		"armor_piercers":
+			return player.armor_piercers_level
+		"weakpoint_scanner":
+			return player.weakpoint_scanner_level
+		"med_pump":
+			return player.med_pump_level
+		"orbit_gears":
+			return player.orbit_gears_level
+		"mine_dispenser":
+			return player.mine_dispenser_level
+		"drone_command":
+			return player.drone_command_level
+		"lucky_core":
+			return player.lucky_core_level
 		"chain_lightning_level":
 			return player.chain_lightning_level
 		"guardian_satellite_level":
@@ -315,6 +342,24 @@ func get_synergy_label(synergy_id: String) -> String:
 			return "Munition Printer"
 		"stabilized_chassis":
 			return "Stabilized Chassis"
+		"vector_thrusters":
+			return "Vector Thrusters"
+		"impact_fuse":
+			return "Impact Fuse"
+		"armor_piercers":
+			return "Armor Piercers"
+		"weakpoint_scanner":
+			return "Weakpoint Scanner"
+		"med_pump":
+			return "Med Pump"
+		"orbit_gears":
+			return "Orbit Gears"
+		"mine_dispenser":
+			return "Mine Dispenser"
+		"drone_command":
+			return "Drone Command"
+		"lucky_core":
+			return "Lucky Core"
 		"chain_lightning_level":
 			return "Chain Lightning"
 		"guardian_satellite_level":

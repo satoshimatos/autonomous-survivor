@@ -45,7 +45,10 @@ func apply_contact_damage() -> void:
 			continue
 		
 		hit_cooldowns[area] = HIT_COOLDOWN
-		var actual_damage: int = area.hit(ceili(player.attack_damage / 3.0))
+		var damage_multiplier := 1.0
+		if player.has_method("get_contact_power_damage_multiplier"):
+			damage_multiplier = player.get_contact_power_damage_multiplier()
+		var actual_damage: int = area.hit(ceili(player.attack_damage / 3.0 * damage_multiplier))
 		var main := get_tree().current_scene
 		if actual_damage > 0 and main and main.has_method("record_player_damage"):
 			main.record_player_damage(actual_damage)
