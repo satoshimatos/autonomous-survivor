@@ -191,6 +191,19 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Hid debug buttons and the on-screen stat/inventory readouts from the player-facing HUD.
   - Replaced the repeated oval cloud shadows with a full-screen drifting shader overlay.
   - Added confetti and moving color bands to upgrade and ability choices, plus stronger camera shake for boss defeats, volatile elite bursts, and dynamite.
+- Expanded and corrected build content after playtest feedback:
+  - Added 30 new unique upgrades, bringing the upgrade pool to 80 total.
+  - Added 15 new powers, bringing the power pool to 35 total.
+  - Rewrote confusing early upgrade descriptions and rebalanced upgrade/power rarity assignments around gameplay value.
+  - Fixed healing scaling so Nanobots and related sustain upgrades noticeably increase wrench, beacon, cloud, and recycler repairs.
+  - Increased recycler kill-repair chance so the enemy-kill repair upgrade is visible in normal play.
+  - Rebuilt the end-run report as a scrollable panel instead of a cramped raw text block.
+  - Bosses now spawn every 3 minutes, roll from the full boss pool, and avoid repeating the previous boss when alternatives exist.
+  - Added variant enemy sprites and catalog texture hooks so later enemy types stop looking like only recolored starter enemies.
+  - Enlarged supply boxes, widened wrench collision, and made wrench pickup range benefit from the player's pickup radius.
+  - Zoomed the camera out for a wider field of view and made camera visibility math respect zoom.
+  - Reworked the in-game compendium into sprite/icon cards that open detail pages with a back button.
+  - Tightened tank unlock requirements so most tanks should take multiple runs or stronger play to unlock.
 
 ## Backlog
 
@@ -200,7 +213,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are met.
+- Requested content and 30-minute progression targets are exceeded: 80 upgrades, 35 powers, 20 enemies, and 10 bosses.
 
 ### Systems
 

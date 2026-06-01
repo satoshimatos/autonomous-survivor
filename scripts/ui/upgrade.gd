@@ -16,17 +16,17 @@ var displayed_upgrades: Array[String] = []
 var ai_pick_in_progress: bool = false
 
 var upgrade_catalog: Dictionary = {
-	"speed": {"title": "+ SPEED", "tag": "MOBILITY", "hint": "Move faster and reposition sooner.", "synergy": ["magnet", "oil_slick_level"]},
-	"fire_rate": {"title": "+ FIRE RATE", "tag": "WEAPON", "hint": "Shoot more often.", "synergy": ["damage", "cannon", "footsoldier_level", "drone_swarm_level"]},
-	"damage": {"title": "+ DAMAGE", "tag": "POWER", "hint": "Raise all direct weapon damage.", "synergy": ["fire_rate", "splash", "piercing", "shock_field_level"]},
-	"regeneration": {"title": "+ REGENERATION", "tag": "SUSTAIN", "hint": "Recover health over time.", "synergy": ["armor", "barbed_wire"]},
-	"exp": {"title": "+ EXP", "tag": "ECONOMY", "hint": "Level faster from every orb.", "synergy": ["magnet"]},
-	"splash": {"title": "+ SPLASH", "tag": "AREA", "hint": "Projectiles explode over a wider radius.", "synergy": ["damage", "piercing", "artillery_level", "landmine_level"]},
-	"piercing": {"title": "+ PIERCING", "tag": "CLEAR", "hint": "Shots pass through more targets.", "synergy": ["damage", "splash", "fire_rate"]},
-	"barbed_wire": {"title": "+ BARBED WIRE", "tag": "CONTACT", "hint": "Damage enemies that get too close.", "synergy": ["armor", "regeneration", "shock_field_level"]},
+	"speed": {"title": "+ SPEED", "tag": "MOBILITY", "hint": "Raises tank movement speed.", "synergy": ["magnet", "oil_slick_level"]},
+	"fire_rate": {"title": "+ FIRE RATE", "tag": "WEAPON", "hint": "Reduces cannon cooldown so the tank shoots more often.", "synergy": ["damage", "cannon", "footsoldier_level", "drone_swarm_level"]},
+	"damage": {"title": "+ DAMAGE", "tag": "WEAPON", "hint": "Raises main cannon damage.", "synergy": ["fire_rate", "splash", "piercing", "shock_field_level"]},
+	"regeneration": {"title": "+ REGENERATION", "tag": "SUSTAIN", "hint": "Repairs the tank slowly over time.", "synergy": ["armor", "barbed_wire"]},
+	"exp": {"title": "+ EXP VALUE", "tag": "ECONOMY", "hint": "Makes every EXP crystal worth more.", "synergy": ["magnet"]},
+	"splash": {"title": "+ SPLASH", "tag": "AREA", "hint": "Adds an explosion radius to cannon shells.", "synergy": ["damage", "piercing", "artillery_level", "landmine_level"]},
+	"piercing": {"title": "+ PIERCING", "tag": "CLEAR", "hint": "Lets cannon shells hit additional enemies before disappearing.", "synergy": ["damage", "splash", "fire_rate"]},
+	"barbed_wire": {"title": "+ BARBED WIRE", "tag": "CONTACT", "hint": "Creates a close-range damage ring around the tank.", "synergy": ["armor", "regeneration", "shock_field_level"]},
 	"armor": {"title": "+ ARMOR", "tag": "DEFENSE", "hint": "Reduce incoming hit damage.", "synergy": ["barbed_wire", "regeneration", "circular_saw_level"]},
 	"magnet": {"title": "+ MAGNET", "tag": "ECONOMY", "hint": "Pull EXP from farther away.", "synergy": ["exp", "speed", "artillery_level"]},
-	"cannon": {"title": "+ CANNON", "tag": "MULTISHOT", "hint": "Add another cannon to each volley.", "synergy": ["damage", "fire_rate", "drone_swarm_level"]},
+	"cannon": {"title": "+ MULTISHOT", "tag": "MULTISHOT", "hint": "Adds another shell to each cannon volley.", "synergy": ["damage", "fire_rate", "drone_swarm_level"]},
 	"targeting_array": {"title": "+ TARGETING ARRAY", "tag": "ACCESSORY", "hint": "Adds stacking critical hit chance.", "synergy": ["damage", "fire_rate", "cannon"]},
 	"accelerator": {"title": "+ ACCELERATOR", "tag": "ACCESSORY", "hint": "Shots travel faster and reach targets sooner.", "synergy": ["piercing", "splash", "payload_rack"]},
 	"alloy_plating": {"title": "+ ALLOY PLATING", "tag": "ACCESSORY", "hint": "Raises max health and repairs some HP.", "synergy": ["armor", "regeneration", "reactive_shield"]},
@@ -66,6 +66,36 @@ var upgrade_catalog: Dictionary = {
 	"mine_dispenser": {"title": "+ MINE DISPENSER", "tag": "DEVICE", "hint": "Places stronger mines more often.", "synergy": ["landmine_level", "combustion_mix", "impact_fuse"]},
 	"drone_command": {"title": "+ DRONE COMMAND", "tag": "PET", "hint": "Boosts pet damage and drone-style power levels.", "synergy": ["footsoldier_level", "drone_swarm_level", "guardian_satellite_level"]},
 	"lucky_core": {"title": "+ LUCKY CORE", "tag": "LUCK", "hint": "Adds EXP, crit chance, and occasional extra shots.", "synergy": ["crystal_lens", "targeting_array", "munition_printer"]},
+	"auto_loader": {"title": "+ AUTO LOADER", "tag": "TEMPO", "hint": "Slightly lowers cannon cooldown.", "synergy": ["fire_rate"]},
+	"focus_lens": {"title": "+ FOCUS LENS", "tag": "CRIT", "hint": "Adds crit chance and crit damage after Targeting Array.", "synergy": ["targeting_array"]},
+	"reinforced_tracks": {"title": "+ REINFORCED TRACKS", "tag": "DEFENSE", "hint": "Adds armor and a small speed boost.", "synergy": ["speed", "armor"]},
+	"field_medic_kit": {"title": "+ FIELD MEDIC KIT", "tag": "SUSTAIN", "hint": "Raises healing received and max health.", "synergy": ["nanobots", "repair_beacon_level"]},
+	"repair_gel": {"title": "+ REPAIR GEL", "tag": "SUSTAIN", "hint": "Strongly improves all healing after Nanobots.", "synergy": ["nanobots"]},
+	"salvage_claws": {"title": "+ SALVAGE CLAWS", "tag": "SUSTAIN", "hint": "Increases the chance for enemy kills to repair the tank.", "synergy": ["recycler"]},
+	"wide_nozzle": {"title": "+ WIDE NOZZLE", "tag": "AREA", "hint": "Expands shell explosion radius.", "synergy": ["splash"]},
+	"chain_fuse": {"title": "+ CHAIN FUSE", "tag": "AREA", "hint": "Raises explosion damage.", "synergy": ["splash"]},
+	"reactive_tracks": {"title": "+ REACTIVE TRACKS", "tag": "MOBILITY", "hint": "Adds speed and slightly longer safety after being hit.", "synergy": ["speed", "reactive_shield"]},
+	"polished_barrel": {"title": "+ POLISHED BARREL", "tag": "WEAPON", "hint": "Raises cannon damage and shell speed.", "synergy": ["damage", "accelerator"]},
+	"pickup_scoop": {"title": "+ PICKUP SCOOP", "tag": "ECONOMY", "hint": "Increases pickup reach for crystals and repair items.", "synergy": ["magnet"]},
+	"overcharger": {"title": "+ OVERCHARGER", "tag": "POWER", "hint": "Raises ability damage after owning a power.", "synergy": ["shock_field_level", "capacitor_bank"]},
+	"boss_buster": {"title": "+ BOSS BUSTER", "tag": "WEAPON", "hint": "Adds damage pressure intended for boss fights.", "synergy": ["damage"]},
+	"elite_hunter": {"title": "+ ELITE HUNTER", "tag": "WEAPON", "hint": "Adds damage pressure against dangerous special enemies.", "synergy": ["damage"]},
+	"crystal_converter": {"title": "+ CRYSTAL CONVERTER", "tag": "ECONOMY", "hint": "Increases EXP value after taking EXP upgrades.", "synergy": ["exp"]},
+	"armor_gasket": {"title": "+ ARMOR GASKET", "tag": "DEFENSE", "hint": "Adds armor and improves healing.", "synergy": ["armor", "nanobots"]},
+	"blast_compound": {"title": "+ BLAST COMPOUND", "tag": "AREA", "hint": "Raises explosion radius and explosion damage.", "synergy": ["splash"]},
+	"coolant_loop": {"title": "+ COOLANT LOOP", "tag": "TEMPO", "hint": "Slightly lowers cannon cooldown and improves power damage.", "synergy": ["fire_rate", "capacitor_bank"]},
+	"recoil_brace": {"title": "+ RECOIL BRACE", "tag": "WEAPON", "hint": "Raises cannon damage and crit chance.", "synergy": ["damage", "targeting_array"]},
+	"split_chamber": {"title": "+ SPLIT CHAMBER", "tag": "MULTISHOT", "hint": "Adds a chance to fire one extra shell after taking Multishot.", "synergy": ["cannon"]},
+	"power_coupler": {"title": "+ POWER COUPLER", "tag": "POWER", "hint": "Raises ability damage after owning a power.", "synergy": ["shock_field_level"]},
+	"shock_absorbers": {"title": "+ SHOCK ABSORBERS", "tag": "DEFENSE", "hint": "Adds armor and slightly longer hit protection.", "synergy": ["armor"]},
+	"supply_scanner": {"title": "+ SUPPLY SCANNER", "tag": "ECONOMY", "hint": "Improves pickup reach and EXP value.", "synergy": ["magnet", "exp"]},
+	"wrench_arm": {"title": "+ WRENCH ARM", "tag": "SUSTAIN", "hint": "Greatly improves repair pickup reach and healing received.", "synergy": ["magnet", "nanobots"]},
+	"battle_vault": {"title": "+ BATTLE VAULT", "tag": "DEFENSE", "hint": "Adds max health and armor.", "synergy": ["armor"]},
+	"kinetic_capacitor": {"title": "+ KINETIC CAPACITOR", "tag": "MOBILITY", "hint": "Adds speed and power damage after movement upgrades.", "synergy": ["speed"]},
+	"prism_rounds": {"title": "+ PRISM ROUNDS", "tag": "CRIT", "hint": "Adds crit chance and shell speed after Piercing.", "synergy": ["piercing"]},
+	"target_link": {"title": "+ TARGET LINK", "tag": "PET", "hint": "Improves crit chance and pet damage after owning a pet.", "synergy": ["footsoldier_level"]},
+	"flare_core": {"title": "+ FLARE CORE", "tag": "AREA", "hint": "Improves area and power damage after Flame Wave.", "synergy": ["flame_wave_level"]},
+	"lucky_battery": {"title": "+ LUCKY BATTERY", "tag": "LUCK", "hint": "Adds EXP value and occasional extra shells after Lucky Core.", "synergy": ["lucky_core"]},
 }
 
 @onready var buttons: Array[Button] = [
@@ -100,6 +130,11 @@ func connect_focus_updates() -> void:
 
 
 func roll_upgrade_options() -> void:
+	if player == null:
+		for button in buttons:
+			button.visible = false
+		detail_label.text = "Upgrade preview requires an active run."
+		return
 	var valid_upgrades: Array[String] = player.get_valid_upgrade_ids()
 	
 	valid_upgrades.shuffle()
@@ -129,13 +164,13 @@ func configure_card_button(button: Button, upgrade_id: String) -> void:
 
 func get_upgrade_rarity(upgrade_id: String) -> String:
 	match upgrade_id:
-		"speed", "fire_rate", "damage", "exp", "armor", "magnet", "cannon", "splash", "piercing", "barbed_wire", "regeneration":
+		"speed", "exp", "armor", "magnet", "barbed_wire", "regeneration", "auto_loader", "pickup_scoop", "field_medic_kit", "reinforced_tracks", "supply_scanner":
 			return "Common"
-		"targeting_array", "accelerator", "alloy_plating", "recycler", "payload_rack", "reactive_shield", "gyro_stabilizer", "rapid_loader", "high_caliber", "nanobots", "kinetic_treads", "ammo_synthesizer", "shatter_rounds", "phase_core", "salvage_magnet", "emergency_repairs":
+		"fire_rate", "damage", "splash", "piercing", "targeting_array", "accelerator", "alloy_plating", "recycler", "payload_rack", "reactive_shield", "gyro_stabilizer", "rapid_loader", "nanobots", "kinetic_treads", "shatter_rounds", "phase_core", "salvage_magnet", "emergency_repairs", "focus_lens", "repair_gel", "chain_fuse", "reactive_tracks", "polished_barrel", "crystal_converter", "armor_gasket", "coolant_loop", "recoil_brace", "shock_absorbers", "wrench_arm", "prism_rounds":
 			return "Uncommon"
-		"capacitor_bank", "combustion_mix", "heat_sinks", "overclocked_barrel", "rail_stabilizer", "missile_guidance", "ordnance_bay", "field_amplifier", "volt_coils", "gravity_anchor", "repair_drones", "crystal_lens", "munition_printer", "stabilized_chassis", "vector_thrusters", "impact_fuse", "armor_piercers", "weakpoint_scanner", "med_pump", "orbit_gears", "mine_dispenser", "drone_command":
+		"cannon", "high_caliber", "ammo_synthesizer", "capacitor_bank", "combustion_mix", "heat_sinks", "overclocked_barrel", "rail_stabilizer", "missile_guidance", "ordnance_bay", "field_amplifier", "volt_coils", "gravity_anchor", "repair_drones", "crystal_lens", "munition_printer", "stabilized_chassis", "vector_thrusters", "impact_fuse", "armor_piercers", "weakpoint_scanner", "med_pump", "orbit_gears", "mine_dispenser", "drone_command", "salvage_claws", "wide_nozzle", "overcharger", "boss_buster", "elite_hunter", "blast_compound", "split_chamber", "power_coupler", "battle_vault", "kinetic_capacitor", "target_link", "flare_core":
 			return "Rare"
-		"lucky_core":
+		"lucky_core", "lucky_battery":
 			return "Epic"
 	return "Common"
 
@@ -342,6 +377,10 @@ func get_synergy_level(synergy_id: String) -> int:
 			return player.oil_slick_level
 		"freeze_pulse_level":
 			return player.freeze_pulse_level
+	if player.has_method("get_extra_upgrade_level"):
+		return int(player.get_extra_upgrade_level(synergy_id))
+	if player.has_method("get_passive_power_level"):
+		return int(player.get_passive_power_level(synergy_id))
 	return 0
 
 

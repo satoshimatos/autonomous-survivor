@@ -1,6 +1,6 @@
 extends Area2D
 
-const HEAL_AMOUNT: int = 1
+const HEAL_AMOUNT: int = 2
 
 var is_active: bool = true
 var pulse_time: float = 0.0
@@ -32,13 +32,30 @@ func _process(delta: float) -> void:
 	
 	pulse_time += delta
 	var pulse: float = 1.0 + sin(pulse_time * TAU * 2.0) * 0.15
-	$PickupSprite.scale = Vector2.ONE * 0.375 * pulse
+	$PickupSprite.scale = Vector2.ONE * 0.48 * pulse
+	try_player_radius_pickup()
+
+
+func try_player_radius_pickup() -> void:
+	var player := get_tree().get_first_node_in_group("Player")
+	if player == null or not player is Node2D:
+		return
+	var pickup_radius := 36.0
+	if player.has_method("get_pickup_collection_radius"):
+		pickup_radius = max(pickup_radius, float(player.get_pickup_collection_radius()))
+	if global_position.distance_to((player as Node2D).global_position) <= pickup_radius:
+		collect(player as Node2D)
 
 
 func _on_body_entered(body: Node2D) -> void:
 	if not is_active or not body.is_in_group("Player"):
 		return
+	collect(body)
 	
+
+func collect(body: Node2D) -> void:
+	if not is_active:
+		return
 	if not body.has_method("heal"):
 		return
 	

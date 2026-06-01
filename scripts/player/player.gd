@@ -77,6 +77,8 @@ var orbit_gears_level: int = 0
 var mine_dispenser_level: int = 0
 var drone_command_level: int = 0
 var lucky_core_level: int = 0
+var extra_upgrade_levels: Dictionary = {}
+var passive_power_levels: Dictionary = {}
 var emergency_repair_timer: float = 0.0
 var barbed_wire_cooldowns := {}
 var selected_tank_id: String = "vanguard"
@@ -277,14 +279,14 @@ const BARBED_WIRE_DAMAGE_INTERVAL: float = 0.5
 const BARBED_WIRE_DAMAGE_MULTIPLIER: float = 0.33
 const ARMOR_DAMAGE_REDUCTION_PER_LEVEL: float = 0.08
 const ARMOR_MAX_DAMAGE_REDUCTION: float = 0.65
-const MAGNET_BASE_RADIUS: float = 86.0
-const MAGNET_RADIUS_PER_LEVEL: float = 38.0
+const MAGNET_BASE_RADIUS: float = 98.0
+const MAGNET_RADIUS_PER_LEVEL: float = 46.0
 const CANNON_SPREAD_DEGREES: float = 12.0
 const TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL: float = 0.04
 const TARGETING_ARRAY_CRIT_MULTIPLIER: float = 1.5
 const ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL: float = 0.12
 const ALLOY_PLATING_HEALTH_PER_LEVEL: int = 2
-const RECYCLER_HEAL_CHANCE_PER_LEVEL: float = 0.025
+const RECYCLER_HEAL_CHANCE_PER_LEVEL: float = 0.12
 const RECYCLER_BOSS_HEAL_AMOUNT: int = 3
 const PAYLOAD_RACK_SPLASH_RADIUS_PER_LEVEL: float = 6.0
 const PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL: float = 0.06
@@ -293,7 +295,7 @@ const GYRO_ROTATION_MULTIPLIER: float = 1.12
 const RAPID_LOADER_FIRE_INTERVAL_MULTIPLIER: float = 0.94
 const HIGH_CALIBER_DAMAGE_MULTIPLIER: float = 1.12
 const HIGH_CALIBER_PROJECTILE_SCALE_PER_LEVEL: float = 0.04
-const NANOBOTS_HEAL_BONUS_PER_LEVEL: float = 0.12
+const NANOBOTS_HEAL_BONUS_PER_LEVEL: float = 0.5
 const KINETIC_TREADS_SPEED_MULTIPLIER: float = 1.1
 const SHATTER_ROUNDS_RADIUS_PER_LEVEL: float = 4.0
 const SHATTER_ROUNDS_DAMAGE_PER_LEVEL: float = 0.03
@@ -754,30 +756,6 @@ func apply_starting_ability_levels(tank: Dictionary) -> void:
 		upgrade_ricochet_rounds()
 	for i in range(int(tank.get("chrono_burst_level", 0))):
 		upgrade_chrono_burst()
-	for i in range(int(tank.get("chain_lightning_level", 0))):
-		upgrade_chain_lightning()
-	for i in range(int(tank.get("guardian_satellite_level", 0))):
-		upgrade_guardian_satellite()
-	for i in range(int(tank.get("overdrive_core_level", 0))):
-		upgrade_overdrive_core()
-	for i in range(int(tank.get("flame_wave_level", 0))):
-		upgrade_flame_wave()
-	for i in range(int(tank.get("repair_beacon_level", 0))):
-		upgrade_repair_beacon()
-	for i in range(int(tank.get("missile_pod_level", 0))):
-		upgrade_missile_pod()
-	for i in range(int(tank.get("gravity_well_level", 0))):
-		upgrade_gravity_well()
-	for i in range(int(tank.get("railgun_orbiter_level", 0))):
-		upgrade_railgun_orbiter()
-	for i in range(int(tank.get("tesla_pylon_level", 0))):
-		upgrade_tesla_pylon()
-	for i in range(int(tank.get("nanite_cloud_level", 0))):
-		upgrade_nanite_cloud()
-	for i in range(int(tank.get("ricochet_rounds_level", 0))):
-		upgrade_ricochet_rounds()
-	for i in range(int(tank.get("chrono_burst_level", 0))):
-		upgrade_chrono_burst()
 
 
 func upgrade_drone_swarm() -> void:
@@ -1072,6 +1050,7 @@ func get_valid_upgrade_ids() -> Array[String]:
 		"drone_command",
 		"lucky_core",
 	]
+	upgrade_pool.append_array(get_extra_upgrade_ids())
 	if can_upgrade_regeneration():
 		upgrade_pool.append("regeneration")
 
@@ -1084,6 +1063,13 @@ func get_valid_upgrade_ids() -> Array[String]:
 
 
 func are_upgrade_prerequisites_met(upgrade_id: String) -> bool:
+	var extra_upgrade := get_extra_upgrade_config(upgrade_id)
+	if not extra_upgrade.is_empty():
+		var required: Dictionary = extra_upgrade.get("requires", {}) as Dictionary
+		for key in required.keys():
+			if get_build_level_for_evolution(String(key)) < int(required[key]):
+				return false
+		return true
 	match upgrade_id:
 		"payload_rack", "shatter_rounds", "impact_fuse":
 			return has_splash_build()
@@ -1143,6 +1129,8 @@ func has_field_or_aura_power() -> bool:
 
 
 func has_active_power() -> bool:
+	if not passive_power_levels.is_empty():
+		return true
 	return (
 		landmine_level > 0
 		or circular_saw_level > 0
@@ -1168,6 +1156,10 @@ func has_active_power() -> bool:
 
 
 func apply_upgrade_by_id(upgrade_id: String) -> void:
+	if apply_extra_upgrade_by_id(upgrade_id):
+		update_evolutions()
+		return
+
 	match upgrade_id:
 		"speed":
 			speed_level += 1
@@ -1289,6 +1281,92 @@ func apply_upgrade_by_id(upgrade_id: String) -> void:
 	update_evolutions()
 
 
+func get_extra_upgrade_ids() -> Array[String]:
+	var ids: Array[String] = []
+	for upgrade in get_extra_upgrade_catalog():
+		ids.append(String(upgrade.id))
+	return ids
+
+
+func get_extra_upgrade_config(upgrade_id: String) -> Dictionary:
+	for upgrade in get_extra_upgrade_catalog():
+		if String(upgrade.id) == upgrade_id:
+			return upgrade
+	return {}
+
+
+func apply_extra_upgrade_by_id(upgrade_id: String) -> bool:
+	var upgrade := get_extra_upgrade_config(upgrade_id)
+	if upgrade.is_empty():
+		return false
+	extra_upgrade_levels[upgrade_id] = int(extra_upgrade_levels.get(upgrade_id, 0)) + 1
+	var effects: Dictionary = upgrade.get("effects", {}) as Dictionary
+	if effects.has("speed_multiplier"):
+		speed *= 1.0 + float(effects.speed_multiplier)
+	if effects.has("fire_interval_multiplier"):
+		fire_interval *= float(effects.fire_interval_multiplier)
+	if effects.has("damage_multiplier"):
+		attack_damage *= 1.0 + float(effects.damage_multiplier)
+	if effects.has("max_health"):
+		max_health += int(effects.max_health)
+		health = min(health + int(effects.max_health), max_health)
+	if effects.has("armor_levels"):
+		armor_level += int(effects.armor_levels)
+	if effects.has("magnet_levels"):
+		magnet_level += int(effects.magnet_levels)
+	return true
+
+
+func get_extra_upgrade_catalog() -> Array[Dictionary]:
+	return [
+		{"id": "auto_loader", "effects": {"fire_interval_multiplier": 0.96}},
+		{"id": "focus_lens", "effects": {"crit_chance": 0.025, "crit_multiplier": 0.05}, "requires": {"targeting_array": 1}},
+		{"id": "reinforced_tracks", "effects": {"speed_multiplier": 0.04, "armor_levels": 1}},
+		{"id": "field_medic_kit", "effects": {"heal_multiplier": 0.14, "max_health": 1}},
+		{"id": "repair_gel", "effects": {"heal_multiplier": 0.16}, "requires": {"nanobots": 1}},
+		{"id": "salvage_claws", "effects": {"recycler_chance": 0.05}, "requires": {"recycler": 1}},
+		{"id": "wide_nozzle", "effects": {"splash_radius": 5.0}, "requires": {"splash": 1}},
+		{"id": "chain_fuse", "effects": {"splash_damage": 0.05}, "requires": {"splash": 1}},
+		{"id": "reactive_tracks", "effects": {"speed_multiplier": 0.05, "invulnerability": 0.04}},
+		{"id": "polished_barrel", "effects": {"damage_multiplier": 0.05, "projectile_speed": 0.04}},
+		{"id": "pickup_scoop", "effects": {"pickup_radius": 20.0}},
+		{"id": "overcharger", "effects": {"power_damage": 0.05}, "requires": {"shock_field": 1}},
+		{"id": "boss_buster", "effects": {"boss_damage": 0.08}},
+		{"id": "elite_hunter", "effects": {"elite_damage": 0.07}},
+		{"id": "crystal_converter", "effects": {"exp_value": 0.06}, "requires": {"exp": 1}},
+		{"id": "armor_gasket", "effects": {"armor_levels": 1, "heal_multiplier": 0.05}},
+		{"id": "blast_compound", "effects": {"splash_radius": 4.0, "splash_damage": 0.04}, "requires": {"splash": 1}},
+		{"id": "coolant_loop", "effects": {"fire_interval_multiplier": 0.975, "power_damage": 0.03}},
+		{"id": "recoil_brace", "effects": {"damage_multiplier": 0.04, "crit_chance": 0.015}},
+		{"id": "split_chamber", "effects": {"extra_shot_chance": 0.05}, "requires": {"cannon": 1}},
+		{"id": "power_coupler", "effects": {"power_damage": 0.06}, "requires": {"shock_field": 1}},
+		{"id": "shock_absorbers", "effects": {"armor_levels": 1, "invulnerability": 0.03}},
+		{"id": "supply_scanner", "effects": {"pickup_radius": 14.0, "exp_value": 0.03}},
+		{"id": "wrench_arm", "effects": {"pickup_radius": 26.0, "heal_multiplier": 0.08}},
+		{"id": "battle_vault", "effects": {"max_health": 2, "armor_levels": 1}},
+		{"id": "kinetic_capacitor", "effects": {"speed_multiplier": 0.04, "power_damage": 0.04}, "requires": {"speed": 1}},
+		{"id": "prism_rounds", "effects": {"crit_chance": 0.02, "projectile_speed": 0.04}, "requires": {"piercing": 1}},
+		{"id": "target_link", "effects": {"crit_chance": 0.018, "pet_damage": 0.05}, "requires": {"footsoldier": 1}},
+		{"id": "flare_core", "effects": {"splash_damage": 0.05, "power_damage": 0.04}, "requires": {"flame_wave": 1}},
+		{"id": "lucky_battery", "effects": {"extra_shot_chance": 0.035, "exp_value": 0.04}, "requires": {"lucky_core": 1}},
+	]
+
+
+func get_extra_upgrade_level(upgrade_id: String) -> int:
+	return int(extra_upgrade_levels.get(upgrade_id, 0))
+
+
+func get_extra_upgrade_effect(effect_id: String) -> float:
+	var total := 0.0
+	for upgrade in get_extra_upgrade_catalog():
+		var level := get_extra_upgrade_level(String(upgrade.id))
+		if level <= 0:
+			continue
+		var effects: Dictionary = upgrade.get("effects", {}) as Dictionary
+		total += float(effects.get(effect_id, 0.0)) * float(level)
+	return total
+
+
 func upgrade_damage() -> void:
 	damage_level += 1
 	attack_damage *= 1.2925
@@ -1299,7 +1377,7 @@ func upgrade_exp() -> void:
 
 
 func get_exp_value(base_exp_value: int) -> int:
-	return int(ceil(float(base_exp_value) * (1.0 + float(exp_bonus_level) * 0.25 + float(salvage_magnet_level) * SALVAGE_MAGNET_EXP_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_EXP_PER_LEVEL + float(lucky_core_level) * LUCKY_CORE_EXP_PER_LEVEL)))
+	return int(ceil(float(base_exp_value) * (1.0 + float(exp_bonus_level) * 0.25 + float(salvage_magnet_level) * SALVAGE_MAGNET_EXP_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_EXP_PER_LEVEL + float(lucky_core_level) * LUCKY_CORE_EXP_PER_LEVEL + get_extra_upgrade_effect("exp_value") + get_passive_power_effect("exp_value"))))
 
 
 func upgrade_splash() -> void:
@@ -1314,7 +1392,7 @@ func get_splash_radius() -> float:
 	if splash_level > 0:
 		upgrade_radius = 10.0 + float(splash_level - 1) * 5.0
 
-	return upgrade_radius + get_payload_splash_radius_bonus() + float(shatter_rounds_level) * SHATTER_ROUNDS_RADIUS_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_RADIUS_PER_LEVEL + float(missile_guidance_level) * MISSILE_GUIDANCE_RADIUS_PER_LEVEL + float(impact_fuse_level) * IMPACT_FUSE_RADIUS_PER_LEVEL + get_evolution_effect_value("splash_radius_bonus")
+	return upgrade_radius + get_payload_splash_radius_bonus() + float(shatter_rounds_level) * SHATTER_ROUNDS_RADIUS_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_RADIUS_PER_LEVEL + float(missile_guidance_level) * MISSILE_GUIDANCE_RADIUS_PER_LEVEL + float(impact_fuse_level) * IMPACT_FUSE_RADIUS_PER_LEVEL + get_extra_upgrade_effect("splash_radius") + get_passive_power_effect("splash_radius") + get_evolution_effect_value("splash_radius_bonus")
 
 
 func get_payload_splash_radius_bonus() -> float:
@@ -1322,7 +1400,7 @@ func get_payload_splash_radius_bonus() -> float:
 
 
 func get_splash_damage_multiplier() -> float:
-	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL + float(shatter_rounds_level) * SHATTER_ROUNDS_DAMAGE_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_DAMAGE_PER_LEVEL + float(impact_fuse_level) * IMPACT_FUSE_DAMAGE_PER_LEVEL) * get_area_damage_multiplier() * get_evolution_effect_multiplier("splash_damage_multiplier")
+	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL + float(shatter_rounds_level) * SHATTER_ROUNDS_DAMAGE_PER_LEVEL + float(ordnance_bay_level) * ORDNANCE_BAY_DAMAGE_PER_LEVEL + float(impact_fuse_level) * IMPACT_FUSE_DAMAGE_PER_LEVEL + get_extra_upgrade_effect("splash_damage") + get_passive_power_effect("splash_damage")) * get_area_damage_multiplier() * get_evolution_effect_multiplier("splash_damage_multiplier")
 
 
 func spawn_muzzle_burst() -> void:
@@ -1396,17 +1474,17 @@ func get_projectile_hp() -> int:
 
 
 func get_projectile_speed() -> float:
-	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL + float(phase_core_level) * PHASE_CORE_SPEED_PER_LEVEL + float(vector_thrusters_level) * VECTOR_THRUSTERS_PROJECTILE_SPEED_PER_LEVEL)
+	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL + float(phase_core_level) * PHASE_CORE_SPEED_PER_LEVEL + float(vector_thrusters_level) * VECTOR_THRUSTERS_PROJECTILE_SPEED_PER_LEVEL + get_extra_upgrade_effect("projectile_speed") + get_passive_power_effect("projectile_speed"))
 
 
 func get_crit_chance() -> float:
-	return min(float(targeting_array_level) * TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL + float(rail_stabilizer_level) * RAIL_STABILIZER_CRIT_CHANCE_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_CRIT_CHANCE_PER_LEVEL + float(weakpoint_scanner_level) * WEAKPOINT_SCANNER_CRIT_CHANCE_PER_LEVEL + float(lucky_core_level) * LUCKY_CORE_CRIT_CHANCE_PER_LEVEL + get_evolution_effect_value("crit_chance_bonus"), 0.75)
+	return min(float(targeting_array_level) * TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL + float(rail_stabilizer_level) * RAIL_STABILIZER_CRIT_CHANCE_PER_LEVEL + float(crystal_lens_level) * CRYSTAL_LENS_CRIT_CHANCE_PER_LEVEL + float(weakpoint_scanner_level) * WEAKPOINT_SCANNER_CRIT_CHANCE_PER_LEVEL + float(lucky_core_level) * LUCKY_CORE_CRIT_CHANCE_PER_LEVEL + get_extra_upgrade_effect("crit_chance") + get_passive_power_effect("crit_chance") + get_evolution_effect_value("crit_chance_bonus"), 0.9)
 
 
 func get_crit_multiplier() -> float:
 	if targeting_array_level <= 0:
-		return 1.0
-	return TARGETING_ARRAY_CRIT_MULTIPLIER + float(weakpoint_scanner_level) * WEAKPOINT_SCANNER_CRIT_MULTIPLIER_PER_LEVEL + get_evolution_effect_value("crit_multiplier_bonus")
+		return 1.0 + get_extra_upgrade_effect("crit_multiplier") + get_passive_power_effect("crit_multiplier")
+	return TARGETING_ARRAY_CRIT_MULTIPLIER + float(weakpoint_scanner_level) * WEAKPOINT_SCANNER_CRIT_MULTIPLIER_PER_LEVEL + get_extra_upgrade_effect("crit_multiplier") + get_passive_power_effect("crit_multiplier") + get_evolution_effect_value("crit_multiplier_bonus")
 
 
 func fire_projectile_volley(target_direction: Vector2) -> void:
@@ -1438,7 +1516,7 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 
 
 func get_armor_damage_reduction() -> float:
-	return min(float(armor_level) * ARMOR_DAMAGE_REDUCTION_PER_LEVEL + float(stabilized_chassis_level) * STABILIZED_CHASSIS_ARMOR_PER_LEVEL + get_evolution_effect_value("armor_reduction_bonus"), ARMOR_MAX_DAMAGE_REDUCTION)
+	return min(float(armor_level) * ARMOR_DAMAGE_REDUCTION_PER_LEVEL + float(stabilized_chassis_level) * STABILIZED_CHASSIS_ARMOR_PER_LEVEL + get_passive_power_effect("armor") + get_evolution_effect_value("armor_reduction_bonus"), ARMOR_MAX_DAMAGE_REDUCTION)
 
 
 func get_projectile_count() -> int:
@@ -1449,11 +1527,13 @@ func get_projectile_count() -> int:
 		projectile_count += 1
 	if lucky_core_level > 0 and randf() < min(float(lucky_core_level) * 0.025, 0.25):
 		projectile_count += 1
+	if randf() < min(get_extra_upgrade_effect("extra_shot_chance") + get_passive_power_effect("extra_shot_chance"), 0.65):
+		projectile_count += 1
 	return projectile_count
 
 
 func get_area_damage_multiplier() -> float:
-	return 1.0 + float(combustion_mix_level) * COMBUSTION_MIX_AREA_DAMAGE_PER_LEVEL + float(gravity_anchor_level) * GRAVITY_ANCHOR_AREA_DAMAGE_PER_LEVEL
+	return 1.0 + float(combustion_mix_level) * COMBUSTION_MIX_AREA_DAMAGE_PER_LEVEL + float(gravity_anchor_level) * GRAVITY_ANCHOR_AREA_DAMAGE_PER_LEVEL + get_passive_power_effect("area_damage")
 
 
 func upgrade_alloy_plating() -> void:
@@ -1514,12 +1594,22 @@ func try_recycler_heal(is_boss: bool = false) -> void:
 		return
 
 	if is_boss:
-		health = min(health + RECYCLER_BOSS_HEAL_AMOUNT + recycler_level, max_health)
+		var boss_healed_amount := heal(RECYCLER_BOSS_HEAL_AMOUNT + recycler_level)
+		if boss_healed_amount > 0:
+			show_self_heal_popup(boss_healed_amount)
 		return
 
-	var heal_chance: float = min(float(recycler_level) * RECYCLER_HEAL_CHANCE_PER_LEVEL + get_evolution_effect_value("recycler_heal_chance_bonus"), 0.35)
+	var heal_chance: float = min(float(recycler_level) * RECYCLER_HEAL_CHANCE_PER_LEVEL + get_extra_upgrade_effect("recycler_chance") + get_passive_power_effect("recycler_chance") + get_evolution_effect_value("recycler_heal_chance_bonus"), 0.8)
 	if randf() <= heal_chance:
-		heal(1)
+		var healed_amount := heal(1 + int(get_passive_power_effect("recycler_heal")))
+		if healed_amount > 0:
+			show_self_heal_popup(healed_amount)
+
+
+func show_self_heal_popup(healed_amount: int) -> void:
+	var main := get_tree().current_scene
+	if healed_amount > 0 and main and main.has_method("show_healing_popup"):
+		main.show_healing_popup(global_position + Vector2(0.0, -28.0), healed_amount)
 
 
 func process_emergency_repairs(delta: float) -> void:
@@ -1708,7 +1798,111 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return ricochet_rounds_level
 		"chrono_burst":
 			return chrono_burst_level
+	if extra_upgrade_levels.has(build_id):
+		return get_extra_upgrade_level(build_id)
+	if passive_power_levels.has(build_id):
+		return get_passive_power_level(build_id)
 	return 0
+
+
+func upgrade_passive_power(power_id: String) -> void:
+	passive_power_levels[power_id] = get_passive_power_level(power_id) + 1
+	update_evolutions()
+
+
+func get_passive_power_level(power_id: String) -> int:
+	return int(passive_power_levels.get(power_id, 0))
+
+
+func get_passive_power_effect(effect_id: String) -> float:
+	var total := 0.0
+	for power in get_passive_power_catalog():
+		var level := get_passive_power_level(String(power.id))
+		if level <= 0:
+			continue
+		var effects: Dictionary = power.get("effects", {}) as Dictionary
+		total += float(effects.get(effect_id, 0.0)) * float(level)
+	return total
+
+
+func get_passive_power_catalog() -> Array[Dictionary]:
+	return [
+		{"id": "vampire_circuit", "effects": {"recycler_chance": 0.08, "heal_multiplier": 0.08}},
+		{"id": "ion_lance", "effects": {"projectile_damage": 0.08, "projectile_speed": 0.06}},
+		{"id": "meteor_shell", "effects": {"splash_radius": 7.0, "splash_damage": 0.07}},
+		{"id": "bulldozer_aura", "effects": {"contact_damage": 0.1, "armor": 0.015}},
+		{"id": "supply_beacon", "effects": {"pickup_radius": 18.0, "exp_value": 0.04}},
+		{"id": "black_hole_mines", "effects": {"area_damage": 0.08, "splash_radius": 5.0}},
+		{"id": "pulse_drone", "effects": {"pet_damage": 0.1, "projectile_damage": 0.03}},
+		{"id": "acid_pool", "effects": {"area_damage": 0.07, "splash_damage": 0.05}},
+		{"id": "guardian_wall", "effects": {"armor": 0.025, "heal_multiplier": 0.05}},
+		{"id": "critical_storm", "effects": {"crit_chance": 0.035, "crit_multiplier": 0.08}},
+		{"id": "repair_burst", "effects": {"heal_multiplier": 0.16, "recycler_heal": 1.0}},
+		{"id": "magnet_storm", "effects": {"pickup_radius": 32.0, "power_damage": 0.04}},
+		{"id": "orbital_cannon", "effects": {"extra_shot_chance": 0.06, "projectile_damage": 0.05}},
+		{"id": "ember_turret", "effects": {"power_damage": 0.08, "area_damage": 0.04}},
+		{"id": "time_shock", "effects": {"crit_chance": 0.02, "power_damage": 0.06}},
+	]
+
+
+func upgrade_vampire_circuit() -> void:
+	upgrade_passive_power("vampire_circuit")
+
+
+func upgrade_ion_lance() -> void:
+	upgrade_passive_power("ion_lance")
+
+
+func upgrade_meteor_shell() -> void:
+	upgrade_passive_power("meteor_shell")
+
+
+func upgrade_bulldozer_aura() -> void:
+	upgrade_passive_power("bulldozer_aura")
+
+
+func upgrade_supply_beacon() -> void:
+	upgrade_passive_power("supply_beacon")
+
+
+func upgrade_black_hole_mines() -> void:
+	upgrade_passive_power("black_hole_mines")
+
+
+func upgrade_pulse_drone() -> void:
+	upgrade_passive_power("pulse_drone")
+
+
+func upgrade_acid_pool() -> void:
+	upgrade_passive_power("acid_pool")
+
+
+func upgrade_guardian_wall() -> void:
+	upgrade_passive_power("guardian_wall")
+
+
+func upgrade_critical_storm() -> void:
+	upgrade_passive_power("critical_storm")
+
+
+func upgrade_repair_burst() -> void:
+	upgrade_passive_power("repair_burst")
+
+
+func upgrade_magnet_storm() -> void:
+	upgrade_passive_power("magnet_storm")
+
+
+func upgrade_orbital_cannon() -> void:
+	upgrade_passive_power("orbital_cannon")
+
+
+func upgrade_ember_turret() -> void:
+	upgrade_passive_power("ember_turret")
+
+
+func upgrade_time_shock() -> void:
+	upgrade_passive_power("time_shock")
 
 
 func apply_evolution_runtime_updates() -> void:
@@ -1787,22 +1981,22 @@ func get_effective_ability_level(ability_id: String) -> int:
 
 
 func get_projectile_damage_multiplier() -> float:
-	return get_power_damage_multiplier() * (1.0 + float(armor_piercers_level) * ARMOR_PIERCERS_DAMAGE_PER_LEVEL) * get_evolution_effect_multiplier("projectile_damage_multiplier")
+	return get_power_damage_multiplier() * (1.0 + float(armor_piercers_level) * ARMOR_PIERCERS_DAMAGE_PER_LEVEL + get_passive_power_effect("projectile_damage")) * get_evolution_effect_multiplier("projectile_damage_multiplier")
 
 
 func get_power_damage_multiplier() -> float:
-	var multiplier := 1.0 + float(capacitor_bank_level) * CAPACITOR_BANK_DAMAGE_PER_LEVEL + float(volt_coils_level) * VOLT_COILS_POWER_DAMAGE_PER_LEVEL + get_evolution_effect_value("overdrive_damage_bonus")
+	var multiplier := 1.0 + float(capacitor_bank_level) * CAPACITOR_BANK_DAMAGE_PER_LEVEL + float(volt_coils_level) * VOLT_COILS_POWER_DAMAGE_PER_LEVEL + get_extra_upgrade_effect("power_damage") + get_passive_power_effect("power_damage") + get_evolution_effect_value("overdrive_damage_bonus")
 	if is_instance_valid(overdrive_core) and overdrive_core.has_method("get_damage_multiplier"):
 		multiplier *= overdrive_core.get_damage_multiplier()
 	return multiplier
 
 
 func get_contact_power_damage_multiplier() -> float:
-	return get_power_damage_multiplier() * (1.0 + float(orbit_gears_level) * ORBIT_GEARS_CONTACT_DAMAGE_PER_LEVEL + get_evolution_effect_value("power_contact_damage_bonus"))
+	return get_power_damage_multiplier() * (1.0 + float(orbit_gears_level) * ORBIT_GEARS_CONTACT_DAMAGE_PER_LEVEL + get_passive_power_effect("contact_damage") + get_evolution_effect_value("power_contact_damage_bonus"))
 
 
 func get_pet_damage_multiplier() -> float:
-	return get_power_damage_multiplier() * (1.0 + float(drone_command_level) * DRONE_COMMAND_PET_DAMAGE_PER_LEVEL)
+	return get_power_damage_multiplier() * (1.0 + float(drone_command_level) * DRONE_COMMAND_PET_DAMAGE_PER_LEVEL + get_passive_power_effect("pet_damage"))
 
 
 func get_power_speed_multiplier() -> float:
@@ -1866,7 +2060,7 @@ func process_personal_magnet() -> void:
 	if magnet_level <= 0 or is_dead:
 		return
 	
-	var pull_radius := MAGNET_BASE_RADIUS + float(magnet_level - 1) * MAGNET_RADIUS_PER_LEVEL + float(salvage_magnet_level) * SALVAGE_MAGNET_RADIUS_PER_LEVEL
+	var pull_radius := MAGNET_BASE_RADIUS + float(magnet_level - 1) * MAGNET_RADIUS_PER_LEVEL + float(salvage_magnet_level) * SALVAGE_MAGNET_RADIUS_PER_LEVEL + get_extra_upgrade_effect("pickup_radius") + get_passive_power_effect("pickup_radius")
 	var pull_radius_squared := pull_radius * pull_radius
 	for exp_orb in get_tree().get_nodes_in_group("ExpOrb"):
 		if is_instance_valid(exp_orb) and global_position.distance_squared_to(exp_orb.global_position) <= pull_radius_squared:
@@ -2017,7 +2211,14 @@ func heal(heal_amount: int) -> int:
 
 
 func get_heal_multiplier() -> float:
-	return 1.0 + float(nanobots_level) * NANOBOTS_HEAL_BONUS_PER_LEVEL + float(repair_drones_level) * REPAIR_DRONES_HEAL_BONUS_PER_LEVEL + float(med_pump_level) * MED_PUMP_HEAL_BONUS_PER_LEVEL + get_evolution_effect_value("heal_multiplier_bonus")
+	return 1.0 + float(nanobots_level) * NANOBOTS_HEAL_BONUS_PER_LEVEL + float(repair_drones_level) * REPAIR_DRONES_HEAL_BONUS_PER_LEVEL + float(med_pump_level) * MED_PUMP_HEAL_BONUS_PER_LEVEL + get_extra_upgrade_effect("heal_multiplier") + get_passive_power_effect("heal_multiplier") + get_evolution_effect_value("heal_multiplier_bonus")
+
+
+func get_pickup_collection_radius() -> float:
+	var magnet_radius := 0.0
+	if magnet_level > 0:
+		magnet_radius = MAGNET_BASE_RADIUS + float(magnet_level - 1) * MAGNET_RADIUS_PER_LEVEL
+	return 28.0 + magnet_radius * 0.35 + float(salvage_magnet_level) * SALVAGE_MAGNET_RADIUS_PER_LEVEL * 0.5 + get_extra_upgrade_effect("pickup_radius") + get_passive_power_effect("pickup_radius")
 
 
 func update_invincibility_visual() -> void:

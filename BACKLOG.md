@@ -60,6 +60,7 @@ Completed setup:
   - #27 Fix full upgrade pause and tighten upgrade visuals
   - #28 Add rarity-colored cards and prerequisite-gated rolls
   - #29 Progression communication, compendium, and juice polish pass
+  - #30 Fix progression readability, pickups, bosses, and expand build content
 
 Completed issues:
 
@@ -92,10 +93,11 @@ Completed issues:
 - #27 Fix full upgrade pause and tighten upgrade visuals
 - #28 Add rarity-colored cards and prerequisite-gated rolls
 - #29 Progression communication, compendium, and juice polish pass
+- #30 Fix progression readability, pickups, bosses, and expand build content
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are met. Current counts: 50/50 unique upgrades, 20/20 powers, 20/20 enemies, 10/10 bosses.
+- Content and progression targets are exceeded. Current counts: 80 unique upgrades, 35 powers, 20 enemies, 10 bosses.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 
 ### P1 - Enemies And Bosses

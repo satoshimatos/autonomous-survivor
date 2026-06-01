@@ -96,15 +96,44 @@ layout_mode = 2
 size_flags_vertical = 3
 theme_override_constants/separation = 16
 
-[node name="EntryList" type="ItemList" parent="MarginContainer/VBoxContainer/ContentRow"]
-custom_minimum_size = Vector2(290, 0)
-layout_mode = 2
-size_flags_vertical = 3
-theme_override_font_sizes/font_size = 16
-
-[node name="DetailText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ContentRow"]
+[node name="BrowserPanel" type="Control" parent="MarginContainer/VBoxContainer/ContentRow"]
 layout_mode = 2
 size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="CardScroll" type="ScrollContainer" parent="MarginContainer/VBoxContainer/ContentRow/BrowserPanel"]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+horizontal_scroll_mode = 0
+
+[node name="CardGrid" type="GridContainer" parent="MarginContainer/VBoxContainer/ContentRow/BrowserPanel/CardScroll"]
+layout_mode = 2
+size_flags_horizontal = 3
+theme_override_constants/h_separation = 14
+theme_override_constants/v_separation = 14
+columns = 4
+
+[node name="DetailPanel" type="PanelContainer" parent="MarginContainer/VBoxContainer/ContentRow"]
+visible = false
+layout_mode = 2
+size_flags_horizontal = 3
+size_flags_vertical = 3
+
+[node name="VBoxContainer" type="VBoxContainer" parent="MarginContainer/VBoxContainer/ContentRow/DetailPanel"]
+layout_mode = 2
+theme_override_constants/separation = 12
+
+[node name="DetailIcon" type="TextureRect" parent="MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer"]
+custom_minimum_size = Vector2(150, 150)
+layout_mode = 2
+stretch_mode = 5
+
+[node name="DetailText" type="RichTextLabel" parent="MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer"]
+layout_mode = 2
 size_flags_vertical = 3
 theme_override_colors/default_color = Color(0.94, 0.98, 1, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.035, 1)
@@ -113,6 +142,11 @@ theme_override_font_sizes/normal_font_size = 17
 bbcode_enabled = true
 fit_content = true
 scroll_following = true
+
+[node name="DetailBackButton" type="Button" parent="MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer"]
+custom_minimum_size = Vector2(140, 42)
+layout_mode = 2
+text = "Back"
 
 [node name="FooterRow" type="HBoxContainer" parent="MarginContainer/VBoxContainer"]
 layout_mode = 2
@@ -125,5 +159,5 @@ theme_override_font_sizes/font_size = 20
 text = "Back"
 
 [connection signal="item_selected" from="MarginContainer/VBoxContainer/HeaderRow/CategorySelector" to="." method="_on_category_selector_item_selected"]
-[connection signal="item_selected" from="MarginContainer/VBoxContainer/ContentRow/EntryList" to="." method="_on_entry_list_item_selected"]
+[connection signal="pressed" from="MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer/DetailBackButton" to="." method="_on_detail_back_button_pressed"]
 [connection signal="pressed" from="MarginContainer/VBoxContainer/FooterRow/BackButton" to="." method="_on_back_button_pressed"]

@@ -4,7 +4,7 @@
 [ext_resource type="Texture2D" path="res://assets/pickups/wrench.png" id="2_wrench"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_wrench"]
-size = Vector2(24, 24)
+size = Vector2(42, 42)
 
 [node name="WrenchPickup" type="Area2D"]
 z_index = 2
@@ -16,7 +16,7 @@ script = ExtResource("1_wrench")
 shape = SubResource("RectangleShape2D_wrench")
 
 [node name="PickupSprite" type="Sprite2D" parent="."]
-scale = Vector2(0.375, 0.375)
+scale = Vector2(0.48, 0.48)
 texture = ExtResource("2_wrench")
 
 [connection signal="body_entered" from="." to="." method="_on_body_entered"]

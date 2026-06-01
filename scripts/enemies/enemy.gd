@@ -76,6 +76,9 @@ func configure_variant(config: Dictionary) -> void:
 	movement_style = String(config.get("movement_style", movement_style))
 	variant_color = config.get("color", Color.WHITE) as Color
 	variant_scale = float(config.get("scale", 1.0))
+	var texture_path := String(config.get("texture", ""))
+	if texture_path != "" and ResourceLoader.exists(texture_path) and mesh_instance is Sprite2D:
+		(mesh_instance as Sprite2D).texture = load(texture_path)
 	death_payload = (config.get("death_payload", {}) as Dictionary).duplicate(true)
 	if config.has("elite_affix"):
 		death_payload["elite_affix"] = String(config.get("elite_affix", ""))

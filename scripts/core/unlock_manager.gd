@@ -3,7 +3,7 @@ extends Node
 const SAVE_PATH: String = "user://unlock_state.cfg"
 
 var unlocked_tanks: Array[String] = ["vanguard", "scout"]
-var unlocked_abilities: Array[String] = ["landmine", "circular_saw", "footsoldier", "shock_field"]
+var unlocked_abilities: Array[String] = ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm"]
 var unlocked_modifiers: Array[String] = ["swarm_opening", "rich_crystals"]
 var completed_challenge_goals: Array[String] = []
 var best_survival_seconds: int = 0
@@ -59,7 +59,7 @@ func save_unlocks() -> void:
 func ensure_default_unlocks() -> void:
 	for tank_id in ["vanguard", "scout"]:
 		unlock_id(unlocked_tanks, tank_id)
-	for ability_id in ["landmine", "circular_saw", "footsoldier", "shock_field"]:
+	for ability_id in ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm"]:
 		unlock_id(unlocked_abilities, ability_id)
 	for modifier_id in ["swarm_opening", "rich_crystals"]:
 		unlock_id(unlocked_modifiers, modifier_id)
@@ -79,45 +79,55 @@ func record_run_result(result: Dictionary) -> Array[String]:
 
 
 func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
-	if best_survival_seconds >= 120:
+	if best_survival_seconds >= 420:
 		try_unlock("tank", "fortress", "Fortress tank", unlocked_messages)
 		try_unlock("ability", "oil_slick", "Oil Slick ability", unlocked_messages)
 		try_unlock("modifier", "supply_rain", "Supply Rain modifier", unlocked_messages)
-	if best_level >= 5:
+	if best_level >= 12:
 		try_unlock("tank", "collector", "Collector tank", unlocked_messages)
 		try_unlock("ability", "drone_swarm", "Drone Swarm ability", unlocked_messages)
-	if total_bosses_defeated >= 1:
+	if total_bosses_defeated >= 3:
 		try_unlock("tank", "twin_cannon", "Twin Cannon tank", unlocked_messages)
 		try_unlock("ability", "artillery", "Artillery ability", unlocked_messages)
 		try_unlock("modifier", "boss_contract", "Boss Contract modifier", unlocked_messages)
-	if best_enemies_defeated >= 250:
+	if best_enemies_defeated >= 900:
 		try_unlock("tank", "engineer", "Engineer tank", unlocked_messages)
 		try_unlock("modifier", "salvage_field", "Salvage Field modifier", unlocked_messages)
-	if best_level >= 8:
+	if best_level >= 18:
 		try_unlock("tank", "storm_chaser", "Storm Chaser tank", unlocked_messages)
-	if best_survival_seconds >= 420:
+	if best_survival_seconds >= 900:
 		try_unlock("tank", "pyroclast", "Pyroclast tank", unlocked_messages)
-	if total_bosses_defeated >= 3:
+	if total_bosses_defeated >= 8:
 		try_unlock("tank", "medic", "Medic tank", unlocked_messages)
-	if best_survival_seconds >= 900 and best_level >= 14:
+	if best_survival_seconds >= 1500 and best_level >= 22:
 		try_unlock("tank", "singularity_rig", "Singularity Rig tank", unlocked_messages)
 	if best_level >= 10:
 		try_unlock("ability", "freeze_pulse", "Freeze Pulse ability", unlocked_messages)
+		try_unlock("ability", "ion_lance", "Ion Lance power", unlocked_messages)
+		try_unlock("ability", "acid_pool", "Acid Pool power", unlocked_messages)
 		try_unlock("modifier", "unstable_engine", "Unstable Engine modifier", unlocked_messages)
 	if best_level >= 12:
 		try_unlock("ability", "overdrive_core", "Overdrive Core ability", unlocked_messages)
+		try_unlock("ability", "guardian_wall", "Guardian Wall power", unlocked_messages)
+		try_unlock("ability", "critical_storm", "Critical Storm power", unlocked_messages)
 	if best_survival_seconds >= 240:
 		try_unlock("ability", "flame_wave", "Flame Wave ability", unlocked_messages)
+		try_unlock("ability", "meteor_shell", "Meteor Shell power", unlocked_messages)
 	if best_survival_seconds >= 300:
 		try_unlock("ability", "repair_beacon", "Repair Beacon ability", unlocked_messages)
+		try_unlock("ability", "repair_burst", "Repair Burst power", unlocked_messages)
 	if best_survival_seconds >= 480:
 		try_unlock("ability", "missile_pod", "Missile Pod ability", unlocked_messages)
+		try_unlock("ability", "pulse_drone", "Pulse Drone power", unlocked_messages)
 	if best_survival_seconds >= 600:
 		try_unlock("ability", "chain_lightning", "Chain Lightning ability", unlocked_messages)
+		try_unlock("ability", "orbital_cannon", "Orbital Cannon power", unlocked_messages)
 	if best_level >= 14:
 		try_unlock("ability", "gravity_well", "Gravity Well ability", unlocked_messages)
+		try_unlock("ability", "black_hole_mines", "Black Hole Mines power", unlocked_messages)
 	if best_survival_seconds >= 900:
 		try_unlock("ability", "guardian_satellite", "Guardian Satellite ability", unlocked_messages)
+		try_unlock("ability", "ember_turret", "Ember Turret power", unlocked_messages)
 	if total_bosses_defeated >= 2:
 		try_unlock("ability", "railgun_orbiter", "Railgun Orbiter ability", unlocked_messages)
 	if best_survival_seconds >= 720:
@@ -128,6 +138,7 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("ability", "ricochet_rounds", "Ricochet Rounds ability", unlocked_messages)
 	if best_survival_seconds >= 1320:
 		try_unlock("ability", "chrono_burst", "Chrono Burst ability", unlocked_messages)
+		try_unlock("ability", "time_shock", "Time Shock power", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -197,21 +208,21 @@ func get_tank_unlock_hint(tank_id: String) -> String:
 		return "Unlocked"
 	match tank_id:
 		"fortress":
-			return "Survive 2:00 in any run."
-		"collector":
-			return "Reach level 5 in any run."
-		"twin_cannon":
-			return "Defeat 1 boss across all runs."
-		"engineer":
-			return "Defeat 250 enemies across your best run record."
-		"storm_chaser":
-			return "Reach level 8 in any run."
-		"pyroclast":
 			return "Survive 7:00 in any run."
-		"medic":
+		"collector":
+			return "Reach level 12 in any run."
+		"twin_cannon":
 			return "Defeat 3 total bosses across runs."
+		"engineer":
+			return "Defeat 900 enemies across your best run record."
+		"storm_chaser":
+			return "Reach level 18 in any run."
+		"pyroclast":
+			return "Survive 15:00 in any run."
+		"medic":
+			return "Defeat 8 total bosses across runs."
 		"singularity_rig":
-			return "Survive 15:00 and reach level 14."
+			return "Survive 25:00 and reach level 22."
 	return "Progress further to reveal this unlock."
 
 

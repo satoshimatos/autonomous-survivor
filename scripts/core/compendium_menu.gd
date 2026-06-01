@@ -17,8 +17,12 @@ const CATEGORIES: Array[String] = [
 ]
 
 @onready var category_selector: OptionButton = $MarginContainer/VBoxContainer/HeaderRow/CategorySelector
-@onready var entry_list: ItemList = $MarginContainer/VBoxContainer/ContentRow/EntryList
-@onready var detail_text: RichTextLabel = $MarginContainer/VBoxContainer/ContentRow/DetailText
+@onready var browser_panel: Control = $MarginContainer/VBoxContainer/ContentRow/BrowserPanel
+@onready var card_grid: GridContainer = $MarginContainer/VBoxContainer/ContentRow/BrowserPanel/CardScroll/CardGrid
+@onready var detail_panel: Control = $MarginContainer/VBoxContainer/ContentRow/DetailPanel
+@onready var detail_icon: TextureRect = $MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer/DetailIcon
+@onready var detail_text: RichTextLabel = $MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer/DetailText
+@onready var detail_back_button: Button = $MarginContainer/VBoxContainer/ContentRow/DetailPanel/VBoxContainer/DetailBackButton
 @onready var back_button: Button = $MarginContainer/VBoxContainer/FooterRow/BackButton
 
 var current_entries: Array[Dictionary] = []
@@ -36,6 +40,7 @@ func apply_visual_skin() -> void:
 	CartoonUiSkin.apply_label_pop($MarginContainer/VBoxContainer/TitleLabel, Color(1.0, 0.86, 0.24, 1.0))
 	CartoonUiSkin.apply_option_button(category_selector)
 	CartoonUiSkin.apply_button(back_button, Color(0.54, 0.18, 0.28, 1.0))
+	CartoonUiSkin.apply_button(detail_back_button, Color(0.22, 0.34, 0.68, 1.0))
 
 
 func populate_categories() -> void:
@@ -46,14 +51,26 @@ func populate_categories() -> void:
 
 func show_category(category_index: int) -> void:
 	current_entries = build_entries_for_category(CATEGORIES[category_index])
-	entry_list.clear()
-	for entry in current_entries:
-		entry_list.add_item(String(entry.get("name", "Unknown")))
-	if not current_entries.is_empty():
-		entry_list.select(0)
-		show_entry(0)
-	else:
-		detail_text.text = "No entries."
+	show_browser()
+	for child in card_grid.get_children():
+		child.queue_free()
+	for i in range(current_entries.size()):
+		add_entry_card(current_entries[i], i)
+
+
+func add_entry_card(entry: Dictionary, index: int) -> void:
+	var button := Button.new()
+	button.custom_minimum_size = Vector2(180, 140)
+	button.text = String(entry.get("name", "Unknown"))
+	button.icon = entry.get("texture", null) as Texture2D
+	button.expand_icon = true
+	button.clip_text = true
+	button.vertical_icon_alignment = VERTICAL_ALIGNMENT_TOP
+	button.alignment = HORIZONTAL_ALIGNMENT_CENTER
+	button.focus_mode = Control.FOCUS_ALL
+	CartoonUiSkin.apply_button(button, entry.get("accent", Color(0.18, 0.32, 0.48, 1.0)) as Color)
+	button.pressed.connect(func(): show_entry(index))
+	card_grid.add_child(button)
 
 
 func build_entries_for_category(category: String) -> Array[Dictionary]:
@@ -84,6 +101,8 @@ func get_tank_entries() -> Array[Dictionary]:
 		var status := "Unlocked" if unlock_manager.is_tank_unlocked(tank_id) else "Locked"
 		entries.append({
 			"name": "%s [%s]" % [String(tank.name), status],
+			"texture": load("res://assets/visual/player/tank_base_cartoon.png"),
+			"accent": tank.get("color", Color(0.22, 0.34, 0.48, 1.0)),
 			"detail": format_tank_detail(tank, status, unlock_manager.get_tank_unlock_hint(tank_id)),
 		})
 	return entries
@@ -124,6 +143,8 @@ func get_upgrade_entries() -> Array[Dictionary]:
 		var data: Dictionary = catalog[upgrade_id]
 		entries.append({
 			"name": String(data.get("title", upgrade_id)).replace("+ ", ""),
+			"texture": menu.get_upgrade_icon(String(upgrade_id)),
+			"accent": menu.RARITY_COLORS.get(menu.get_upgrade_rarity(String(upgrade_id)), Color(0.18, 0.32, 0.48, 1.0)),
 			"detail": "[b]%s[/b]\nTag: %s\nRarity: %s\nEffect: %s\nSynergy hooks: %s" % [
 				String(data.get("title", upgrade_id)),
 				String(data.get("tag", "UPGRADE")),
@@ -143,6 +164,8 @@ func get_ability_entries() -> Array[Dictionary]:
 		var tags: Array = ability.get("tags", []) as Array
 		entries.append({
 			"name": String(ability.label).replace("+1 ", "").replace("+ ", ""),
+			"texture": menu.get_ability_icon(String(ability.id)),
+			"accent": menu.RARITY_COLORS.get(String(ability.get("rarity", "Common")), Color(0.16, 0.40, 0.64, 1.0)),
 			"detail": "[b]%s[/b]\nRarity: %s\nBase weight: %.1f\nTags: %s\nUnlock status: %s\nLevel property: %s\nSynergy upgrades: %s\nSynergy abilities: %s" % [
 				String(ability.label),
 				String(ability.get("rarity", "Common")),
@@ -196,6 +219,8 @@ func format_combat_catalog(catalog: Array[Dictionary], is_boss: bool) -> Array[D
 			detail_lines.append("Movement: %s" % String(config.get("movement_style", "chase")))
 		entries.append({
 			"name": String(config.id).capitalize(),
+			"texture": get_combat_texture(config, is_boss),
+			"accent": config.get("color", Color(0.18, 0.32, 0.48, 1.0)),
 			"detail": "\n".join(detail_lines),
 		})
 	return entries
@@ -208,6 +233,8 @@ func get_modifier_entries() -> Array[Dictionary]:
 		var status := "Unlocked" if get_unlock_manager().is_modifier_unlocked(modifier_id) else "Locked"
 		entries.append({
 			"name": "%s [%s]" % [String(modifier.name), status],
+			"texture": load("res://assets/pickups/supply_box_green.png"),
+			"accent": Color(0.24, 0.42, 0.24, 1.0),
 			"detail": "[b]%s[/b]\n%s\nStatus: %s\nEffects: %s" % [
 				String(modifier.name),
 				String(modifier.summary),
@@ -222,12 +249,16 @@ func get_unlock_goal_entries() -> Array[Dictionary]:
 	var unlock_manager = get_unlock_manager()
 	var entries: Array[Dictionary] = [{
 		"name": "Progress Summary",
+		"texture": load("res://assets/pickups/magnet_pickup_sprite.png"),
+		"accent": Color(0.25, 0.38, 0.62, 1.0),
 		"detail": unlock_manager.get_progress_report(),
 	}]
 	for goal in unlock_manager.challenge_goal_catalog:
 		var status := "Complete" if unlock_manager.completed_challenge_goals.has(String(goal.id)) else "Incomplete"
 		entries.append({
 			"name": "%s [%s]" % [String(goal.name), status],
+			"texture": load("res://assets/pickups/wrench.png"),
+			"accent": Color(0.42, 0.28, 0.18, 1.0),
 			"detail": "[b]%s[/b]\nMetric: %s\nTarget: %s\nReward: %s\nStatus: %s" % [
 				String(goal.name),
 				String(goal.metric),
@@ -242,7 +273,24 @@ func get_unlock_goal_entries() -> Array[Dictionary]:
 func show_entry(index: int) -> void:
 	if index < 0 or index >= current_entries.size():
 		return
+	browser_panel.visible = false
+	detail_panel.visible = true
+	detail_icon.texture = current_entries[index].get("texture", null) as Texture2D
 	detail_text.text = String(current_entries[index].get("detail", ""))
+
+
+func show_browser() -> void:
+	browser_panel.visible = true
+	detail_panel.visible = false
+
+
+func get_combat_texture(config: Dictionary, is_boss: bool) -> Texture2D:
+	var texture_path := String(config.get("texture", ""))
+	if texture_path != "" and ResourceLoader.exists(texture_path):
+		return load(texture_path)
+	if is_boss:
+		return load("res://assets/visual/enemies/boss_core_cartoon.png")
+	return load("res://assets/visual/enemies/enemy_scout_cartoon.png")
 
 
 func format_nonzero_keys(data: Dictionary, keys: Array[String]) -> String:
@@ -275,12 +323,12 @@ func _on_category_selector_item_selected(index: int) -> void:
 	show_category(index)
 
 
-func _on_entry_list_item_selected(index: int) -> void:
-	show_entry(index)
-
-
 func _on_back_button_pressed() -> void:
 	get_tree().change_scene_to_file("res://scenes/core/main_menu.tscn")
+
+
+func _on_detail_back_button_pressed() -> void:
+	show_browser()
 
 
 func _unhandled_input(event: InputEvent) -> void:

@@ -2,6 +2,8 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 80 upgrades, 35 powers, 20 enemies, and 10 bosses.
+
 ## Menu
 
 - [Core Loop](#core-loop)
