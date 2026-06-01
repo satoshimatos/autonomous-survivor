@@ -7,6 +7,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 ## Navigation
 
 - [Game Compendium](docs/GAME_COMPENDIUM.md): open-book reference for mechanics, tanks, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and budgets.
+- [30-Minute Balance Pass](docs/BALANCE_30_MIN.md): deterministic long-run pressure and strong-build projection for the 30-minute target.
 - [Backlog](BACKLOG.md): autonomous task queue and completed issue history.
 - [Current Changelog](#current-changelog): latest implementation notes.
 
@@ -146,16 +147,22 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Tesla Pylon, Nanite Cloud, Ricochet Rounds, and Chrono Burst, bringing the ability/power catalog to 20/20 powers.
   - New powers add stationary electric area denial, sustain aura damage, projectile ricochet chains, and heavy crowd-control bursts.
   - Added Time Cage and Storm Battery evolutions for late-game control and electric synergy spikes.
+- Completed the 30-minute progression balance pass:
+  - Expanded `tools/balance_check.py` from enemy-pressure-only output into a long-run progression projection that also models a coherent high-synergy player build.
+  - Verified the current catalog meets the requested 20 enemies, 10 bosses, 50 upgrades, and 20 powers.
+  - Projected the 30-minute pressure point at 225 active enemies, 853 average regular spawn HP, and a 0.20s minimum spawn interval.
+  - Projected a strong 30-minute build at about 31,764 direct DPS and 37.2 regular kills/s against the 5.0 kills/s spawn cadence before splash overlap, piercing, pets, fields, or crowd-control are credited.
+  - Added `docs/BALANCE_30_MIN.md` as the readable balance report linked from the README.
 
 ## Backlog
 
 ### Next
 
-- Run a 30-minute progression balance pass and tune the long-run curve.
+- Continue with focused polish, playtest feedback, and bug fixes as new issues are identified.
 
 ### Content
 
-- Run a 30-minute progression balance pass and tune the long-run curve.
+- Requested content and 30-minute progression targets are met.
 
 ### Systems
 

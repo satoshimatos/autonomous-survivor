@@ -73,11 +73,12 @@ Completed issues:
 - #21 Add another upgrade branch batch toward 50 unique upgrades
 - #22 Add final upgrade batch toward 50 unique upgrades
 - #23 Add final power batch toward 20 powers
+- #24 Run 30-minute progression balance pass
 
 ### P1 - Replayability And Power Growth
 
-- #24 Run 30-minute progression balance pass.
-- Content count targets are met. Current counts: 50/50 unique upgrades, 20/20 powers.
+- Content and progression targets are met. Current counts: 50/50 unique upgrades, 20/20 powers, 20/20 enemies, 10/10 bosses.
+- The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 
 ### P1 - Enemies And Bosses
 

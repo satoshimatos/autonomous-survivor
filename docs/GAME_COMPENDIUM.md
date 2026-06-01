@@ -19,6 +19,7 @@ This document is the current open-book reference for the game. It describes the 
 - [Unlocks And Meta Progression](#unlocks-and-meta-progression)
 - [Pickups And Rewards](#pickups-and-rewards)
 - [Scaling And Pressure](#scaling-and-pressure)
+- [30-Minute Balance Evidence](#30-minute-balance-evidence)
 - [Performance Budgets](#performance-budgets)
 - [AI And Debug Helpers](#ai-and-debug-helpers)
 
@@ -390,6 +391,21 @@ Additional pressure rules:
 - Boss minions can spawn only below 92% of current pressure cap.
 - Splitting elites can spawn children only below 96% of current pressure cap and below the split cap of 180.
 - Skipped spawns are tracked and shown in the run report.
+
+## 30-Minute Balance Evidence
+
+The deterministic balance report lives in [30-Minute Balance Pass](BALANCE_30_MIN.md).
+
+Current projection status: PASS.
+
+At 30 minutes:
+
+- Active enemy cap is 225.
+- Average regular spawn HP is 853.0.
+- Minimum spawn interval is 0.20s, or 5 regular spawns per second.
+- A coherent high-synergy build projects about 31,764 direct weapon DPS and 37.2 regular kills per second before splash overlap, piercing, pets, fields, and crowd-control are credited.
+
+This confirms the intended long-run shape: the director reaches maximum active pressure while focused upgrades and evolved synergies can still create a deliberately overpowered bullet-heaven build.
 
 ## Performance Budgets
 
