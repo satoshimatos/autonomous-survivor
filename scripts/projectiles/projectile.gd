@@ -1,12 +1,16 @@
 extends Area2D
 
 const COLLISION_RADIUS: float = 6.0
+const DEFAULT_SPEED: float = 500.0
 const POOLED_POSITION: Vector2 = Vector2(-100000.0, -100000.0)
 
-var speed: float = 500.0
+var speed: float = DEFAULT_SPEED
 var direction: Vector2
 var damage: float = 10.0
 var splash_radius: float = 0.0
+var splash_damage_multiplier: float = 1.0
+var critical_chance: float = 0.0
+var critical_multiplier: float = 1.0
 var max_piercing_hp: int = 1
 var piercing_hp: int = 1
 var hit_enemies := {}
@@ -33,7 +37,11 @@ func launch(config: Dictionary) -> void:
 		direction = Vector2.RIGHT
 	damage = float(config.get("damage", 10.0))
 	splash_radius = float(config.get("splash_radius", 0.0))
+	splash_damage_multiplier = float(config.get("splash_damage_multiplier", 1.0))
+	critical_chance = clamp(float(config.get("critical_chance", 0.0)), 0.0, 1.0)
+	critical_multiplier = max(float(config.get("critical_multiplier", 1.0)), 1.0)
 	max_piercing_hp = int(config.get("max_piercing_hp", 1))
+	speed = float(config.get("speed", DEFAULT_SPEED))
 	projectile_scale = float(config.get("projectile_scale", 1.0))
 	projectile_texture = config.get("projectile_texture", null) as Texture2D
 	fade_in_duration = float(config.get("fade_in_duration", 0.0))
@@ -101,7 +109,7 @@ func hit_enemy(area: Area2D, hit_position: Vector2) -> void:
 	global_position = hit_position
 	
 	if splash_radius > 0.0:
-		spawn_splash(hit_damage)
+		spawn_splash(hit_damage * splash_damage_multiplier)
 	else:
 		var actual_damage: int = area.hit(hit_damage)
 		record_player_damage(actual_damage)
@@ -199,7 +207,8 @@ func record_player_damage(amount: int) -> void:
 func get_damage_for_piercing_state() -> float:
 	var spent_hp: int = max(max_piercing_hp - piercing_hp, 0)
 	var damage_multiplier: float = max(1.0 - float(spent_hp) * 0.3, 0.15)
-	return damage * damage_multiplier
+	var crit_multiplier := critical_multiplier if randf() <= critical_chance else 1.0
+	return damage * damage_multiplier * crit_multiplier
 
 
 func get_splash_enemies() -> Array[Area2D]:

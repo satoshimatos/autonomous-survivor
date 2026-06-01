@@ -105,12 +105,25 @@ Upgrade choices show 3 random options from the valid upgrade pool. Regeneration 
 | Damage | Multiplies attack damage by 1.2925. | Stacks multiplicatively through `damage_level`. | Fire Rate, Splash, Piercing, Shock Field |
 | Regeneration | Adds or improves passive healing. | Starts at 1 HP every 5s, then virtual interval improves by 0.333s per level down to 0.166s virtual minimum while displayed interval remains capped. | Armor, Barbed Wire |
 | EXP | Adds +25% EXP value per level. | Used when picking up EXP orbs. | Magnet |
-| Splash | Adds projectile explosion radius. | Radius is 10 + 5 per extra Splash level. Evolutions can add more. | Damage, Piercing, Artillery, Landmine |
+| Splash | Adds projectile explosion radius. | Radius is 10 + 5 per extra Splash level. Payload Rack and evolutions can add more. | Damage, Piercing, Artillery, Landmine |
 | Piercing | Adds projectile hit capacity. | Projectile HP is Piercing + 1 before evolution bonuses. | Damage, Splash, Fire Rate |
 | Barbed Wire | Damages nearby enemies every 0.5s. | Damage is attack damage * 0.33 * Barbed Wire level, modified by evolutions. | Armor, Regeneration, Shock Field |
 | Armor | Reduces incoming hit damage. | +8% reduction per level, capped at 65%, plus evolution bonuses. | Barbed Wire, Regeneration, Circular Saw |
 | Magnet | Pulls EXP orbs toward the player. | Pull radius is 86 + 38 per extra level. | EXP, Speed, Artillery |
 | Cannon | Adds another shot to each volley. | Total shots are 1 + Cannon level, plus evolution bonuses. Spread is 12 degrees. | Damage, Fire Rate, Drone Swarm |
+
+### Accessory Upgrades
+
+Accessories are part of the normal 3-choice upgrade pool. They are lightweight stat or proc upgrades intended to widen build paths without adding new scenes.
+
+| Accessory | Effect | Scaling | Synergy Hints |
+|---|---|---|---|
+| Targeting Array | Adds projectile critical hit chance. | +4% crit chance per level, capped at 75%. Crits deal 1.5x damage before evolution bonuses. | Damage, Fire Rate, Cannon |
+| Accelerator | Increases projectile speed. | Projectile speed is 500 * (1 + 0.12 * Accelerator level). | Piercing, Splash, Payload Rack |
+| Alloy Plating | Raises maximum health and repairs the tank immediately. | +2 max HP and +2 current HP per level, capped by max health. | Armor, Regeneration, Reactive Shield |
+| Recycler | Defeated enemies can repair the tank. | +2.5% chance per level to heal 1 HP on normal enemy defeat, capped at 35%. Boss defeats heal 3 + Recycler level HP. | Magnet, EXP, Alloy Plating |
+| Payload Rack | Adds baseline payload blast radius and splash damage. | +6px splash radius and +6% splash damage per level. Works even before Splash is picked. | Splash, Damage, Accelerator |
+| Reactive Shield | Extends the post-hit invulnerability window. | +0.08s invulnerability per level. | Armor, Alloy Plating, Recycler |
 
 ## Abilities
 
@@ -136,6 +149,8 @@ Evolutions are checked after upgrade and ability picks. Active evolutions appear
 | Shrapnel Core | Damage 4, Splash 3, Piercing 2 | Projectile damage *1.2, splash radius +18, piercing +2, projectile scale 1.22. |
 | Storm Armor | Shock Field 3, Barbed Wire 3, Armor 3 | Shock Field effective level +2, Barbed Wire radius +30, Barbed Wire damage *1.35, armor reduction +8 percentage points. |
 | Drone Foundry | Drone Swarm 2, Cannon 3, Fire Rate 4 | Drone Swarm effective level +2, cannon projectile bonus +1, projectile damage *1.1, projectile scale up to 1.12. |
+| Critical Payload | Targeting Array 3, Payload Rack 3, Damage 4 | Crit chance +12 percentage points, crit multiplier +0.35, splash damage *1.2, projectile scale up to 1.1. |
+| Repair Loop | Recycler 3, Alloy Plating 3, Reactive Shield 2 | Recycler heal chance +8 percentage points and armor reduction +5 percentage points. |
 
 Projectile damage multipliers from active evolutions multiply together. Projectile scale uses the largest active scale bonus.
 

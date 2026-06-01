@@ -762,6 +762,8 @@ func get_ai_preferred_upgrade_id(displayed_upgrades: Array[String]) -> String:
 	
 	if low_health_upgrade_timer >= LOW_HEALTH_REGEN_PRIORITY_TIME and displayed_upgrades.has("regeneration"):
 		return "regeneration"
+	if player != null and player.health < player.max_health and displayed_upgrades.has("alloy_plating"):
+		return "alloy_plating"
 	
 	return displayed_upgrades.pick_random()
 
@@ -1078,6 +1080,8 @@ func _on_enemy_defeated(enemy_position: Vector2, exp_drop_count: int = 1, exp_dr
 	if not mass_damage_active:
 		try_drop_dynamite.call_deferred(enemy_position)
 		try_drop_wrench.call_deferred(enemy_position)
+	if player != null and player.has_method("try_recycler_heal"):
+		player.try_recycler_heal(false)
 
 
 func apply_elite_death_payload(enemy_position: Vector2, death_payload: Dictionary) -> void:
@@ -1139,6 +1143,8 @@ func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_dr
 	if not mass_damage_active:
 		try_drop_dynamite.call_deferred(enemy_position)
 		try_drop_wrench.call_deferred(enemy_position)
+	if player != null and player.has_method("try_recycler_heal"):
+		player.try_recycler_heal(true)
 
 
 func queue_exp_drops(enemy_position: Vector2, drop_count: int, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
@@ -1522,7 +1528,9 @@ func update_stats_label() -> void:
 	
 	var exp_multiplier_percent := int(round((1.0 + float(player.exp_bonus_level) * 0.25) * 100.0))
 	var armor_percent := int(round(player.get_armor_damage_reduction() * 100.0)) if player.has_method("get_armor_damage_reduction") else 0
-	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nEvent: %s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
+	var crit_percent: int = int(round(player.get_crit_chance() * 100.0)) if player.has_method("get_crit_chance") else 0
+	var projectile_speed: float = player.get_projectile_speed() if player.has_method("get_projectile_speed") else 500.0
+	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nEvent: %s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nProjectile Speed: %.0f\nCrit Chance: %s%%\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
 		player.selected_tank_name,
 		player.attack_damage,
 		player_dps,
@@ -1535,6 +1543,8 @@ func update_stats_label() -> void:
 		1 + player.cannon_level,
 		player.speed,
 		player.fire_interval,
+		projectile_speed,
+		crit_percent,
 		armor_percent,
 		regen_per_second,
 		exp_multiplier_percent
@@ -1582,6 +1592,12 @@ func get_build_level_snapshot() -> Dictionary:
 		"speed": player.speed_level,
 		"armor": player.armor_level,
 		"cannon": player.cannon_level,
+		"targeting_array": player.targeting_array_level,
+		"accelerator": player.accelerator_level,
+		"alloy_plating": player.alloy_plating_level,
+		"recycler": player.recycler_level,
+		"payload_rack": player.payload_rack_level,
+		"reactive_shield": player.reactive_shield_level,
 		"piercing": player.piercing_level,
 		"splash": player.splash_level,
 		"magnet": player.magnet_level,
@@ -1605,6 +1621,12 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Speed", player.speed_level)
 	add_build_entry(entries, "Armor", player.armor_level)
 	add_build_entry(entries, "Cannon", player.cannon_level)
+	add_build_entry(entries, "Targeting Array", player.targeting_array_level)
+	add_build_entry(entries, "Accelerator", player.accelerator_level)
+	add_build_entry(entries, "Alloy Plating", player.alloy_plating_level)
+	add_build_entry(entries, "Recycler", player.recycler_level)
+	add_build_entry(entries, "Payload Rack", player.payload_rack_level)
+	add_build_entry(entries, "Reactive Shield", player.reactive_shield_level)
 	add_build_entry(entries, "Piercing", player.piercing_level)
 	add_build_entry(entries, "Splash", player.splash_level)
 	add_build_entry(entries, "Magnet", player.magnet_level)
@@ -1658,6 +1680,12 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Armor", player.armor_level),
 		format_upgrade_inventory_row("Magnet", player.magnet_level),
 		format_upgrade_inventory_row("Cannon", player.cannon_level),
+		format_upgrade_inventory_row("Targeting Array", player.targeting_array_level),
+		format_upgrade_inventory_row("Accelerator", player.accelerator_level),
+		format_upgrade_inventory_row("Alloy Plating", player.alloy_plating_level),
+		format_upgrade_inventory_row("Recycler", player.recycler_level),
+		format_upgrade_inventory_row("Payload Rack", player.payload_rack_level),
+		format_upgrade_inventory_row("Reactive Shield", player.reactive_shield_level),
 		"",
 		"Abilities",
 		format_upgrade_inventory_row("Landmine", player.landmine_level),

@@ -105,16 +105,21 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Fixed boss variant and projectile cleanup issues:
   - Boss phase thresholds and ability modules now convert incoming config data into typed arrays before assignment.
   - Pooled player projectiles now launch after being placed, and recycled shots are hidden, disabled, and moved out of play before returning to the pool.
+- Added accessory upgrade branch for build variety:
+  - Added Targeting Array, Accelerator, Alloy Plating, Recycler, Payload Rack, and Reactive Shield to the normal upgrade pool.
+  - Accessories add crits, projectile speed, max health, kill-based repairs, payload splash scaling, and longer post-hit safety windows.
+  - Added Critical Payload and Repair Loop evolutions so accessory-heavy builds can cross into stronger late-game synergies.
+  - HUD stats, upgrade inventory, run summary build tracking, and the game compendium now include accessory upgrades.
 
 ## Backlog
 
 ### Next
 
-- Add accessory upgrade branch for build variety. See issue #15.
+- Add late-game enemy and boss variants to move toward 20 enemies and 10 bosses.
 
 ### Content
 
-- #15 Add accessory upgrade branch for build variety.
+- Add late-game enemy and boss variants to move toward 20 enemies and 10 bosses.
 
 ### Systems
 

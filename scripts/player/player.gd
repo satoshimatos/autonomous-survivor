@@ -38,6 +38,12 @@ var barbed_wire_level: int = 0
 var armor_level: int = 0
 var magnet_level: int = 0
 var cannon_level: int = 0
+var targeting_array_level: int = 0
+var accelerator_level: int = 0
+var alloy_plating_level: int = 0
+var recycler_level: int = 0
+var payload_rack_level: int = 0
+var reactive_shield_level: int = 0
 var barbed_wire_cooldowns := {}
 var selected_tank_id: String = "vanguard"
 var selected_tank_name: String = "Vanguard"
@@ -89,6 +95,18 @@ var evolution_catalog: Array[Dictionary] = [
 		"requirements": {"drone_swarm": 2, "cannon": 3, "fire_rate": 4},
 		"effects": {"drone_swarm_level_bonus": 2, "cannon_projectile_bonus": 1, "projectile_damage_multiplier": 1.1, "projectile_scale": 1.12},
 	},
+	{
+		"id": "critical_payload",
+		"name": "Critical Payload",
+		"requirements": {"targeting_array": 3, "payload_rack": 3, "damage": 4},
+		"effects": {"crit_chance_bonus": 0.12, "crit_multiplier_bonus": 0.35, "splash_damage_multiplier": 1.2, "projectile_scale": 1.1},
+	},
+	{
+		"id": "repair_loop",
+		"name": "Repair Loop",
+		"requirements": {"recycler": 3, "alloy_plating": 3, "reactive_shield": 2},
+		"effects": {"recycler_heal_chance_bonus": 0.08, "armor_reduction_bonus": 0.05},
+	},
 ]
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
@@ -120,6 +138,15 @@ const ARMOR_MAX_DAMAGE_REDUCTION: float = 0.65
 const MAGNET_BASE_RADIUS: float = 86.0
 const MAGNET_RADIUS_PER_LEVEL: float = 38.0
 const CANNON_SPREAD_DEGREES: float = 12.0
+const TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL: float = 0.04
+const TARGETING_ARRAY_CRIT_MULTIPLIER: float = 1.5
+const ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL: float = 0.12
+const ALLOY_PLATING_HEALTH_PER_LEVEL: int = 2
+const RECYCLER_HEAL_CHANCE_PER_LEVEL: float = 0.025
+const RECYCLER_BOSS_HEAL_AMOUNT: int = 3
+const PAYLOAD_RACK_SPLASH_RADIUS_PER_LEVEL: float = 6.0
+const PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL: float = 0.06
+const REACTIVE_SHIELD_I_WINDOW_PER_LEVEL: float = 0.08
 
 @onready var camera: Camera2D = $Camera2D
 @onready var tank_base: Sprite2D = $TankBase
@@ -597,7 +624,24 @@ func get_landmine_damage_multiplier() -> float:
 
 
 func get_valid_upgrade_ids() -> Array[String]:
-	var valid_upgrades: Array[String] = ["speed", "fire_rate", "damage", "exp", "splash", "piercing", "barbed_wire", "armor", "magnet", "cannon"]
+	var valid_upgrades: Array[String] = [
+		"speed",
+		"fire_rate",
+		"damage",
+		"exp",
+		"splash",
+		"piercing",
+		"barbed_wire",
+		"armor",
+		"magnet",
+		"cannon",
+		"targeting_array",
+		"accelerator",
+		"alloy_plating",
+		"recycler",
+		"payload_rack",
+		"reactive_shield",
+	]
 	if can_upgrade_regeneration():
 		valid_upgrades.append("regeneration")
 	
@@ -630,6 +674,18 @@ func apply_upgrade_by_id(upgrade_id: String) -> void:
 			magnet_level += 1
 		"cannon":
 			cannon_level += 1
+		"targeting_array":
+			targeting_array_level += 1
+		"accelerator":
+			accelerator_level += 1
+		"alloy_plating":
+			upgrade_alloy_plating()
+		"recycler":
+			recycler_level += 1
+		"payload_rack":
+			payload_rack_level += 1
+		"reactive_shield":
+			upgrade_reactive_shield()
 	update_evolutions()
 
 
@@ -651,10 +707,22 @@ func upgrade_splash() -> void:
 
 
 func get_splash_radius() -> float:
-	if splash_level <= 0:
+	if splash_level <= 0 and payload_rack_level <= 0:
 		return 0.0
-	
-	return 10.0 + float(splash_level - 1) * 5.0 + get_evolution_effect_value("splash_radius_bonus")
+
+	var upgrade_radius := 0.0
+	if splash_level > 0:
+		upgrade_radius = 10.0 + float(splash_level - 1) * 5.0
+
+	return upgrade_radius + get_payload_splash_radius_bonus() + get_evolution_effect_value("splash_radius_bonus")
+
+
+func get_payload_splash_radius_bonus() -> float:
+	return float(payload_rack_level) * PAYLOAD_RACK_SPLASH_RADIUS_PER_LEVEL
+
+
+func get_splash_damage_multiplier() -> float:
+	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL) * get_evolution_effect_multiplier("splash_damage_multiplier")
 
 
 func spawn_muzzle_burst() -> void:
@@ -727,6 +795,20 @@ func get_projectile_hp() -> int:
 	return piercing_level + 1 + int(get_evolution_effect_value("piercing_bonus"))
 
 
+func get_projectile_speed() -> float:
+	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL)
+
+
+func get_crit_chance() -> float:
+	return min(float(targeting_array_level) * TARGETING_ARRAY_CRIT_CHANCE_PER_LEVEL + get_evolution_effect_value("crit_chance_bonus"), 0.75)
+
+
+func get_crit_multiplier() -> float:
+	if targeting_array_level <= 0:
+		return 1.0
+	return TARGETING_ARRAY_CRIT_MULTIPLIER + get_evolution_effect_value("crit_multiplier_bonus")
+
+
 func fire_projectile_volley(target_direction: Vector2) -> void:
 	var projectile_count := 1 + cannon_level + int(get_evolution_effect_value("cannon_projectile_bonus"))
 	var spread_radians := deg_to_rad(CANNON_SPREAD_DEGREES)
@@ -737,7 +819,11 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 			"direction": direction,
 			"damage": attack_damage * get_evolution_effect_multiplier("projectile_damage_multiplier"),
 			"splash_radius": get_splash_radius(),
+			"splash_damage_multiplier": get_splash_damage_multiplier(),
 			"max_piercing_hp": get_projectile_hp(),
+			"speed": get_projectile_speed(),
+			"critical_chance": get_crit_chance(),
+			"critical_multiplier": get_crit_multiplier(),
 			"projectile_scale": get_evolution_projectile_scale(),
 			"fade_in_duration": 0.08,
 		}
@@ -747,12 +833,36 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 		else:
 			var proj = PROJECTILE.instantiate()
 			get_tree().current_scene.add_child(proj)
-			proj.launch(projectile_config)
 			proj.global_position = global_position + direction * 32.0
+			proj.launch(projectile_config)
 
 
 func get_armor_damage_reduction() -> float:
 	return min(float(armor_level) * ARMOR_DAMAGE_REDUCTION_PER_LEVEL + get_evolution_effect_value("armor_reduction_bonus"), ARMOR_MAX_DAMAGE_REDUCTION)
+
+
+func upgrade_alloy_plating() -> void:
+	alloy_plating_level += 1
+	max_health += ALLOY_PLATING_HEALTH_PER_LEVEL
+	health = min(health + ALLOY_PLATING_HEALTH_PER_LEVEL, max_health)
+
+
+func upgrade_reactive_shield() -> void:
+	reactive_shield_level += 1
+	i_window += REACTIVE_SHIELD_I_WINDOW_PER_LEVEL
+
+
+func try_recycler_heal(is_boss: bool = false) -> void:
+	if recycler_level <= 0 or is_dead or health >= max_health:
+		return
+
+	if is_boss:
+		health = min(health + RECYCLER_BOSS_HEAL_AMOUNT + recycler_level, max_health)
+		return
+
+	var heal_chance: float = min(float(recycler_level) * RECYCLER_HEAL_CHANCE_PER_LEVEL + get_evolution_effect_value("recycler_heal_chance_bonus"), 0.35)
+	if randf() <= heal_chance:
+		health = min(health + 1, max_health)
 
 
 func update_evolutions() -> Array[String]:
@@ -804,6 +914,18 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return magnet_level
 		"cannon":
 			return cannon_level
+		"targeting_array":
+			return targeting_array_level
+		"accelerator":
+			return accelerator_level
+		"alloy_plating":
+			return alloy_plating_level
+		"recycler":
+			return recycler_level
+		"payload_rack":
+			return payload_rack_level
+		"reactive_shield":
+			return reactive_shield_level
 		"landmine":
 			return landmine_level
 		"circular_saw":

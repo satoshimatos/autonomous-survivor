@@ -20,6 +20,12 @@ var upgrade_catalog: Dictionary = {
 	"armor": {"title": "+ ARMOR", "tag": "DEFENSE", "hint": "Reduce incoming hit damage.", "synergy": ["barbed_wire", "regeneration", "circular_saw_level"]},
 	"magnet": {"title": "+ MAGNET", "tag": "ECONOMY", "hint": "Pull EXP from farther away.", "synergy": ["exp", "speed", "artillery_level"]},
 	"cannon": {"title": "+ CANNON", "tag": "MULTISHOT", "hint": "Add another cannon to each volley.", "synergy": ["damage", "fire_rate", "drone_swarm_level"]},
+	"targeting_array": {"title": "+ TARGETING ARRAY", "tag": "ACCESSORY", "hint": "Adds stacking critical hit chance.", "synergy": ["damage", "fire_rate", "cannon"]},
+	"accelerator": {"title": "+ ACCELERATOR", "tag": "ACCESSORY", "hint": "Shots travel faster and reach targets sooner.", "synergy": ["piercing", "splash", "payload_rack"]},
+	"alloy_plating": {"title": "+ ALLOY PLATING", "tag": "ACCESSORY", "hint": "Raises max health and repairs some HP.", "synergy": ["armor", "regeneration", "reactive_shield"]},
+	"recycler": {"title": "+ RECYCLER", "tag": "ACCESSORY", "hint": "Defeated enemies can repair the tank.", "synergy": ["magnet", "exp", "alloy_plating"]},
+	"payload_rack": {"title": "+ PAYLOAD RACK", "tag": "ACCESSORY", "hint": "Adds payload blast radius and splash damage.", "synergy": ["splash", "damage", "accelerator"]},
+	"reactive_shield": {"title": "+ REACTIVE SHIELD", "tag": "ACCESSORY", "hint": "Extends post-hit invulnerability windows.", "synergy": ["armor", "alloy_plating", "recycler"]},
 }
 
 @onready var buttons: Array[Button] = [
@@ -114,6 +120,18 @@ func get_synergy_level(synergy_id: String) -> int:
 			return player.magnet_level
 		"cannon":
 			return player.cannon_level
+		"targeting_array":
+			return player.targeting_array_level
+		"accelerator":
+			return player.accelerator_level
+		"alloy_plating":
+			return player.alloy_plating_level
+		"recycler":
+			return player.recycler_level
+		"payload_rack":
+			return player.payload_rack_level
+		"reactive_shield":
+			return player.reactive_shield_level
 		"landmine_level":
 			return player.landmine_level
 		"circular_saw_level":
@@ -155,6 +173,14 @@ func get_synergy_label(synergy_id: String) -> String:
 			return "Oil Slick"
 		"freeze_pulse_level":
 			return "Freeze Pulse"
+		"targeting_array":
+			return "Targeting Array"
+		"alloy_plating":
+			return "Alloy Plating"
+		"payload_rack":
+			return "Payload Rack"
+		"reactive_shield":
+			return "Reactive Shield"
 	return synergy_id.capitalize()
 
 

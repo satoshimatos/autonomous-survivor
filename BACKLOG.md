@@ -38,6 +38,7 @@ Completed setup:
   - #13 Add first evolved upgrade synergy rewards
   - #14 Add randomized mid-run events and gambit rewards
   - #15 Add accessory upgrade branch for build variety
+  - #16 Add late-game enemy and boss variants toward long-run variety
 
 Completed issues:
 
@@ -55,14 +56,15 @@ Completed issues:
 - #12 Add challenge goals and meta-progression rewards
 - #13 Add first evolved upgrade synergy rewards
 - #14 Add randomized mid-run events and gambit rewards
+- #15 Add accessory upgrade branch for build variety
 
 ### P1 - Replayability And Power Growth
 
-- #15 Add accessory upgrade branch for build variety.
+- Add more upgrade and power branches until the project reaches at least 50 unique upgrades and 20 powers.
 
 ### P1 - Enemies And Bosses
 
-- Add late-game enemy and boss variants once the current weighted catalog needs more variety.
+- #16 Add late-game enemy and boss variants toward 20 enemies and 10 bosses.
 
 ### P2 - Performance
 
