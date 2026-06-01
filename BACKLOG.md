@@ -47,6 +47,7 @@ Completed setup:
   - #22 Add final upgrade batch toward 50 unique upgrades
   - #23 Add final power batch toward 20 powers
   - #24 Run 30-minute progression balance pass
+  - #25 Visual identity and juice pass
 
 Completed issues:
 
@@ -74,6 +75,7 @@ Completed issues:
 - #22 Add final upgrade batch toward 50 unique upgrades
 - #23 Add final power batch toward 20 powers
 - #24 Run 30-minute progression balance pass
+- #25 Visual identity and juice pass
 
 ### P1 - Replayability And Power Growth
 
@@ -90,4 +92,5 @@ Completed issues:
 
 ### P2 - UI And Feedback
 
-- Continue improving upgrade and ability card readability as the build system grows.
+- Visual identity pass is complete enough for the current scope: generated arena/menu art, cartoon sprites, chunky UI, cloud shadows, player lighting, projectile trails, hit pops, and richer bursts are in-game.
+- Continue improving individual power-specific animations after hands-on playtest feedback identifies weak effects.

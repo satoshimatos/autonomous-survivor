@@ -4,6 +4,7 @@ const AI_MENU_VIEW_DELAY: float = 0.5
 const AI_SELECTION_FLASH_DELAY: float = 0.5
 const AI_SELECTION_FLASH_COLOR: Color = Color(1.0, 0.95, 0.25, 1.0)
 const OPTION_COUNT: int = 3
+const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
 
 var player: CharacterBody2D
 var ai_pick_in_progress: bool = false
@@ -42,7 +43,14 @@ var ability_catalog: Array[Dictionary] = [
 
 
 func _ready() -> void:
+	apply_visual_skin()
 	roll_ability_options()
+
+
+func apply_visual_skin() -> void:
+	CartoonUiSkin.apply_label_pop($CanvasLayer/ColorRect/Label, Color(0.74, 0.92, 1.0, 1.0))
+	for button in ability_buttons:
+		CartoonUiSkin.apply_button(button, Color(0.22, 0.34, 0.62, 1.0))
 
 
 func roll_ability_options() -> void:

@@ -58,6 +58,15 @@ func _draw() -> void:
 	var ring_width: float = max(3.0, radius * 0.18 * (1.0 - progress * 0.35))
 	var ring_color := Color(1.0, 0.48, 0.03, alpha)
 	var highlight_color := Color(1.0, 0.86, 0.16, alpha * 0.65)
+	var smoke_color := Color(0.07, 0.04, 0.03, alpha * 0.22)
+	var flash_color := Color(1.0, 0.92, 0.32, alpha * 0.16)
 	
+	draw_circle(Vector2.ZERO, current_radius * 0.78, flash_color)
+	draw_arc(Vector2.ZERO, current_radius + ring_width * 0.32, 0.0, TAU, 96, Color(0.02, 0.015, 0.01, alpha * 0.95), ring_width * 0.42, true)
 	draw_arc(Vector2.ZERO, current_radius, 0.0, TAU, 96, ring_color, ring_width, true)
 	draw_arc(Vector2.ZERO, max(current_radius - ring_width * 0.55, 1.0), 0.0, TAU, 96, highlight_color, max(ring_width * 0.35, 1.0), true)
+	for i in range(8):
+		var angle := TAU * float(i) / 8.0 + progress * 0.7
+		var start := Vector2.RIGHT.rotated(angle) * current_radius * 0.25
+		var end := Vector2.RIGHT.rotated(angle) * current_radius * 0.92
+		draw_line(start, end, smoke_color, max(2.0, ring_width * 0.18), true)

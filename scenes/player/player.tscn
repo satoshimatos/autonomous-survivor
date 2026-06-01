@@ -1,10 +1,12 @@
-[gd_scene load_steps=7 format=3 uid="uid://db7gd8hjmu5dt"]
+[gd_scene load_steps=9 format=3 uid="uid://db7gd8hjmu5dt"]
 
 [ext_resource type="Script" uid="uid://eiav7mp0hdy4" path="res://scripts/player/player.gd" id="1_3vyb7"]
 [ext_resource type="Script" uid="uid://dbuc7f3pkg5s6" path="res://scripts/player/camera_shake.gd" id="2_3vyb7"]
-[ext_resource type="Texture2D" uid="uid://jaqvvle1eqb0" path="res://assets/player/tank_sheet.png" id="3_r7x1u"]
+[ext_resource type="Texture2D" path="res://assets/visual/player/tank_base_cartoon.png" id="3_tank_base"]
 [ext_resource type="Texture2D" path="res://assets/ui/icons/upgrades/icon_upgrade_barbed_wire.png" id="4_barbed"]
 [ext_resource type="Script" path="res://scripts/player/player_auto_driver.gd" id="5_auto"]
+[ext_resource type="Texture2D" path="res://assets/visual/player/tank_cannon_cartoon.png" id="6_tank_cannon"]
+[ext_resource type="Texture2D" path="res://assets/visual/effects/radial_player_light.png" id="7_player_light"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_u8vuu"]
 size = Vector2(32, 32)
@@ -30,10 +32,15 @@ collision_mask = 12
 shape = SubResource("CircleShape2D_exp_awareness")
 
 [node name="TankBase" type="Sprite2D" parent="." unique_id=1706945761]
-scale = Vector2(0.07, 0.07)
-texture = ExtResource("3_r7x1u")
-hframes = 2
-region_rect = Rect2(118, 376, 509, 558)
+scale = Vector2(0.62, 0.62)
+texture = ExtResource("3_tank_base")
+
+[node name="PlayerLight" type="PointLight2D" parent="."]
+z_index = -3
+energy = 0.8
+texture = ExtResource("7_player_light")
+texture_scale = 2.25
+color = Color(1, 0.92, 0.66, 1)
 
 [node name="BarbedWireRing" type="Sprite2D" parent="."]
 visible = false
@@ -44,12 +51,9 @@ texture = ExtResource("4_barbed")
 
 [node name="TankCannon" type="Sprite2D" parent="." unique_id=808772171]
 z_index = 1
-scale = Vector2(0.07, 0.07)
-texture = ExtResource("3_r7x1u")
-offset = Vector2(0, -110)
-hframes = 2
-frame = 1
-region_rect = Rect2(627, 262, 509, 677)
+scale = Vector2(0.58, 0.58)
+texture = ExtResource("6_tank_cannon")
+offset = Vector2(0, -25)
 
 [node name="AiBehaviorLabel" type="Label" parent="."]
 visible = false

@@ -7,6 +7,10 @@
 [ext_resource type="Script" uid="uid://cjo461r7u4rvg" path="res://scripts/effects/damage_number_pool.gd" id="5_m2b0t"]
 [ext_resource type="Script" uid="uid://co1aw411j2p46" path="res://scripts/ui/low_health_vignette.gd" id="6_wysh3"]
 [ext_resource type="Script" uid="uid://b612al6i45ogm" path="res://scripts/ui/status_bar.gd" id="7_m8b2t"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/wasteland_arena_generated.png" id="8_arena_bg"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/cloud_shadow_large.png" id="9_cloud_large"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/cloud_shadow_small.png" id="10_cloud_small"]
+[ext_resource type="Script" path="res://scripts/visual/cloud_shadow_layer.gd" id="11_cloud_script"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_sgp6g"]
 size = Vector2(1728, 1128)
@@ -24,6 +28,14 @@ size = Vector2(1536, 64)
 process_mode = 3
 script = ExtResource("1_0wfyh")
 
+[node name="WorldMood" type="CanvasModulate" parent="."]
+color = Color(0.9, 0.93, 1, 1)
+
+[node name="WastelandBackground" type="Sprite2D" parent="."]
+z_index = -6
+position = Vector2(576, 324)
+texture = ExtResource("8_arena_bg")
+
 [node name="BoundsMesh" type="MeshInstance2D" parent="." unique_id=2025702318]
 modulate = Color(0.32544088, 0.3254409, 0.32544088, 1)
 position = Vector2(577.5, 324.5)
@@ -31,14 +43,30 @@ scale = Vector2(0.8327546, 0.7420212)
 mesh = SubResource("QuadMesh_sgp6g")
 
 [node name="ArenaMesh" type="MeshInstance2D" parent="." unique_id=177240365]
+visible = false
 modulate = Color(0.5330367, 0.5330367, 0.5330367, 1)
 z_index = -1
 position = Vector2(576, 324)
 mesh = SubResource("QuadMesh_o5qli")
 
 [node name="FloorDetails" type="Node2D" parent="." unique_id=1047719930]
+visible = false
 script = ExtResource("3_wm82h")
 area_size = Vector2(1408, 808)
+
+[node name="CloudShadowLayer" type="Node2D" parent="."]
+z_index = 0
+modulate = Color(0.5, 0.45, 0.62, 0.46)
+script = ExtResource("11_cloud_script")
+
+[node name="CloudShadowLarge" type="Sprite2D" parent="CloudShadowLayer"]
+texture = ExtResource("9_cloud_large")
+metadata/base_offset = Vector2(-260, -120)
+
+[node name="CloudShadowSmall" type="Sprite2D" parent="CloudShadowLayer"]
+scale = Vector2(0.8, 0.8)
+texture = ExtResource("10_cloud_small")
+metadata/base_offset = Vector2(260, 90)
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1671463928]
 position = Vector2(576, 324)

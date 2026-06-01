@@ -1,7 +1,7 @@
 [gd_scene load_steps=3 format=3]
 
 [ext_resource type="Script" path="res://scripts/ui/ability_menu.gd" id="1_ability"]
-[ext_resource type="Texture2D" uid="uid://di2kwmajc3aiq" path="res://assets/ui/panels/menu_panel_nine_patch.png" id="2_panel"]
+[ext_resource type="Texture2D" path="res://assets/visual/ui/chunky_panel.png" id="2_panel"]
 
 [node name="AbilityMenu" type="Control"]
 process_mode = 3
@@ -27,12 +27,12 @@ offset_right = 210.0
 offset_bottom = 310.0
 grow_horizontal = 2
 grow_vertical = 2
-modulate = Color(0.58, 0.73, 1, 1)
+modulate = Color(0.7, 0.84, 1, 1)
 texture = ExtResource("2_panel")
-patch_margin_left = 72
-patch_margin_top = 72
-patch_margin_right = 72
-patch_margin_bottom = 72
+patch_margin_left = 28
+patch_margin_top = 28
+patch_margin_right = 28
+patch_margin_bottom = 28
 axis_stretch_horizontal = 2
 axis_stretch_vertical = 2
 

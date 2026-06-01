@@ -1,11 +1,27 @@
 extends Control
 
+const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
+
 @onready var tank_selector: OptionButton = $CenterContainer/VBoxContainer/TankSelector
 @onready var tank_summary_label: Label = $CenterContainer/VBoxContainer/TankSummaryLabel
+@onready var title_label: Label = $CenterContainer/VBoxContainer/TitleLabel
+@onready var tank_label: Label = $CenterContainer/VBoxContainer/TankLabel
+@onready var play_button: Button = $CenterContainer/VBoxContainer/PlayButton
+@onready var quit_button: Button = $CenterContainer/VBoxContainer/QuitButton
 
 
 func _ready() -> void:
+	apply_visual_skin()
 	populate_tank_selector()
+
+
+func apply_visual_skin() -> void:
+	CartoonUiSkin.apply_label_pop(title_label, Color(1.0, 0.84, 0.16, 1.0))
+	CartoonUiSkin.apply_label_pop(tank_label, Color(0.76, 0.95, 1.0, 1.0))
+	CartoonUiSkin.apply_label_pop(tank_summary_label, Color(0.94, 0.98, 1.0, 1.0))
+	CartoonUiSkin.apply_option_button(tank_selector)
+	CartoonUiSkin.apply_button(play_button, Color(0.16, 0.58, 0.32, 1.0))
+	CartoonUiSkin.apply_button(quit_button, Color(0.58, 0.18, 0.24, 1.0))
 
 
 func _on_play_button_pressed() -> void:

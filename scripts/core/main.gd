@@ -1365,20 +1365,24 @@ func debug_spawn_dynamite() -> void:
 
 
 func spawn_enemy_death_burst(enemy_position: Vector2) -> void:
-	spawn_particle_burst(self, enemy_position, 10, Color(1, 0.08, 0.02, 1), 200.0, 0.3, Vector2(12.0, 16.0), true)
+	spawn_particle_burst(self, enemy_position, 14, Color(1.0, 0.36, 0.08, 1.0), 230.0, 0.28, Vector2(7.0, 13.0), true)
+	spawn_particle_burst(self, enemy_position, 8, Color(1.0, 0.92, 0.25, 1.0), 170.0, 0.18, Vector2(3.0, 6.0), true)
 
 
 func spawn_boss_death_burst(enemy_position: Vector2) -> void:
-	spawn_particle_burst(self, enemy_position, 80, Color(1.0, 0.22, 0.04, 1), 300.0, 0.6, Vector2(24.0, 36.0), true)
+	dynamite_flash.color = Color(1.0, 0.62, 0.18, 0.58)
+	spawn_particle_burst(self, enemy_position, 80, Color(1.0, 0.22, 0.04, 1), 330.0, 0.68, Vector2(24.0, 38.0), true)
+	spawn_particle_burst(self, enemy_position, 42, Color(0.25, 0.92, 1.0, 1), 245.0, 0.48, Vector2(10.0, 20.0), true)
 
 
 func _on_player_damaged(player_position: Vector2) -> void:
-	spawn_particle_burst(self, player_position, 50, Color(1, 0, 0, 1), 200.0, 0.5, Vector2(2.0, 3.0), false)
+	dynamite_flash.color = Color(1.0, 0.05, 0.02, 0.22)
+	spawn_particle_burst(self, player_position, 50, Color(1, 0.06, 0.02, 1), 220.0, 0.42, Vector2(2.0, 5.0), false)
 
 
 func spawn_exp_pickup_burst() -> void:
 	var burst_position: Vector2 = exp_bar.get_fill_end_global_position()
-	spawn_particle_burst($CanvasLayer, burst_position, 15, Color(1, 0.9, 0.05, 1), 200.0, 0.3, Vector2(2.0, 3.0), false)
+	spawn_particle_burst($CanvasLayer, burst_position, 18, Color(1, 0.95, 0.08, 1), 220.0, 0.28, Vector2(2.0, 5.0), false)
 
 
 func spawn_particle_burst(parent: Node, burst_position: Vector2, count: int, color: Color, speed: float, duration: float, size_range: Vector2, shrink: bool) -> void:
@@ -1439,7 +1443,7 @@ func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: 
 
 
 func activate_dynamite() -> void:
-	dynamite_flash.color.a = 0.85
+	dynamite_flash.color = Color(1.0, 0.92, 0.25, 0.85)
 	var enemies := get_tree().get_nodes_in_group("Enemy").duplicate()
 	dynamite_blast_active = true
 	for enemy in enemies:

@@ -78,6 +78,7 @@ func _process(delta: float) -> void:
 	if is_active and not is_queued_for_deletion():
 		global_position = next_position
 	update_fade_in(delta)
+	queue_redraw()
 
 
 func update_fade_in(delta: float) -> void:
@@ -188,6 +189,15 @@ func prepare_for_pool() -> void:
 		lifetime_timer.stop()
 	hit_enemies.clear()
 	global_position = POOLED_POSITION
+	queue_redraw()
+
+
+func _draw() -> void:
+	if not is_active:
+		return
+	var tail := Vector2.DOWN * 38.0
+	draw_line(Vector2.ZERO, tail, Color(0.02, 0.015, 0.01, 0.62), 9.0, true)
+	draw_line(Vector2.ZERO, tail * 0.86, Color(1.0, 0.7, 0.08, 0.72), 5.0, true)
 
 
 func spawn_splash(splash_damage: float) -> void:

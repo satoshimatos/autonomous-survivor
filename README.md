@@ -8,6 +8,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 - [Game Compendium](docs/GAME_COMPENDIUM.md): open-book reference for mechanics, tanks, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and budgets.
 - [30-Minute Balance Pass](docs/BALANCE_30_MIN.md): deterministic long-run pressure and strong-build projection for the 30-minute target.
+- [Visual Identity](docs/VISUAL_IDENTITY.md): current art direction, generated asset families, and juice hooks.
 - [Backlog](BACKLOG.md): autonomous task queue and completed issue history.
 - [Current Changelog](#current-changelog): latest implementation notes.
 
@@ -154,11 +155,22 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Projected a strong 30-minute build at about 31,764 direct DPS and 37.2 regular kills/s against the 5.0 kills/s spawn cadence before splash overlap, piercing, pets, fields, or crowd-control are credited.
   - Added `docs/BALANCE_30_MIN.md` as the readable balance report linked from the README.
 
+### 2026-06-01
+
+- Added a cartoony black-outline visual identity pass:
+  - Generated and integrated a vivid top-down wasteland arena/background and menu backdrop.
+  - Added project-local cartoon sprite assets for the player tank, cannon, regular enemies, shielded enemies, bruisers, bosses, projectiles, EXP crystals, pickups, ability items, UI panels, cloud shadows, and player light texture.
+  - Replaced primitive enemy/boss mesh placeholders with modulated sprite visuals so the existing data-driven variants keep their colors while gaining silhouettes and inked details.
+  - Added moving cloud-shadow parallax and player-centered warm 2D lighting over a cooler world tint.
+  - Skinned the main menu, upgrade menu, and ability menu with chunky outlined button styles and generated panel art while keeping Godot's default font.
+  - Added projectile trails, enemy/boss hit pops, extra impact bursts, richer explosion rings, boss defeat flashes, player damage screen modulation, and juicier EXP pickup particles.
+  - Added `tools/generate_visual_identity_assets.ps1` so this visual identity asset set can be regenerated from the source background image.
+
 ## Backlog
 
 ### Next
 
-- Continue with focused polish, playtest feedback, and bug fixes as new issues are identified.
+- Continue with focused playtest feedback, bug fixes, and individual power animation polish as new issues are identified.
 
 ### Content
 

@@ -14,6 +14,8 @@ var player: CharacterBody2D
 var main: Node2D
 var is_defeated: bool = false
 var hit_flash_timer: float = 0.0
+var juice_pop_timer: float = 0.0
+var visual_base_scale: Vector2 = Vector2.ONE
 var base_modulate: Color = Color.WHITE
 var base_health: int = 14
 var max_health: int = 14
@@ -25,7 +27,7 @@ var slow_timer: float = 0.0
 var slow_multiplier: float = 1.0
 var death_payload: Dictionary = {}
 
-@onready var mesh_instance: MeshInstance2D = $MeshInstance2D
+@onready var mesh_instance: Node2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 
 
@@ -38,11 +40,13 @@ func _ready() -> void:
 	movement_seed = randf() * TAU
 	apply_variant_visuals()
 	base_modulate = mesh_instance.modulate
+	visual_base_scale = mesh_instance.scale
 
 
 func _process(delta: float) -> void:
 	update_status_effects(delta)
 	update_hit_flash(delta)
+	update_juice_pop(delta)
 	
 	if player:
 		position += get_movement_vector(delta) * speed * get_status_speed_multiplier() * delta
@@ -76,6 +80,7 @@ func configure_variant(config: Dictionary) -> void:
 		max_health = health
 		apply_variant_visuals()
 		base_modulate = mesh_instance.modulate
+		visual_base_scale = mesh_instance.scale
 
 
 func apply_variant_visuals() -> void:
@@ -177,8 +182,12 @@ func apply_health_bonus(total_bonus_percent: float) -> void:
 
 
 func start_hit_flash() -> void:
-	hit_flash_timer = 0.08
+	hit_flash_timer = 0.12
+	juice_pop_timer = 0.14
 	mesh_instance.modulate = Color.WHITE
+	mesh_instance.scale = visual_base_scale * 1.18
+	if main and main.has_method("spawn_particle_burst"):
+		main.spawn_particle_burst(main, global_position, 6, base_modulate.lightened(0.25), 115.0, 0.16, Vector2(3.0, 6.0), true)
 
 
 func update_hit_flash(delta: float) -> void:
@@ -188,3 +197,14 @@ func update_hit_flash(delta: float) -> void:
 	hit_flash_timer -= delta
 	if hit_flash_timer <= 0.0:
 		mesh_instance.modulate = base_modulate
+
+
+func update_juice_pop(delta: float) -> void:
+	if juice_pop_timer <= 0.0:
+		return
+	juice_pop_timer = max(juice_pop_timer - delta, 0.0)
+	var progress := 1.0 - juice_pop_timer / 0.14
+	var scale_boost := sin(progress * PI) * 0.18
+	mesh_instance.scale = visual_base_scale * (1.0 + scale_boost)
+	if juice_pop_timer <= 0.0:
+		mesh_instance.scale = visual_base_scale

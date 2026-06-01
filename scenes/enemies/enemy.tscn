@@ -1,13 +1,10 @@
 [gd_scene format=3 uid="uid://kxdifr4760x4"]
 
 [ext_resource type="Script" uid="uid://bftbnbsrdntea" path="res://scripts/enemies/enemy.gd" id="1_7p1mj"]
+[ext_resource type="Texture2D" path="res://assets/visual/enemies/enemy_scout_cartoon.png" id="2_enemy_sprite"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_md0e3"]
 radius = 16.0
-
-[sub_resource type="SphereMesh" id="SphereMesh_8tegq"]
-radius = 16.0
-height = 32.0
 
 [node name="Enemy" type="Area2D" unique_id=1311812154 groups=["Enemy"]]
 z_index = 1
@@ -18,6 +15,7 @@ script = ExtResource("1_7p1mj")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=376632203]
 shape = SubResource("CircleShape2D_md0e3")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=1450694719]
+[node name="MeshInstance2D" type="Sprite2D" parent="." unique_id=1450694719]
 modulate = Color(1, 0, 0, 1)
-mesh = SubResource("SphereMesh_8tegq")
+scale = Vector2(0.58, 0.58)
+texture = ExtResource("2_enemy_sprite")

@@ -7,11 +7,9 @@
 [ext_resource type="Script" uid="uid://qde5v47alhhp" path="res://scripts/states/charge_state.gd" id="5_charge"]
 [ext_resource type="Script" uid="uid://cvgm6r3vh85a4" path="res://scripts/states/dash_state.gd" id="6_dash"]
 [ext_resource type="Script" uid="uid://bx8b5mfbqvm0v" path="res://scripts/states/idle_state.gd" id="7_idle"]
+[ext_resource type="Texture2D" path="res://assets/visual/enemies/boss_core_cartoon.png" id="8_boss_sprite"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_boss"]
-size = Vector2(128, 128)
-
-[sub_resource type="QuadMesh" id="QuadMesh_boss"]
 size = Vector2(128, 128)
 
 [node name="BossEnemy" type="Area2D" unique_id=400060093 groups=["Boss", "Enemy"]]
@@ -23,9 +21,10 @@ script = ExtResource("1_boss")
 [node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=1533632136]
 shape = SubResource("RectangleShape2D_boss")
 
-[node name="MeshInstance2D" type="MeshInstance2D" parent="." unique_id=1344292290]
+[node name="MeshInstance2D" type="Sprite2D" parent="." unique_id=1344292290]
 modulate = Color(0.5, 0.05, 0.62, 1)
-mesh = SubResource("QuadMesh_boss")
+scale = Vector2(0.82, 0.82)
+texture = ExtResource("8_boss_sprite")
 
 [node name="TelegraphLine" type="Line2D" parent="." unique_id=1653022875]
 visible = false

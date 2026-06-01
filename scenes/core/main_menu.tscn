@@ -1,6 +1,8 @@
-[gd_scene load_steps=2 format=3]
+[gd_scene load_steps=4 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/main_menu.gd" id="1_menu"]
+[ext_resource type="Texture2D" path="res://assets/backgrounds/menu_backdrop_generated.png" id="2_menu_bg"]
+[ext_resource type="Texture2D" path="res://assets/visual/ui/chunky_panel.png" id="3_panel"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -19,6 +21,38 @@ anchor_bottom = 1.0
 grow_horizontal = 2
 grow_vertical = 2
 color = Color(0.08, 0.08, 0.08, 1)
+
+[node name="Backdrop" type="TextureRect" parent="."]
+layout_mode = 1
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("2_menu_bg")
+expand_mode = 1
+stretch_mode = 6
+
+[node name="PanelBackdrop" type="NinePatchRect" parent="."]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -300.0
+offset_top = -228.0
+offset_right = 300.0
+offset_bottom = 228.0
+grow_horizontal = 2
+grow_vertical = 2
+texture = ExtResource("3_panel")
+patch_margin_left = 28
+patch_margin_top = 28
+patch_margin_right = 28
+patch_margin_bottom = 28
+axis_stretch_horizontal = 2
+axis_stretch_vertical = 2
 
 [node name="CenterContainer" type="CenterContainer" parent="."]
 layout_mode = 1

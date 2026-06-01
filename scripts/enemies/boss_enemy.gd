@@ -18,6 +18,8 @@ var player: CharacterBody2D
 var main: Node2D
 var is_defeated: bool = false
 var hit_flash_timer: float = 0.0
+var juice_pop_timer: float = 0.0
+var visual_base_scale: Vector2 = Vector2.ONE
 var base_modulate: Color = Color.WHITE
 var base_health: int = 1000
 var max_health: int = 1000
@@ -29,7 +31,7 @@ var slow_multiplier: float = 1.0
 var ability_timers: Array[float] = []
 var phase_index: int = 0
 
-@onready var mesh_instance: MeshInstance2D = $MeshInstance2D
+@onready var mesh_instance: Node2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
 @onready var health_bar: Control = $HealthBar
 @onready var state_machine: StateMachine = $StateMachine
@@ -43,6 +45,7 @@ func _ready() -> void:
 	max_health = health
 	apply_variant_visuals()
 	base_modulate = mesh_instance.modulate
+	visual_base_scale = mesh_instance.scale
 	update_health_bar()
 	state_machine.setup(self)
 
@@ -54,6 +57,7 @@ func _process(delta: float) -> void:
 	update_phase_state()
 	update_ability_modules(delta)
 	update_hit_flash(delta)
+	update_juice_pop(delta)
 	state_machine.update(delta)
 	clamp_to_arena()
 	process_contact_damage()
@@ -77,6 +81,7 @@ func configure_variant(config: Dictionary) -> void:
 		max_health = health
 		apply_variant_visuals()
 		base_modulate = mesh_instance.modulate
+		visual_base_scale = mesh_instance.scale
 		update_health_bar()
 
 
@@ -284,8 +289,12 @@ func apply_health_bonus(total_bonus_percent: float) -> void:
 
 
 func start_hit_flash() -> void:
-	hit_flash_timer = 0.08
+	hit_flash_timer = 0.14
+	juice_pop_timer = 0.16
 	mesh_instance.modulate = Color.WHITE
+	mesh_instance.scale = visual_base_scale * 1.08
+	if main and main.has_method("spawn_particle_burst"):
+		main.spawn_particle_burst(main, global_position, 10, base_modulate.lightened(0.35), 150.0, 0.18, Vector2(5.0, 10.0), true)
 
 
 func update_hit_flash(delta: float) -> void:
@@ -295,3 +304,14 @@ func update_hit_flash(delta: float) -> void:
 	hit_flash_timer -= delta
 	if hit_flash_timer <= 0.0:
 		mesh_instance.modulate = base_modulate
+
+
+func update_juice_pop(delta: float) -> void:
+	if juice_pop_timer <= 0.0:
+		return
+	juice_pop_timer = max(juice_pop_timer - delta, 0.0)
+	var progress := 1.0 - juice_pop_timer / 0.16
+	var scale_boost := sin(progress * PI) * 0.1
+	mesh_instance.scale = visual_base_scale * (1.0 + scale_boost)
+	if juice_pop_timer <= 0.0:
+		mesh_instance.scale = visual_base_scale
