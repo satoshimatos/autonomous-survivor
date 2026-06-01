@@ -124,6 +124,18 @@ Accessories are part of the normal 3-choice upgrade pool. They are lightweight s
 | Recycler | Defeated enemies can repair the tank. | +2.5% chance per level to heal 1 HP on normal enemy defeat, capped at 35%. Boss defeats heal 3 + Recycler level HP. | Magnet, EXP, Alloy Plating |
 | Payload Rack | Adds baseline payload blast radius and splash damage. | +6px splash radius and +6% splash damage per level. Works even before Splash is picked. | Splash, Damage, Accelerator |
 | Reactive Shield | Extends the post-hit invulnerability window. | +0.08s invulnerability per level. | Armor, Alloy Plating, Recycler |
+| Gyro Stabilizer | Increases tank and cannon rotation speed. | Rotation speed multiplies by 1.12 per level. | Fire Rate, Cannon, Accelerator |
+| Rapid Loader | Adds a second fire-rate branch. | Fire interval multiplies by 0.94 per level. | Fire Rate, Damage, Ammo Synth |
+| High Caliber | Raises base damage and projectile size. | Attack damage multiplies by 1.12 per level; projectile scale gains +0.04 per level. | Damage, Targeting Array, Piercing |
+| Nanobots | Improves all healing received. | Healing amount multiplies by 1 + 0.12 per level. | Regeneration, Recycler, Emergency Repairs |
+| Kinetic Treads | Adds another movement branch. | Move speed multiplies by 1.1 per level. | Speed, Oil Slick, Magnet |
+| Ammo Synthesizer | Adds extra shots to volleys. | +1 guaranteed shot every 2 levels; odd levels have a 50% chance to add one more shot. | Cannon, Rapid Loader, Damage |
+| Shatter Rounds | Adds splash radius and splash damage. | +4px splash radius and +3% splash damage per level. | Splash, Payload Rack, Combustion Mix |
+| Phase Core | Improves projectile speed and piercing. | +6% projectile speed per level; +1 pierce every 2 levels. | Piercing, Accelerator, High Caliber |
+| Capacitor Bank | Amplifies weapon and power damage. | +5.5% power damage multiplier per level. | Damage, Overdrive Core, Chain Lightning |
+| Salvage Magnet | Improves economy and pickup reach. | +8% EXP value and +24px EXP pull radius per level. | Magnet, EXP, Recycler |
+| Emergency Repairs | Repairs while critically damaged. | At or below 42% health, heals Emergency Repairs level HP every 9s. | Armor, Nanobots, Reactive Shield |
+| Combustion Mix | Improves area and contact damage. | Splash, Barbed Wire, and other area/contact damage gain +6.5% per level. | Splash, Barbed Wire, Landmine |
 
 ## Abilities
 

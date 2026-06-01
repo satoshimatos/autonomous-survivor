@@ -44,6 +44,19 @@ var alloy_plating_level: int = 0
 var recycler_level: int = 0
 var payload_rack_level: int = 0
 var reactive_shield_level: int = 0
+var gyro_stabilizer_level: int = 0
+var rapid_loader_level: int = 0
+var high_caliber_level: int = 0
+var nanobots_level: int = 0
+var kinetic_treads_level: int = 0
+var ammo_synthesizer_level: int = 0
+var shatter_rounds_level: int = 0
+var phase_core_level: int = 0
+var capacitor_bank_level: int = 0
+var salvage_magnet_level: int = 0
+var emergency_repairs_level: int = 0
+var combustion_mix_level: int = 0
+var emergency_repair_timer: float = 0.0
 var barbed_wire_cooldowns := {}
 var selected_tank_id: String = "vanguard"
 var selected_tank_name: String = "Vanguard"
@@ -168,6 +181,22 @@ const RECYCLER_BOSS_HEAL_AMOUNT: int = 3
 const PAYLOAD_RACK_SPLASH_RADIUS_PER_LEVEL: float = 6.0
 const PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL: float = 0.06
 const REACTIVE_SHIELD_I_WINDOW_PER_LEVEL: float = 0.08
+const GYRO_ROTATION_MULTIPLIER: float = 1.12
+const RAPID_LOADER_FIRE_INTERVAL_MULTIPLIER: float = 0.94
+const HIGH_CALIBER_DAMAGE_MULTIPLIER: float = 1.12
+const HIGH_CALIBER_PROJECTILE_SCALE_PER_LEVEL: float = 0.04
+const NANOBOTS_HEAL_BONUS_PER_LEVEL: float = 0.12
+const KINETIC_TREADS_SPEED_MULTIPLIER: float = 1.1
+const SHATTER_ROUNDS_RADIUS_PER_LEVEL: float = 4.0
+const SHATTER_ROUNDS_DAMAGE_PER_LEVEL: float = 0.03
+const PHASE_CORE_SPEED_PER_LEVEL: float = 0.06
+const PHASE_CORE_PIERCE_PER_TWO_LEVELS: int = 1
+const CAPACITOR_BANK_DAMAGE_PER_LEVEL: float = 0.055
+const SALVAGE_MAGNET_EXP_PER_LEVEL: float = 0.08
+const SALVAGE_MAGNET_RADIUS_PER_LEVEL: float = 24.0
+const EMERGENCY_REPAIRS_INTERVAL: float = 9.0
+const EMERGENCY_REPAIRS_HEALTH_RATIO: float = 0.42
+const COMBUSTION_MIX_AREA_DAMAGE_PER_LEVEL: float = 0.065
 
 @onready var camera: Camera2D = $Camera2D
 @onready var tank_base: Sprite2D = $TankBase
@@ -193,6 +222,7 @@ func _physics_process(delta: float) -> void:
 	muzzle_burst_timer += delta
 	circular_saw_orbit_angle += TAU / 2.0 * delta
 	process_regeneration(delta)
+	process_emergency_repairs(delta)
 	process_landmine_placement(delta)
 	process_barbed_wire(delta)
 	process_personal_magnet()
@@ -687,7 +717,7 @@ func get_landmine_interval() -> float:
 
 
 func get_landmine_damage_multiplier() -> float:
-	return LANDMINE_BASE_DAMAGE_MULTIPLIER * pow(LANDMINE_DAMAGE_LEVEL_MULTIPLIER, float(max(landmine_level - 1, 0)))
+	return LANDMINE_BASE_DAMAGE_MULTIPLIER * pow(LANDMINE_DAMAGE_LEVEL_MULTIPLIER, float(max(landmine_level - 1, 0))) * get_area_damage_multiplier()
 
 
 func get_valid_upgrade_ids() -> Array[String]:
@@ -708,6 +738,18 @@ func get_valid_upgrade_ids() -> Array[String]:
 		"recycler",
 		"payload_rack",
 		"reactive_shield",
+		"gyro_stabilizer",
+		"rapid_loader",
+		"high_caliber",
+		"nanobots",
+		"kinetic_treads",
+		"ammo_synthesizer",
+		"shatter_rounds",
+		"phase_core",
+		"capacitor_bank",
+		"salvage_magnet",
+		"emergency_repairs",
+		"combustion_mix",
 	]
 	if can_upgrade_regeneration():
 		valid_upgrades.append("regeneration")
@@ -753,6 +795,30 @@ func apply_upgrade_by_id(upgrade_id: String) -> void:
 			payload_rack_level += 1
 		"reactive_shield":
 			upgrade_reactive_shield()
+		"gyro_stabilizer":
+			upgrade_gyro_stabilizer()
+		"rapid_loader":
+			upgrade_rapid_loader()
+		"high_caliber":
+			upgrade_high_caliber()
+		"nanobots":
+			nanobots_level += 1
+		"kinetic_treads":
+			upgrade_kinetic_treads()
+		"ammo_synthesizer":
+			ammo_synthesizer_level += 1
+		"shatter_rounds":
+			shatter_rounds_level += 1
+		"phase_core":
+			phase_core_level += 1
+		"capacitor_bank":
+			capacitor_bank_level += 1
+		"salvage_magnet":
+			salvage_magnet_level += 1
+		"emergency_repairs":
+			emergency_repairs_level += 1
+		"combustion_mix":
+			combustion_mix_level += 1
 	update_evolutions()
 
 
@@ -766,7 +832,7 @@ func upgrade_exp() -> void:
 
 
 func get_exp_value(base_exp_value: int) -> int:
-	return int(ceil(float(base_exp_value) * (1.0 + float(exp_bonus_level) * 0.25)))
+	return int(ceil(float(base_exp_value) * (1.0 + float(exp_bonus_level) * 0.25 + float(salvage_magnet_level) * SALVAGE_MAGNET_EXP_PER_LEVEL)))
 
 
 func upgrade_splash() -> void:
@@ -781,7 +847,7 @@ func get_splash_radius() -> float:
 	if splash_level > 0:
 		upgrade_radius = 10.0 + float(splash_level - 1) * 5.0
 
-	return upgrade_radius + get_payload_splash_radius_bonus() + get_evolution_effect_value("splash_radius_bonus")
+	return upgrade_radius + get_payload_splash_radius_bonus() + float(shatter_rounds_level) * SHATTER_ROUNDS_RADIUS_PER_LEVEL + get_evolution_effect_value("splash_radius_bonus")
 
 
 func get_payload_splash_radius_bonus() -> float:
@@ -789,7 +855,7 @@ func get_payload_splash_radius_bonus() -> float:
 
 
 func get_splash_damage_multiplier() -> float:
-	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL) * get_evolution_effect_multiplier("splash_damage_multiplier")
+	return (1.0 + float(payload_rack_level) * PAYLOAD_RACK_SPLASH_DAMAGE_PER_LEVEL + float(shatter_rounds_level) * SHATTER_ROUNDS_DAMAGE_PER_LEVEL) * get_area_damage_multiplier() * get_evolution_effect_multiplier("splash_damage_multiplier")
 
 
 func spawn_muzzle_burst() -> void:
@@ -813,7 +879,7 @@ func upgrade_barbed_wire() -> void:
 
 
 func get_barbed_wire_damage() -> float:
-	return attack_damage * BARBED_WIRE_DAMAGE_MULTIPLIER * float(barbed_wire_level) * get_evolution_effect_multiplier("barbed_wire_damage_multiplier")
+	return attack_damage * BARBED_WIRE_DAMAGE_MULTIPLIER * float(barbed_wire_level) * get_area_damage_multiplier() * get_evolution_effect_multiplier("barbed_wire_damage_multiplier")
 
 
 func process_barbed_wire(delta: float) -> void:
@@ -859,11 +925,11 @@ func increase_max_health_from_level() -> void:
 
 
 func get_projectile_hp() -> int:
-	return piercing_level + 1 + int(get_evolution_effect_value("piercing_bonus"))
+	return piercing_level + 1 + int(floor(float(phase_core_level) / 2.0)) * PHASE_CORE_PIERCE_PER_TWO_LEVELS + int(get_evolution_effect_value("piercing_bonus"))
 
 
 func get_projectile_speed() -> float:
-	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL)
+	return 500.0 * (1.0 + float(accelerator_level) * ACCELERATOR_PROJECTILE_SPEED_PER_LEVEL + float(phase_core_level) * PHASE_CORE_SPEED_PER_LEVEL)
 
 
 func get_crit_chance() -> float:
@@ -877,21 +943,21 @@ func get_crit_multiplier() -> float:
 
 
 func fire_projectile_volley(target_direction: Vector2) -> void:
-	var projectile_count := 1 + cannon_level + int(get_evolution_effect_value("cannon_projectile_bonus"))
+	var projectile_count := get_projectile_count()
 	var spread_radians := deg_to_rad(CANNON_SPREAD_DEGREES)
 	var middle_index := float(projectile_count - 1) / 2.0
 	for i in range(projectile_count):
 		var direction := target_direction.rotated((float(i) - middle_index) * spread_radians).normalized()
 		var projectile_config := {
 			"direction": direction,
-			"damage": attack_damage * get_power_damage_multiplier() * get_evolution_effect_multiplier("projectile_damage_multiplier"),
+		"damage": attack_damage * get_power_damage_multiplier() * get_evolution_effect_multiplier("projectile_damage_multiplier"),
 			"splash_radius": get_splash_radius(),
 			"splash_damage_multiplier": get_splash_damage_multiplier(),
 			"max_piercing_hp": get_projectile_hp(),
 			"speed": get_projectile_speed(),
 			"critical_chance": get_crit_chance(),
 			"critical_multiplier": get_crit_multiplier(),
-			"projectile_scale": get_evolution_projectile_scale(),
+			"projectile_scale": get_projectile_scale(),
 			"fade_in_duration": 0.08,
 		}
 		var main := get_tree().current_scene
@@ -908,6 +974,17 @@ func get_armor_damage_reduction() -> float:
 	return min(float(armor_level) * ARMOR_DAMAGE_REDUCTION_PER_LEVEL + get_evolution_effect_value("armor_reduction_bonus"), ARMOR_MAX_DAMAGE_REDUCTION)
 
 
+func get_projectile_count() -> int:
+	var projectile_count := 1 + cannon_level + int(get_evolution_effect_value("cannon_projectile_bonus")) + int(floor(float(ammo_synthesizer_level) / 2.0))
+	if ammo_synthesizer_level % 2 == 1 and randf() < 0.5:
+		projectile_count += 1
+	return projectile_count
+
+
+func get_area_damage_multiplier() -> float:
+	return 1.0 + float(combustion_mix_level) * COMBUSTION_MIX_AREA_DAMAGE_PER_LEVEL
+
+
 func upgrade_alloy_plating() -> void:
 	alloy_plating_level += 1
 	max_health += ALLOY_PLATING_HEALTH_PER_LEVEL
@@ -917,6 +994,26 @@ func upgrade_alloy_plating() -> void:
 func upgrade_reactive_shield() -> void:
 	reactive_shield_level += 1
 	i_window += REACTIVE_SHIELD_I_WINDOW_PER_LEVEL
+
+
+func upgrade_gyro_stabilizer() -> void:
+	gyro_stabilizer_level += 1
+	rotation_speed *= GYRO_ROTATION_MULTIPLIER
+
+
+func upgrade_rapid_loader() -> void:
+	rapid_loader_level += 1
+	fire_interval *= RAPID_LOADER_FIRE_INTERVAL_MULTIPLIER
+
+
+func upgrade_high_caliber() -> void:
+	high_caliber_level += 1
+	attack_damage *= HIGH_CALIBER_DAMAGE_MULTIPLIER
+
+
+func upgrade_kinetic_treads() -> void:
+	kinetic_treads_level += 1
+	speed *= KINETIC_TREADS_SPEED_MULTIPLIER
 
 
 func try_recycler_heal(is_boss: bool = false) -> void:
@@ -929,7 +1026,22 @@ func try_recycler_heal(is_boss: bool = false) -> void:
 
 	var heal_chance: float = min(float(recycler_level) * RECYCLER_HEAL_CHANCE_PER_LEVEL + get_evolution_effect_value("recycler_heal_chance_bonus"), 0.35)
 	if randf() <= heal_chance:
-		health = min(health + 1, max_health)
+		heal(1)
+
+
+func process_emergency_repairs(delta: float) -> void:
+	if emergency_repairs_level <= 0 or is_dead or health >= max_health:
+		return
+	if get_health_ratio() > EMERGENCY_REPAIRS_HEALTH_RATIO:
+		emergency_repair_timer = 0.0
+		return
+
+	emergency_repair_timer += delta
+	if emergency_repair_timer < EMERGENCY_REPAIRS_INTERVAL:
+		return
+
+	emergency_repair_timer = 0.0
+	heal(emergency_repairs_level)
 
 
 func update_evolutions() -> Array[String]:
@@ -993,6 +1105,30 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return payload_rack_level
 		"reactive_shield":
 			return reactive_shield_level
+		"gyro_stabilizer":
+			return gyro_stabilizer_level
+		"rapid_loader":
+			return rapid_loader_level
+		"high_caliber":
+			return high_caliber_level
+		"nanobots":
+			return nanobots_level
+		"kinetic_treads":
+			return kinetic_treads_level
+		"ammo_synthesizer":
+			return ammo_synthesizer_level
+		"shatter_rounds":
+			return shatter_rounds_level
+		"phase_core":
+			return phase_core_level
+		"capacitor_bank":
+			return capacitor_bank_level
+		"salvage_magnet":
+			return salvage_magnet_level
+		"emergency_repairs":
+			return emergency_repairs_level
+		"combustion_mix":
+			return combustion_mix_level
 		"landmine":
 			return landmine_level
 		"circular_saw":
@@ -1045,7 +1181,7 @@ func get_effective_ability_level(ability_id: String) -> int:
 
 
 func get_power_damage_multiplier() -> float:
-	var multiplier := 1.0 + get_evolution_effect_value("overdrive_damage_bonus")
+	var multiplier := 1.0 + float(capacitor_bank_level) * CAPACITOR_BANK_DAMAGE_PER_LEVEL + get_evolution_effect_value("overdrive_damage_bonus")
 	if is_instance_valid(overdrive_core) and overdrive_core.has_method("get_damage_multiplier"):
 		multiplier *= overdrive_core.get_damage_multiplier()
 	return multiplier
@@ -1083,6 +1219,10 @@ func get_evolution_projectile_scale() -> float:
 	return scale_multiplier
 
 
+func get_projectile_scale() -> float:
+	return get_evolution_projectile_scale() + float(high_caliber_level) * HIGH_CALIBER_PROJECTILE_SCALE_PER_LEVEL
+
+
 func get_active_evolution_configs() -> Array[Dictionary]:
 	var evolutions: Array[Dictionary] = []
 	for evolution in evolution_catalog:
@@ -1108,7 +1248,7 @@ func process_personal_magnet() -> void:
 	if magnet_level <= 0 or is_dead:
 		return
 	
-	var pull_radius := MAGNET_BASE_RADIUS + float(magnet_level - 1) * MAGNET_RADIUS_PER_LEVEL
+	var pull_radius := MAGNET_BASE_RADIUS + float(magnet_level - 1) * MAGNET_RADIUS_PER_LEVEL + float(salvage_magnet_level) * SALVAGE_MAGNET_RADIUS_PER_LEVEL
 	var pull_radius_squared := pull_radius * pull_radius
 	for exp_orb in get_tree().get_nodes_in_group("ExpOrb"):
 		if is_instance_valid(exp_orb) and global_position.distance_squared_to(exp_orb.global_position) <= pull_radius_squared:
@@ -1225,9 +1365,14 @@ func heal(heal_amount: int) -> int:
 	if heal_amount <= 0 or health >= max_health or is_dead:
 		return 0
 	
+	heal_amount = int(ceil(float(heal_amount) * get_heal_multiplier()))
 	var previous_health := health
 	health = min(health + heal_amount, max_health)
 	return health - previous_health
+
+
+func get_heal_multiplier() -> float:
+	return 1.0 + float(nanobots_level) * NANOBOTS_HEAL_BONUS_PER_LEVEL
 
 
 func update_invincibility_visual() -> void:

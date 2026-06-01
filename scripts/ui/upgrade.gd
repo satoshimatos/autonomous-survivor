@@ -26,6 +26,18 @@ var upgrade_catalog: Dictionary = {
 	"recycler": {"title": "+ RECYCLER", "tag": "ACCESSORY", "hint": "Defeated enemies can repair the tank.", "synergy": ["magnet", "exp", "alloy_plating"]},
 	"payload_rack": {"title": "+ PAYLOAD RACK", "tag": "ACCESSORY", "hint": "Adds payload blast radius and splash damage.", "synergy": ["splash", "damage", "accelerator"]},
 	"reactive_shield": {"title": "+ REACTIVE SHIELD", "tag": "ACCESSORY", "hint": "Extends post-hit invulnerability windows.", "synergy": ["armor", "alloy_plating", "recycler"]},
+	"gyro_stabilizer": {"title": "+ GYRO STABILIZER", "tag": "CONTROL", "hint": "Rotate faster and acquire targets sooner.", "synergy": ["fire_rate", "cannon", "accelerator"]},
+	"rapid_loader": {"title": "+ RAPID LOADER", "tag": "WEAPON", "hint": "Slightly lowers fire interval.", "synergy": ["fire_rate", "damage", "ammo_synthesizer"]},
+	"high_caliber": {"title": "+ HIGH CALIBER", "tag": "POWER", "hint": "Raises damage and projectile size.", "synergy": ["damage", "targeting_array", "piercing"]},
+	"nanobots": {"title": "+ NANOBOTS", "tag": "SUSTAIN", "hint": "Increases all healing received.", "synergy": ["regeneration", "recycler", "emergency_repairs"]},
+	"kinetic_treads": {"title": "+ KINETIC TREADS", "tag": "MOBILITY", "hint": "Adds another movement speed multiplier.", "synergy": ["speed", "oil_slick_level", "magnet"]},
+	"ammo_synthesizer": {"title": "+ AMMO SYNTH", "tag": "MULTISHOT", "hint": "Adds alternating extra shots to volleys.", "synergy": ["cannon", "rapid_loader", "damage"]},
+	"shatter_rounds": {"title": "+ SHATTER ROUNDS", "tag": "AREA", "hint": "Adds splash radius and splash damage.", "synergy": ["splash", "payload_rack", "combustion_mix"]},
+	"phase_core": {"title": "+ PHASE CORE", "tag": "CLEAR", "hint": "Adds projectile speed and periodic piercing.", "synergy": ["piercing", "accelerator", "high_caliber"]},
+	"capacitor_bank": {"title": "+ CAPACITOR BANK", "tag": "POWER", "hint": "Amplifies weapon and power damage.", "synergy": ["damage", "overdrive_core_level", "chain_lightning_level"]},
+	"salvage_magnet": {"title": "+ SALVAGE MAGNET", "tag": "ECONOMY", "hint": "Boosts EXP value and pickup pull radius.", "synergy": ["magnet", "exp", "recycler"]},
+	"emergency_repairs": {"title": "+ EMERGENCY REPAIRS", "tag": "SUSTAIN", "hint": "Repairs the tank while critically damaged.", "synergy": ["armor", "nanobots", "reactive_shield"]},
+	"combustion_mix": {"title": "+ COMBUSTION MIX", "tag": "AREA", "hint": "Raises splash and contact-area damage.", "synergy": ["splash", "barbed_wire", "landmine_level"]},
 }
 
 @onready var buttons: Array[Button] = [
@@ -132,6 +144,30 @@ func get_synergy_level(synergy_id: String) -> int:
 			return player.payload_rack_level
 		"reactive_shield":
 			return player.reactive_shield_level
+		"gyro_stabilizer":
+			return player.gyro_stabilizer_level
+		"rapid_loader":
+			return player.rapid_loader_level
+		"high_caliber":
+			return player.high_caliber_level
+		"nanobots":
+			return player.nanobots_level
+		"kinetic_treads":
+			return player.kinetic_treads_level
+		"ammo_synthesizer":
+			return player.ammo_synthesizer_level
+		"shatter_rounds":
+			return player.shatter_rounds_level
+		"phase_core":
+			return player.phase_core_level
+		"capacitor_bank":
+			return player.capacitor_bank_level
+		"salvage_magnet":
+			return player.salvage_magnet_level
+		"emergency_repairs":
+			return player.emergency_repairs_level
+		"combustion_mix":
+			return player.combustion_mix_level
 		"landmine_level":
 			return player.landmine_level
 		"circular_saw_level":
@@ -181,6 +217,28 @@ func get_synergy_label(synergy_id: String) -> String:
 			return "Payload Rack"
 		"reactive_shield":
 			return "Reactive Shield"
+		"gyro_stabilizer":
+			return "Gyro Stabilizer"
+		"rapid_loader":
+			return "Rapid Loader"
+		"high_caliber":
+			return "High Caliber"
+		"kinetic_treads":
+			return "Kinetic Treads"
+		"ammo_synthesizer":
+			return "Ammo Synth"
+		"shatter_rounds":
+			return "Shatter Rounds"
+		"phase_core":
+			return "Phase Core"
+		"capacitor_bank":
+			return "Capacitor Bank"
+		"salvage_magnet":
+			return "Salvage Magnet"
+		"emergency_repairs":
+			return "Emergency Repairs"
+		"combustion_mix":
+			return "Combustion Mix"
 	return synergy_id.capitalize()
 
 

@@ -125,16 +125,20 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Overlord and Singularity, bringing the boss catalog to 10 weighted types.
   - New entries extend the weighted progression through 50 minutes while preserving shared scenes and lightweight config-driven behavior.
   - Updated the compendium and balance projection data for the full 20 enemy / 10 boss catalog.
+- Added a large upgrade branch batch:
+  - Added Gyro Stabilizer, Rapid Loader, High Caliber, Nanobots, Kinetic Treads, Ammo Synthesizer, Shatter Rounds, Phase Core, Capacitor Bank, Salvage Magnet, Emergency Repairs, and Combustion Mix.
+  - New upgrades feed existing projectile, splash, piercing, healing, economy, movement, rotation, power-damage, and low-health sustain systems.
+  - Upgrade cards, HUD stats, inventory, run summaries, ability synergies, and the compendium now include the new upgrade IDs.
 
 ## Backlog
 
 ### Next
 
-- Add more powers and upgrade branches toward 20 powers and 50 unique upgrades.
+- Add another power batch toward 20 powers, then continue upgrade expansion toward 50 unique upgrades.
 
 ### Content
 
-- Add more powers and upgrade branches toward 20 powers and 50 unique upgrades.
+- Add another power batch toward 20 powers, then continue upgrade expansion toward 50 unique upgrades.
 
 ### Systems
 

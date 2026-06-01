@@ -159,6 +159,12 @@ func get_upgrade_level(upgrade_id: String) -> int:
 			return player.payload_rack_level
 		"reactive_shield":
 			return player.reactive_shield_level
+		"rapid_loader":
+			return player.rapid_loader_level
+		"high_caliber":
+			return player.high_caliber_level
+		"capacitor_bank":
+			return player.capacitor_bank_level
 	return 0
 
 

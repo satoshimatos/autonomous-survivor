@@ -1545,9 +1545,11 @@ func update_stats_label() -> void:
 	var armor_percent := int(round(player.get_armor_damage_reduction() * 100.0)) if player.has_method("get_armor_damage_reduction") else 0
 	var crit_percent: int = int(round(player.get_crit_chance() * 100.0)) if player.has_method("get_crit_chance") else 0
 	var projectile_speed: float = player.get_projectile_speed() if player.has_method("get_projectile_speed") else 500.0
-	stats_label.text = "Tank: %s\nDamage: %.1f\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nEvent: %s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nProjectile Speed: %.0f\nCrit Chance: %s%%\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
+	var power_percent := int(round(player.get_power_damage_multiplier() * 100.0)) if player.has_method("get_power_damage_multiplier") else 100
+	stats_label.text = "Tank: %s\nDamage: %.1f\nPower: %s%%\nDPS: %.1f / %.1f HP\nPressure: %s/%s\nEvent: %s\nBarbed Wire: %.0f%% / 0.5s\nSplash Radius: %.0f px\nCannons: %s\nMove Speed: %.0f\nFire Rate: %.3fs\nProjectile Speed: %.0f\nCrit Chance: %s%%\nArmor: %s%%\nRegen: %.3f HP/s\nEXP Mult: %s%%" % [
 		player.selected_tank_name,
 		player.attack_damage,
+		power_percent,
 		player_dps,
 		get_average_spawn_enemy_hp(),
 		get_active_enemy_count(),
@@ -1613,6 +1615,18 @@ func get_build_level_snapshot() -> Dictionary:
 		"recycler": player.recycler_level,
 		"payload_rack": player.payload_rack_level,
 		"reactive_shield": player.reactive_shield_level,
+		"gyro_stabilizer": player.gyro_stabilizer_level,
+		"rapid_loader": player.rapid_loader_level,
+		"high_caliber": player.high_caliber_level,
+		"nanobots": player.nanobots_level,
+		"kinetic_treads": player.kinetic_treads_level,
+		"ammo_synthesizer": player.ammo_synthesizer_level,
+		"shatter_rounds": player.shatter_rounds_level,
+		"phase_core": player.phase_core_level,
+		"capacitor_bank": player.capacitor_bank_level,
+		"salvage_magnet": player.salvage_magnet_level,
+		"emergency_repairs": player.emergency_repairs_level,
+		"combustion_mix": player.combustion_mix_level,
 		"piercing": player.piercing_level,
 		"splash": player.splash_level,
 		"magnet": player.magnet_level,
@@ -1645,6 +1659,18 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Recycler", player.recycler_level)
 	add_build_entry(entries, "Payload Rack", player.payload_rack_level)
 	add_build_entry(entries, "Reactive Shield", player.reactive_shield_level)
+	add_build_entry(entries, "Gyro Stabilizer", player.gyro_stabilizer_level)
+	add_build_entry(entries, "Rapid Loader", player.rapid_loader_level)
+	add_build_entry(entries, "High Caliber", player.high_caliber_level)
+	add_build_entry(entries, "Nanobots", player.nanobots_level)
+	add_build_entry(entries, "Kinetic Treads", player.kinetic_treads_level)
+	add_build_entry(entries, "Ammo Synth", player.ammo_synthesizer_level)
+	add_build_entry(entries, "Shatter Rounds", player.shatter_rounds_level)
+	add_build_entry(entries, "Phase Core", player.phase_core_level)
+	add_build_entry(entries, "Capacitor Bank", player.capacitor_bank_level)
+	add_build_entry(entries, "Salvage Magnet", player.salvage_magnet_level)
+	add_build_entry(entries, "Emergency Repairs", player.emergency_repairs_level)
+	add_build_entry(entries, "Combustion Mix", player.combustion_mix_level)
 	add_build_entry(entries, "Piercing", player.piercing_level)
 	add_build_entry(entries, "Splash", player.splash_level)
 	add_build_entry(entries, "Magnet", player.magnet_level)
@@ -1707,6 +1733,18 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Recycler", player.recycler_level),
 		format_upgrade_inventory_row("Payload Rack", player.payload_rack_level),
 		format_upgrade_inventory_row("Reactive Shield", player.reactive_shield_level),
+		format_upgrade_inventory_row("Gyro Stabilizer", player.gyro_stabilizer_level),
+		format_upgrade_inventory_row("Rapid Loader", player.rapid_loader_level),
+		format_upgrade_inventory_row("High Caliber", player.high_caliber_level),
+		format_upgrade_inventory_row("Nanobots", player.nanobots_level),
+		format_upgrade_inventory_row("Kinetic Treads", player.kinetic_treads_level),
+		format_upgrade_inventory_row("Ammo Synth", player.ammo_synthesizer_level),
+		format_upgrade_inventory_row("Shatter Rounds", player.shatter_rounds_level),
+		format_upgrade_inventory_row("Phase Core", player.phase_core_level),
+		format_upgrade_inventory_row("Capacitor Bank", player.capacitor_bank_level),
+		format_upgrade_inventory_row("Salvage Magnet", player.salvage_magnet_level),
+		format_upgrade_inventory_row("Emergency Repairs", player.emergency_repairs_level),
+		format_upgrade_inventory_row("Combustion Mix", player.combustion_mix_level),
 		"",
 		"Abilities",
 		format_upgrade_inventory_row("Landmine", player.landmine_level),
