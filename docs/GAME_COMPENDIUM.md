@@ -174,6 +174,11 @@ clamp(base_weight + minutes_since_unlock * growth_per_minute, min_weight, max_we
 | Orbiter | 600s | orbiter | 42 | 62 | 3 | 3 tier 2+ | 18 base, +2/min, max 38 |
 | Tank | 720s | chase | 86 | 21 | 5 | 5 tier 3+ | 10 base, +1.2/min, max 22 |
 | Drifter | 840s | drifter | 54 | 70 | 4 | 4 tier 3+ | 18 base, +2.4/min, max 42 |
+| Lancer | 960s | sprinter | 46 | 104 | 5 | 4 tier 3+ | 16 base, +1.8/min, max 36 |
+| Phalanx | 1080s | chase | 128 | 26 | 6 | 6 tier 3+ | 12 base, +1.4/min, max 28 |
+| Mirage | 1200s | weaver | 32 | 90 | 4 | 3 tier 3+ | 20 base, +2.1/min, max 42 |
+| Reaper | 1440s | stalker | 92 | 64 | 7 | 7 tier 4+ | 14 base, +1.7/min, max 34 |
+| Comet | 1680s | drifter | 72 | 112 | 6 | 5 tier 4+ | 18 base, +2/min, max 40 |
 
 ### Enemy Movement Styles
 
@@ -210,6 +215,9 @@ Only one boss can be alive at a time. Bosses normally spawn every 420s, modified
 | Sprinter | 840s | sprinter | 1100 | 34 | 6 | 42 tier 2+ | 55 base, +1.5/min, max 75 | Pulses speed up to +75%. |
 | Crusher | 1260s | crusher | 2200 | 15 | 11 | 52 tier 3+ | 62 base, +1.2/min, max 82 | Phases at 65% and 32%, creates hazard rings every 7.2s after 2.8s. |
 | Wraith | 1680s | wraith | 1750 | 30 | 9 | 60 tier 4+ | 70 base, +1.5/min, max 90 | Phases at 50%, fades visually, targets player hazards every 5.6s and calls minions every 11s. |
+| Monarch | 1800s | monarch | 2400 | 22 | 10 | 68 tier 4+ | 64 base, +1.4/min, max 86 | Phases at 66% and 33%, alternates larger minion calls with player-targeted hazards. |
+| Tempest | 2100s | tempest | 2050 | 38 | 8 | 74 tier 4+ | 68 base, +1.5/min, max 88 | Phases at 72%, 44%, and 20%, rotates rapidly, pulses speed, and layers hazard rings with targeted strikes. |
+| Bastion | 2400s | bastion | 3200 | 13 | 14 | 84 tier 4+ | 72 base, +1.2/min, max 92 | Phases at 75%, 50%, and 25%, uses large hazard rings and bounded support waves. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 

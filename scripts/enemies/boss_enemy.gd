@@ -150,6 +150,14 @@ func update_behavior_effect(delta: float) -> void:
 			mesh_instance.scale = Vector2.ONE * variant_scale * (1.0 + sin(pulse_timer * 6.0) * 0.035)
 		"wraith":
 			mesh_instance.modulate.a = 0.72 + abs(sin(pulse_timer * 2.0)) * 0.28
+		"monarch":
+			mesh_instance.rotation = sin(pulse_timer * 1.4) * 0.18
+			speed = base_speed * (0.92 + abs(sin(pulse_timer * 1.1)) * 0.22) * get_status_speed_multiplier()
+		"tempest":
+			mesh_instance.rotation += delta * 1.2
+			speed = base_speed * (1.0 + max(0.0, sin(pulse_timer * 3.3)) * 0.55) * get_status_speed_multiplier()
+		"bastion":
+			mesh_instance.scale = Vector2.ONE * variant_scale * (1.0 + sin(pulse_timer * 3.2) * 0.025)
 		_:
 			pass
 

@@ -110,16 +110,21 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Accessories add crits, projectile speed, max health, kill-based repairs, payload splash scaling, and longer post-hit safety windows.
   - Added Critical Payload and Repair Loop evolutions so accessory-heavy builds can cross into stronger late-game synergies.
   - HUD stats, upgrade inventory, run summary build tracking, and the game compendium now include accessory upgrades.
+- Expanded late-game enemy and boss variety:
+  - Added Lancer, Phalanx, Mirage, Reaper, and Comet enemy variants, bringing the enemy catalog to 15 weighted types.
+  - Added Monarch, Tempest, and Bastion boss variants, bringing the boss catalog to 8 weighted types.
+  - New variants unlock from 16 to 40 minutes to support longer 30-minute progression and keep late runs from repeating the same pressure mix.
+  - Updated the balance projection tool and compendium with the new weighted entries.
 
 ## Backlog
 
 ### Next
 
-- Add late-game enemy and boss variants to move toward 20 enemies and 10 bosses.
+- Add the next power/ability batch toward 20 powers and stronger late-game build explosions.
 
 ### Content
 
-- Add late-game enemy and boss variants to move toward 20 enemies and 10 bosses.
+- Add the next power/ability batch toward 20 powers and stronger late-game build explosions.
 
 ### Systems
 
