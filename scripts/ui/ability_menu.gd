@@ -5,6 +5,12 @@ const AI_SELECTION_FLASH_DELAY: float = 0.5
 const AI_SELECTION_FLASH_COLOR: Color = Color(1.0, 0.95, 0.25, 1.0)
 const OPTION_COUNT: int = 3
 const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
+const RARITY_COLORS: Dictionary = {
+	"Common": Color(0.16, 0.40, 0.64, 1.0),
+	"Uncommon": Color(0.10, 0.56, 0.80, 1.0),
+	"Rare": Color(0.20, 0.30, 0.86, 1.0),
+	"Epic": Color(0.46, 0.24, 0.86, 1.0),
+}
 
 var player: CharacterBody2D
 var ai_pick_in_progress: bool = false
@@ -34,16 +40,16 @@ var ability_catalog: Array[Dictionary] = [
 ]
 
 @onready var ability_buttons: Array[Button] = [
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/LandmineButton,
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/CircularSawButton,
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/FootsoldierButton,
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/ShockFieldButton,
-	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/ArtilleryButton,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton1,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton2,
+	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton3,
 ]
+@onready var detail_label: Label = $CanvasLayer/ColorRect/MarginContainer/VBoxContainer/DetailLabel
 
 
 func _ready() -> void:
 	apply_visual_skin()
+	connect_focus_updates()
 	roll_ability_options()
 	if not ability_buttons.is_empty() and ability_buttons[0].visible:
 		ability_buttons[0].grab_focus.call_deferred()
@@ -51,9 +57,17 @@ func _ready() -> void:
 
 func apply_visual_skin() -> void:
 	CartoonUiSkin.apply_label_pop($CanvasLayer/ColorRect/Label, Color(0.74, 0.92, 1.0, 1.0))
+	CartoonUiSkin.apply_label_pop(detail_label, Color(0.92, 0.98, 1.0, 1.0))
 	for button in ability_buttons:
 		CartoonUiSkin.apply_button(button, Color(0.22, 0.34, 0.62, 1.0))
 		button.focus_mode = Control.FOCUS_ALL
+
+
+func connect_focus_updates() -> void:
+	for i in range(ability_buttons.size()):
+		var slot_index := i
+		ability_buttons[i].focus_entered.connect(func(): update_detail_for_slot(slot_index))
+		ability_buttons[i].mouse_entered.connect(func(): update_detail_for_slot(slot_index))
 
 
 func roll_ability_options() -> void:
@@ -63,10 +77,24 @@ func roll_ability_options() -> void:
 		var button := ability_buttons[i]
 		if i < displayed_abilities.size():
 			button.visible = true
-			button.text = get_ability_button_label(displayed_abilities[i])
+			configure_card_button(button, displayed_abilities[i])
 			button.disabled = false
 		else:
 			button.visible = false
+
+	update_detail_for_slot(0)
+
+
+func configure_card_button(button: Button, ability: Dictionary) -> void:
+	var rarity := String(ability.get("rarity", "Common"))
+	var tags: Array = ability.get("tags", []) as Array
+	var tag_text := String(tags[0]).to_upper() if not tags.is_empty() else "POWER"
+	button.text = ""
+	button.icon = null
+	CartoonUiSkin.apply_button(button, RARITY_COLORS.get(rarity, RARITY_COLORS["Common"]) as Color)
+	(button.get_node("NameLabel") as Label).text = String(ability.get("label", "ABILITY")).replace("+1 ", "").replace("+ ", "")
+	(button.get_node("TagLabel") as Label).text = "[%s]  %s" % [rarity.to_upper(), tag_text]
+	(button.get_node("Icon") as TextureRect).texture = get_ability_icon(String(ability.get("id", "")))
 
 
 func roll_weighted_ability_options() -> Array[Dictionary]:
@@ -83,11 +111,50 @@ func get_unlocked_ability_options() -> Array[Dictionary]:
 	var unlocked_options: Array[Dictionary] = []
 	var unlock_manager = get_unlock_manager()
 	for ability in ability_catalog:
-		if unlock_manager.is_ability_unlocked(String(ability.id)):
+		if unlock_manager.is_ability_unlocked(String(ability.id)) and are_ability_prerequisites_met(ability):
 			unlocked_options.append(ability.duplicate(true))
 	if unlocked_options.is_empty() and not ability_catalog.is_empty():
-		unlocked_options.append(ability_catalog[0].duplicate(true))
+		for ability in ability_catalog:
+			if unlock_manager.is_ability_unlocked(String(ability.id)):
+				unlocked_options.append(ability.duplicate(true))
+				break
 	return unlocked_options
+
+
+func are_ability_prerequisites_met(ability: Dictionary) -> bool:
+	var ability_id := String(ability.get("id", ""))
+	match ability_id:
+		"artillery":
+			return get_upgrade_level("splash") > 0 or get_player_property_as_int("landmine_level") > 0 or get_player_property_as_int("oil_slick_level") > 0
+		"drone_swarm":
+			return get_player_property_as_int("footsoldier_level") > 0 or get_upgrade_level("cannon") > 0
+		"freeze_pulse":
+			return get_player_property_as_int("shock_field_level") > 0 or get_player_property_as_int("circular_saw_level") > 0 or get_upgrade_level("armor") > 0
+		"chain_lightning":
+			return get_player_property_as_int("shock_field_level") > 0
+		"guardian_satellite":
+			return get_player_property_as_int("circular_saw_level") > 0 or get_upgrade_level("armor") > 0
+		"overdrive_core":
+			return get_upgrade_level("speed") > 0 or get_upgrade_level("damage") > 0
+		"flame_wave":
+			return get_player_property_as_int("oil_slick_level") > 0 or get_upgrade_level("splash") > 0
+		"repair_beacon":
+			return get_upgrade_level("nanobots") > 0 or get_upgrade_level("reactive_shield") > 0 or get_upgrade_level("armor") > 0
+		"missile_pod":
+			return get_player_property_as_int("artillery_level") > 0 or get_upgrade_level("splash") > 0
+		"gravity_well":
+			return get_player_property_as_int("flame_wave_level") > 0 or get_player_property_as_int("chain_lightning_level") > 0
+		"railgun_orbiter":
+			return get_upgrade_level("piercing") > 0 or get_upgrade_level("targeting_array") > 0
+		"tesla_pylon":
+			return get_player_property_as_int("chain_lightning_level") > 0 or get_player_property_as_int("shock_field_level") > 0
+		"nanite_cloud":
+			return get_player_property_as_int("repair_beacon_level") > 0 or get_upgrade_level("nanobots") > 0
+		"ricochet_rounds":
+			return get_player_property_as_int("railgun_orbiter_level") > 0 or get_player_property_as_int("chain_lightning_level") > 0
+		"chrono_burst":
+			return get_player_property_as_int("gravity_well_level") > 0 or get_player_property_as_int("freeze_pulse_level") > 0
+	return true
 
 
 func pick_weighted_ability_index(options: Array[Dictionary]) -> int:
@@ -246,15 +313,26 @@ func get_unlock_manager() -> Node:
 	return get_node("/root/UnlockManager")
 
 
-func get_ability_button_label(ability: Dictionary) -> String:
+func get_ability_icon(ability_id: String) -> Texture2D:
+	var icon_path := "res://assets/ui/icons/abilities/icon_ability_%s.png" % ability_id
+	if ResourceLoader.exists(icon_path):
+		return load(icon_path)
+	return null
+
+
+func update_detail_for_slot(slot_index: int) -> void:
+	if slot_index < 0 or slot_index >= displayed_abilities.size():
+		detail_label.text = ""
+		return
+	var ability: Dictionary = displayed_abilities[slot_index]
 	var tags: Array = ability.get("tags", []) as Array
-	var tag_text := ""
-	if not tags.is_empty():
-		tag_text = "  %s" % String(tags[0]).to_upper()
-	return "%s  [%s]%s" % [
-		String(ability.label),
-		String(ability.rarity).to_upper(),
-		tag_text
+	var level_property := String(ability.get("level_property", ""))
+	var level := get_player_property_as_int(level_property)
+	var tag_text := ", ".join(tags)
+	detail_label.text = "%s. Current level: %s. Tags: %s." % [
+		String(ability.get("rarity", "Common")),
+		level,
+		tag_text if tag_text != "" else "power"
 	]
 
 
@@ -307,24 +385,16 @@ func highlight_ai_selection(slot_index: int) -> void:
 	selected_style.set_border_width_all(3)
 	selected_button.add_theme_stylebox_override("normal", selected_style)
 	selected_button.add_theme_stylebox_override("disabled", selected_style)
-	selected_button.text = "%s  [AI]" % selected_button.text
+	(selected_button.get_node("TagLabel") as Label).text = "[AI PICK]"
 
 
-func _on_landmine_button_pressed() -> void:
+func _on_ability_button_1_pressed() -> void:
 	apply_ability(0)
 
 
-func _on_circular_saw_button_pressed() -> void:
+func _on_ability_button_2_pressed() -> void:
 	apply_ability(1)
 
 
-func _on_footsoldier_button_pressed() -> void:
+func _on_ability_button_3_pressed() -> void:
 	apply_ability(2)
-
-
-func _on_shock_field_button_pressed() -> void:
-	apply_ability(3)
-
-
-func _on_artillery_button_pressed() -> void:
-	apply_ability(4)

@@ -4,6 +4,12 @@ const AI_MENU_VIEW_DELAY: float = 0.5
 const AI_SELECTION_FLASH_DELAY: float = 0.5
 const AI_SELECTION_FLASH_COLOR: Color = Color(1.0, 0.95, 0.25, 1.0)
 const CartoonUiSkin = preload("res://scripts/ui/cartoon_ui_skin.gd")
+const RARITY_COLORS: Dictionary = {
+	"Common": Color(0.20, 0.46, 0.34, 1.0),
+	"Uncommon": Color(0.16, 0.42, 0.72, 1.0),
+	"Rare": Color(0.50, 0.24, 0.78, 1.0),
+	"Epic": Color(0.86, 0.42, 0.12, 1.0),
+}
 
 var player: CharacterBody2D
 var displayed_upgrades: Array[String] = []
@@ -111,12 +117,27 @@ func roll_upgrade_options() -> void:
 
 func configure_card_button(button: Button, upgrade_id: String) -> void:
 	var data: Dictionary = upgrade_catalog.get(upgrade_id, {}) as Dictionary
+	var rarity := get_upgrade_rarity(upgrade_id)
 	button.text = ""
 	button.tooltip_text = ""
 	button.icon = null
+	CartoonUiSkin.apply_button(button, RARITY_COLORS.get(rarity, RARITY_COLORS["Common"]) as Color)
 	(button.get_node("NameLabel") as Label).text = String(data.get("title", "UNKNOWN")).replace("+ ", "")
-	(button.get_node("TagLabel") as Label).text = "[%s]" % String(data.get("tag", "UPGRADE"))
+	(button.get_node("TagLabel") as Label).text = "[%s]  %s" % [rarity.to_upper(), String(data.get("tag", "UPGRADE"))]
 	(button.get_node("Icon") as TextureRect).texture = get_upgrade_icon(upgrade_id)
+
+
+func get_upgrade_rarity(upgrade_id: String) -> String:
+	match upgrade_id:
+		"speed", "fire_rate", "damage", "exp", "armor", "magnet", "cannon", "splash", "piercing", "barbed_wire", "regeneration":
+			return "Common"
+		"targeting_array", "accelerator", "alloy_plating", "recycler", "payload_rack", "reactive_shield", "gyro_stabilizer", "rapid_loader", "high_caliber", "nanobots", "kinetic_treads", "ammo_synthesizer", "shatter_rounds", "phase_core", "salvage_magnet", "emergency_repairs":
+			return "Uncommon"
+		"capacitor_bank", "combustion_mix", "heat_sinks", "overclocked_barrel", "rail_stabilizer", "missile_guidance", "ordnance_bay", "field_amplifier", "volt_coils", "gravity_anchor", "repair_drones", "crystal_lens", "munition_printer", "stabilized_chassis", "vector_thrusters", "impact_fuse", "armor_piercers", "weakpoint_scanner", "med_pump", "orbit_gears", "mine_dispenser", "drone_command":
+			return "Rare"
+		"lucky_core":
+			return "Epic"
+	return "Common"
 
 
 func get_upgrade_label(upgrade_id: String) -> String:

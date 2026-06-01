@@ -57,6 +57,12 @@ func _init() -> void:
 				quit(1)
 				return
 
+		if scene_path == "res://scenes/ui/ability_menu.tscn":
+			if instance.get_node_or_null("CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton1/Icon") == null:
+				push_error("Ability menu should use horizontal card icons.")
+				quit(1)
+				return
+
 		if scene_path == "res://scenes/enemies/boss_enemy.tscn":
 			instance.configure_variant({
 				"phase_thresholds": [0.65, 0.32],

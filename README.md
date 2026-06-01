@@ -177,6 +177,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Removed upgrade hover tooltip content so descriptions are not duplicated.
   - Preserved authored enemy sprite scale when applying data-driven variant scales, reducing oversized enemy visuals and improving collision readability.
   - Zoomed the camera out modestly and expanded the arena/bounds to keep the map from feeling cramped.
+- Added rarity-colored choice cards and prerequisite-gated rolls:
+  - Upgrade cards now color their container by rarity instead of relying only on text tags.
+  - Ability choices now use the same horizontal card layout as upgrades, with blue-themed rarity colors and generated icons for all 20 powers.
+  - Upgrade rolls now filter out dependent modifiers until the player owns the relevant build piece, such as pets before pet damage, powers before power amplifiers, and splash/area tools before splash boosters.
+  - Ability rolls now gate advanced powers behind existing build prerequisites while leaving starter powers available.
+  - Added `tools/generate_ability_icons.ps1` for regenerating the standardized ability icon set.
 
 ## Backlog
 

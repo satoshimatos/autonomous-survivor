@@ -995,7 +995,7 @@ func get_landmine_damage_multiplier() -> float:
 
 
 func get_valid_upgrade_ids() -> Array[String]:
-	var valid_upgrades: Array[String] = [
+	var upgrade_pool: Array[String] = [
 		"speed",
 		"fire_rate",
 		"damage",
@@ -1047,9 +1047,98 @@ func get_valid_upgrade_ids() -> Array[String]:
 		"lucky_core",
 	]
 	if can_upgrade_regeneration():
-		valid_upgrades.append("regeneration")
+		upgrade_pool.append("regeneration")
+
+	var valid_upgrades: Array[String] = []
+	for upgrade_id in upgrade_pool:
+		if are_upgrade_prerequisites_met(upgrade_id):
+			valid_upgrades.append(upgrade_id)
 	
 	return valid_upgrades
+
+
+func are_upgrade_prerequisites_met(upgrade_id: String) -> bool:
+	match upgrade_id:
+		"payload_rack", "shatter_rounds", "impact_fuse":
+			return has_splash_build()
+		"combustion_mix":
+			return has_splash_build() or landmine_level > 0 or barbed_wire_level > 0 or flame_wave_level > 0
+		"missile_guidance":
+			return missile_pod_level > 0
+		"ordnance_bay":
+			return has_splash_build() or artillery_level > 0 or missile_pod_level > 0
+		"field_amplifier":
+			return has_field_or_aura_power()
+		"volt_coils":
+			return shock_field_level > 0 or chain_lightning_level > 0 or tesla_pylon_level > 0
+		"gravity_anchor":
+			return gravity_well_level > 0
+		"repair_drones":
+			return repair_beacon_level > 0 or nanite_cloud_level > 0
+		"med_pump":
+			return nanobots_level > 0 or repair_beacon_level > 0 or nanite_cloud_level > 0 or emergency_repairs_level > 0
+		"orbit_gears":
+			return circular_saw_level > 0 or guardian_satellite_level > 0 or barbed_wire_level > 0
+		"mine_dispenser":
+			return landmine_level > 0
+		"drone_command":
+			return footsoldier_level > 0 or drone_swarm_level > 0 or guardian_satellite_level > 0
+		"armor_piercers":
+			return piercing_level > 0 or railgun_orbiter_level > 0
+		"weakpoint_scanner":
+			return targeting_array_level > 0 or railgun_orbiter_level > 0
+		"rail_stabilizer":
+			return targeting_array_level > 0 or railgun_orbiter_level > 0
+		"capacitor_bank":
+			return has_active_power()
+		"accelerator":
+			return piercing_level > 0 or cannon_level > 0 or railgun_orbiter_level > 0
+		"ammo_synthesizer":
+			return cannon_level > 0
+		"phase_core":
+			return piercing_level > 0
+		"salvage_magnet":
+			return magnet_level > 0 or exp_bonus_level > 0
+		"crystal_lens":
+			return exp_bonus_level > 0 or targeting_array_level > 0
+		"munition_printer":
+			return cannon_level > 0 or ammo_synthesizer_level > 0
+		"lucky_core":
+			return crystal_lens_level > 0 or targeting_array_level > 0 or munition_printer_level > 0
+	return true
+
+
+func has_splash_build() -> bool:
+	return splash_level > 0 or payload_rack_level > 0 or artillery_level > 0 or landmine_level > 0 or missile_pod_level > 0 or flame_wave_level > 0
+
+
+func has_field_or_aura_power() -> bool:
+	return shock_field_level > 0 or flame_wave_level > 0 or gravity_well_level > 0 or repair_beacon_level > 0 or nanite_cloud_level > 0
+
+
+func has_active_power() -> bool:
+	return (
+		landmine_level > 0
+		or circular_saw_level > 0
+		or footsoldier_level > 0
+		or shock_field_level > 0
+		or artillery_level > 0
+		or drone_swarm_level > 0
+		or oil_slick_level > 0
+		or freeze_pulse_level > 0
+		or chain_lightning_level > 0
+		or guardian_satellite_level > 0
+		or overdrive_core_level > 0
+		or flame_wave_level > 0
+		or repair_beacon_level > 0
+		or missile_pod_level > 0
+		or gravity_well_level > 0
+		or railgun_orbiter_level > 0
+		or tesla_pylon_level > 0
+		or nanite_cloud_level > 0
+		or ricochet_rounds_level > 0
+		or chrono_burst_level > 0
+	)
 
 
 func apply_upgrade_by_id(upgrade_id: String) -> void:

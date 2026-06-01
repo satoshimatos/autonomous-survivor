@@ -58,6 +58,7 @@ Completed setup:
   - #25 Visual identity and juice pass
   - #26 Upgrade card UI, pickup precision, and gamepad flow
   - #27 Fix full upgrade pause and tighten upgrade visuals
+  - #28 Add rarity-colored cards and prerequisite-gated rolls
 
 Completed issues:
 
@@ -88,6 +89,7 @@ Completed issues:
 - #25 Visual identity and juice pass
 - #26 Upgrade card UI, pickup precision, and gamepad flow
 - #27 Fix full upgrade pause and tighten upgrade visuals
+- #28 Add rarity-colored cards and prerequisite-gated rolls
 
 ### P1 - Replayability And Power Growth
 

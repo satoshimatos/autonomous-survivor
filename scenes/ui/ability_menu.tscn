@@ -21,10 +21,10 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-offset_left = -210.0
-offset_top = -310.0
-offset_right = 210.0
-offset_bottom = 310.0
+offset_left = -410.0
+offset_top = -205.0
+offset_right = 410.0
+offset_bottom = 205.0
 grow_horizontal = 2
 grow_vertical = 2
 modulate = Color(0.7, 0.84, 1, 1)
@@ -52,50 +52,188 @@ layout_mode = 1
 anchors_preset = 15
 anchor_right = 1.0
 anchor_bottom = 1.0
-offset_top = 102.0
-offset_bottom = -61.0
+offset_top = 70.0
+offset_bottom = -28.0
 grow_horizontal = 2
 grow_vertical = 2
-theme_override_constants/margin_left = 64
-theme_override_constants/margin_right = 64
+theme_override_constants/margin_left = 36
+theme_override_constants/margin_right = 36
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CanvasLayer/ColorRect/MarginContainer"]
 layout_mode = 2
-theme_override_constants/separation = 32
+theme_override_constants/separation = 12
 alignment = 1
 
-[node name="LandmineButton" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
+[node name="OptionsRow" type="HBoxContainer" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "+1 PLACE LANDMINE"
+theme_override_constants/separation = 14
+alignment = 1
 
-[node name="CircularSawButton" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
+[node name="AbilityButton1" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow"]
+custom_minimum_size = Vector2(220, 168)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "+1 CIRCULAR SAW"
+size_flags_horizontal = 3
+text = ""
 
-[node name="FootsoldierButton" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
+[node name="NameLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton1"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 10.0
+offset_bottom = 42.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "ABILITY 1"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton1"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -48.0
+offset_right = 48.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch_mode = 5
+
+[node name="TagLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton1"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "[RARITY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AbilityButton2" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow"]
+custom_minimum_size = Vector2(220, 168)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "+ FOOTSOLDIER"
+size_flags_horizontal = 3
+text = ""
 
-[node name="ShockFieldButton" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
+[node name="NameLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton2"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 10.0
+offset_bottom = 42.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "ABILITY 2"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton2"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -48.0
+offset_right = 48.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch_mode = 5
+
+[node name="TagLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton2"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "[RARITY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AbilityButton3" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow"]
+custom_minimum_size = Vector2(220, 168)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "+ SHOCK FIELD"
+size_flags_horizontal = 3
+text = ""
 
-[node name="ArtilleryButton" type="Button" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
-custom_minimum_size = Vector2(0, 64)
+[node name="NameLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton3"]
+layout_mode = 1
+anchors_preset = 10
+anchor_right = 1.0
+offset_top = 10.0
+offset_bottom = 42.0
+grow_horizontal = 2
+mouse_filter = 2
+theme_override_font_sizes/font_size = 18
+text = "ABILITY 3"
+horizontal_alignment = 1
+vertical_alignment = 1
+clip_text = true
+
+[node name="Icon" type="TextureRect" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton3"]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -48.0
+offset_top = -48.0
+offset_right = 48.0
+offset_bottom = 48.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+stretch_mode = 5
+
+[node name="TagLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton3"]
+layout_mode = 1
+anchors_preset = 12
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_top = -36.0
+offset_bottom = -8.0
+grow_horizontal = 2
+grow_vertical = 0
+mouse_filter = 2
+theme_override_font_sizes/font_size = 14
+text = "[RARITY]"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="DetailLabel" type="Label" parent="CanvasLayer/ColorRect/MarginContainer/VBoxContainer"]
+custom_minimum_size = Vector2(0, 70)
 layout_mode = 2
-theme_override_font_sizes/font_size = 18
-text = "+ ARTILLERY"
+theme_override_font_sizes/font_size = 16
+text = "Highlight an ability to inspect its role."
+horizontal_alignment = 1
+vertical_alignment = 1
+autowrap_mode = 3
 
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/LandmineButton" to="." method="_on_landmine_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/CircularSawButton" to="." method="_on_circular_saw_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/FootsoldierButton" to="." method="_on_footsoldier_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/ShockFieldButton" to="." method="_on_shock_field_button_pressed"]
-[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/ArtilleryButton" to="." method="_on_artillery_button_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton1" to="." method="_on_ability_button_1_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton2" to="." method="_on_ability_button_2_pressed"]
+[connection signal="pressed" from="CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton3" to="." method="_on_ability_button_3_pressed"]
