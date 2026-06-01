@@ -75,6 +75,12 @@ var oil_slick_level: int = 0
 var oil_slick_dispenser: Node2D
 var freeze_pulse_level: int = 0
 var freeze_pulse: Node2D
+var chain_lightning_level: int = 0
+var chain_lightning: Node2D
+var guardian_satellite_level: int = 0
+var guardian_satellite: Node2D
+var overdrive_core_level: int = 0
+var overdrive_core: Node2D
 var active_evolution_ids: Array[String] = []
 var evolution_catalog: Array[Dictionary] = [
 	{
@@ -107,6 +113,18 @@ var evolution_catalog: Array[Dictionary] = [
 		"requirements": {"recycler": 3, "alloy_plating": 3, "reactive_shield": 2},
 		"effects": {"recycler_heal_chance_bonus": 0.08, "armor_reduction_bonus": 0.05},
 	},
+	{
+		"id": "storm_grid",
+		"name": "Storm Grid",
+		"requirements": {"chain_lightning": 3, "shock_field": 3, "freeze_pulse": 2},
+		"effects": {"chain_lightning_level_bonus": 2, "shock_field_level_bonus": 1},
+	},
+	{
+		"id": "guardian_protocol",
+		"name": "Guardian Protocol",
+		"requirements": {"guardian_satellite": 3, "overdrive_core": 3, "armor": 3},
+		"effects": {"guardian_satellite_level_bonus": 2, "overdrive_damage_bonus": 0.12, "armor_reduction_bonus": 0.04},
+	},
 ]
 
 const PROJECTILE = preload("uid://bkslemqb5h4g1")
@@ -120,6 +138,9 @@ const ARTILLERY_BEACON = preload("res://scenes/abilities/artillery_beacon.tscn")
 const DRONE_SWARM = preload("res://scenes/abilities/drone_swarm.tscn")
 const OIL_SLICK_DISPENSER = preload("res://scenes/abilities/oil_slick_dispenser.tscn")
 const FREEZE_PULSE = preload("res://scenes/abilities/freeze_pulse.tscn")
+const CHAIN_LIGHTNING = preload("res://scenes/abilities/chain_lightning.tscn")
+const GUARDIAN_SATELLITE = preload("res://scenes/abilities/guardian_satellite.tscn")
+const OVERDRIVE_CORE = preload("res://scenes/abilities/overdrive_core.tscn")
 const MUZZLE_BURST_INTERVAL: float = 0.15
 const REGEN_START_INTERVAL: float = 5.0
 const REGEN_INTERVAL_STEP: float = 1.0 / 3.0
@@ -181,6 +202,7 @@ func _physics_process(delta: float) -> void:
 	velocity = input.normalized() * speed
 	if velocity.length_squared() > 0.0:
 		tank_base.rotation = rotate_toward_angle(tank_base.rotation, velocity.angle() + PI / 2.0, rotation_speed * delta)
+	velocity *= get_power_speed_multiplier()
 	move_and_slide()
 	process_wall_recovery_collision()
 	
@@ -537,6 +559,12 @@ func apply_starting_ability_levels(tank: Dictionary) -> void:
 		upgrade_oil_slick()
 	for i in range(int(tank.get("freeze_pulse_level", 0))):
 		upgrade_freeze_pulse()
+	for i in range(int(tank.get("chain_lightning_level", 0))):
+		upgrade_chain_lightning()
+	for i in range(int(tank.get("guardian_satellite_level", 0))):
+		upgrade_guardian_satellite()
+	for i in range(int(tank.get("overdrive_core_level", 0))):
+		upgrade_overdrive_core()
 
 
 func upgrade_drone_swarm() -> void:
@@ -576,6 +604,45 @@ func upgrade_freeze_pulse() -> void:
 	add_child(freeze_pulse)
 	if freeze_pulse.has_method("configure"):
 		freeze_pulse.configure(self, freeze_pulse_level)
+
+
+func upgrade_chain_lightning() -> void:
+	chain_lightning_level += 1
+	if is_instance_valid(chain_lightning):
+		if chain_lightning.has_method("update_level"):
+			chain_lightning.update_level(get_effective_ability_level("chain_lightning"))
+		return
+
+	chain_lightning = CHAIN_LIGHTNING.instantiate()
+	add_child(chain_lightning)
+	if chain_lightning.has_method("configure"):
+		chain_lightning.configure(self, get_effective_ability_level("chain_lightning"))
+
+
+func upgrade_guardian_satellite() -> void:
+	guardian_satellite_level += 1
+	if is_instance_valid(guardian_satellite):
+		if guardian_satellite.has_method("update_level"):
+			guardian_satellite.update_level(get_effective_ability_level("guardian_satellite"))
+		return
+
+	guardian_satellite = GUARDIAN_SATELLITE.instantiate()
+	add_child(guardian_satellite)
+	if guardian_satellite.has_method("configure"):
+		guardian_satellite.configure(self, get_effective_ability_level("guardian_satellite"))
+
+
+func upgrade_overdrive_core() -> void:
+	overdrive_core_level += 1
+	if is_instance_valid(overdrive_core):
+		if overdrive_core.has_method("update_level"):
+			overdrive_core.update_level(overdrive_core_level)
+		return
+
+	overdrive_core = OVERDRIVE_CORE.instantiate()
+	add_child(overdrive_core)
+	if overdrive_core.has_method("configure"):
+		overdrive_core.configure(self, overdrive_core_level)
 
 
 func process_landmine_placement(delta: float) -> void:
@@ -817,7 +884,7 @@ func fire_projectile_volley(target_direction: Vector2) -> void:
 		var direction := target_direction.rotated((float(i) - middle_index) * spread_radians).normalized()
 		var projectile_config := {
 			"direction": direction,
-			"damage": attack_damage * get_evolution_effect_multiplier("projectile_damage_multiplier"),
+			"damage": attack_damage * get_power_damage_multiplier() * get_evolution_effect_multiplier("projectile_damage_multiplier"),
 			"splash_radius": get_splash_radius(),
 			"splash_damage_multiplier": get_splash_damage_multiplier(),
 			"max_piercing_hp": get_projectile_hp(),
@@ -942,6 +1009,12 @@ func get_build_level_for_evolution(build_id: String) -> int:
 			return oil_slick_level
 		"freeze_pulse":
 			return freeze_pulse_level
+		"chain_lightning":
+			return chain_lightning_level
+		"guardian_satellite":
+			return guardian_satellite_level
+		"overdrive_core":
+			return overdrive_core_level
 	return 0
 
 
@@ -950,6 +1023,10 @@ func apply_evolution_runtime_updates() -> void:
 		shock_field.update_level(get_effective_ability_level("shock_field"))
 	if is_instance_valid(drone_swarm) and drone_swarm.has_method("update_level"):
 		drone_swarm.update_level(get_effective_ability_level("drone_swarm"))
+	if is_instance_valid(chain_lightning) and chain_lightning.has_method("update_level"):
+		chain_lightning.update_level(get_effective_ability_level("chain_lightning"))
+	if is_instance_valid(guardian_satellite) and guardian_satellite.has_method("update_level"):
+		guardian_satellite.update_level(get_effective_ability_level("guardian_satellite"))
 	update_barbed_wire_visual()
 	spawn_evolution_burst()
 
@@ -960,7 +1037,24 @@ func get_effective_ability_level(ability_id: String) -> int:
 			return shock_field_level + int(get_evolution_effect_value("shock_field_level_bonus"))
 		"drone_swarm":
 			return drone_swarm_level + int(get_evolution_effect_value("drone_swarm_level_bonus"))
+		"chain_lightning":
+			return chain_lightning_level + int(get_evolution_effect_value("chain_lightning_level_bonus"))
+		"guardian_satellite":
+			return guardian_satellite_level + int(get_evolution_effect_value("guardian_satellite_level_bonus"))
 	return get_build_level_for_evolution(ability_id)
+
+
+func get_power_damage_multiplier() -> float:
+	var multiplier := 1.0 + get_evolution_effect_value("overdrive_damage_bonus")
+	if is_instance_valid(overdrive_core) and overdrive_core.has_method("get_damage_multiplier"):
+		multiplier *= overdrive_core.get_damage_multiplier()
+	return multiplier
+
+
+func get_power_speed_multiplier() -> float:
+	if is_instance_valid(overdrive_core) and overdrive_core.has_method("get_speed_multiplier"):
+		return overdrive_core.get_speed_multiplier()
+	return 1.0
 
 
 func get_evolution_effect_value(effect_id: String) -> float:
@@ -1109,6 +1203,15 @@ func disable_combat_on_death() -> void:
 	if is_instance_valid(freeze_pulse):
 		freeze_pulse.queue_free()
 		freeze_pulse = null
+	if is_instance_valid(chain_lightning):
+		chain_lightning.queue_free()
+		chain_lightning = null
+	if is_instance_valid(guardian_satellite):
+		guardian_satellite.queue_free()
+		guardian_satellite = null
+	if is_instance_valid(overdrive_core):
+		overdrive_core.queue_free()
+		overdrive_core = null
 
 
 func clear_active_ability_nodes(nodes: Array[Node2D]) -> void:

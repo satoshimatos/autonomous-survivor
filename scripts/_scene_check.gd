@@ -16,6 +16,9 @@ func _init() -> void:
 		"res://scenes/abilities/oil_slick.tscn",
 		"res://scenes/abilities/oil_slick_dispenser.tscn",
 		"res://scenes/abilities/freeze_pulse.tscn",
+		"res://scenes/abilities/chain_lightning.tscn",
+		"res://scenes/abilities/guardian_satellite.tscn",
+		"res://scenes/abilities/overdrive_core.tscn",
 		"res://scenes/effects/boss_hazard.tscn",
 		"res://scenes/ui/ability_menu.tscn",
 	]

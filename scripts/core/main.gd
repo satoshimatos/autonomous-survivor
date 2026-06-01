@@ -1619,6 +1619,9 @@ func get_build_level_snapshot() -> Dictionary:
 		"drone_swarm": player.drone_swarm_level,
 		"oil_slick": player.oil_slick_level,
 		"freeze_pulse": player.freeze_pulse_level,
+		"chain_lightning": player.chain_lightning_level,
+		"guardian_satellite": player.guardian_satellite_level,
+		"overdrive_core": player.overdrive_core_level,
 	}
 
 
@@ -1649,6 +1652,9 @@ func get_ranked_build_entries() -> Array[Dictionary]:
 	add_build_entry(entries, "Drone Swarm", player.drone_swarm_level)
 	add_build_entry(entries, "Oil Slick", player.oil_slick_level)
 	add_build_entry(entries, "Freeze Pulse", player.freeze_pulse_level)
+	add_build_entry(entries, "Chain Lightning", player.chain_lightning_level)
+	add_build_entry(entries, "Guardian Satellite", player.guardian_satellite_level)
+	add_build_entry(entries, "Overdrive Core", player.overdrive_core_level)
 	return get_entries_sorted_by_level(entries)
 
 
@@ -1704,6 +1710,9 @@ func update_upgrade_inventory_label() -> void:
 		format_upgrade_inventory_row("Drone Swarm", player.drone_swarm_level),
 		format_upgrade_inventory_row("Oil Slick", player.oil_slick_level),
 		format_upgrade_inventory_row("Freeze Pulse", player.freeze_pulse_level),
+		format_upgrade_inventory_row("Chain Lightning", player.chain_lightning_level),
+		format_upgrade_inventory_row("Guardian Satellite", player.guardian_satellite_level),
+		format_upgrade_inventory_row("Overdrive Core", player.overdrive_core_level),
 	]
 	if player.has_method("get_active_evolution_names"):
 		var evolution_names: Array[String] = player.get_active_evolution_names()

@@ -139,6 +139,9 @@ Ability menus roll 3 weighted options from unlocked abilities. Weight increases 
 | Drone Swarm | Uncommon | pet, projectile | Reach level 5 | Adds orbiting drones. Fire interval starts at 0.65s, -0.035s per level, minimum 0.22s. Drone count is min(2 + level, 10). Each shot deals player damage * 0.38 * 1.08^(level - 1). |
 | Artillery | Rare | area, burst | Defeat 1 total boss | Targets dense enemy clusters within 520px. Base interval 4s, -0.28s per level, minimum 1.4s. Telegraphs for 0.55s, then creates a splash radius 82 + 9 per extra level. Damage is player damage * 2.1 * 1.18^(level - 1). Gains late weight at player level 12. |
 | Freeze Pulse | Rare | burst, crowd-control | Reach level 10 | Periodically bursts around the player. Base interval 6s, -0.42s per level, minimum 2s. Radius is 120 + 15 per extra level. Damage is player damage * 0.58 * 1.12^(level - 1). Slows for 1.25s + 0.08s per level at 16% speed. Gains late weight at player level 10. |
+| Overdrive Core | Rare | buff, mobility | Reach level 12 | Adds a permanent power core. Damage multiplier starts at +8% and adds +3.5% per extra level. Move speed multiplier starts at +4% and adds +1.5% per extra level. |
+| Chain Lightning | Rare | chain, crowd-control | Survive 600s | Every 4.8s, reduced by 0.25s per level to 1.8s minimum, strikes nearby enemies in a chain. Starts with 3 jumps, gains more jumps every 2 levels, deals player damage * 0.48 * 1.1^(level - 1), and briefly slows targets. |
+| Guardian Satellite | Uncommon | orbit, defense | Survive 900s | Adds orbiting satellites that damage enemies on contact every 0.28s. Satellite count is min(1 + level, 8), orbit radius grows by 8px per level, and damage is player damage * 0.24 * 1.08^(level - 1). |
 
 ## Evolved Synergies
 
@@ -151,6 +154,8 @@ Evolutions are checked after upgrade and ability picks. Active evolutions appear
 | Drone Foundry | Drone Swarm 2, Cannon 3, Fire Rate 4 | Drone Swarm effective level +2, cannon projectile bonus +1, projectile damage *1.1, projectile scale up to 1.12. |
 | Critical Payload | Targeting Array 3, Payload Rack 3, Damage 4 | Crit chance +12 percentage points, crit multiplier +0.35, splash damage *1.2, projectile scale up to 1.1. |
 | Repair Loop | Recycler 3, Alloy Plating 3, Reactive Shield 2 | Recycler heal chance +8 percentage points and armor reduction +5 percentage points. |
+| Storm Grid | Chain Lightning 3, Shock Field 3, Freeze Pulse 2 | Chain Lightning effective level +2 and Shock Field effective level +1. |
+| Guardian Protocol | Guardian Satellite 3, Overdrive Core 3, Armor 3 | Guardian Satellite effective level +2, Overdrive damage bonus +12 percentage points, and armor reduction +4 percentage points. |
 
 Projectile damage multipliers from active evolutions multiply together. Projectile scale uses the largest active scale bonus.
 
@@ -263,6 +268,9 @@ Progress is saved in `user://unlock_state.cfg`.
 | Total bosses defeated >= 1 | Twin Cannon tank, Artillery ability, Boss Contract modifier |
 | Best enemies defeated >= 250 | Engineer tank, Salvage Field modifier |
 | Best level >= 10 | Freeze Pulse ability, Unstable Engine modifier |
+| Best level >= 12 | Overdrive Core ability |
+| Best survival time >= 600s | Chain Lightning ability |
+| Best survival time >= 900s | Guardian Satellite ability |
 
 ### Challenge Goals
 

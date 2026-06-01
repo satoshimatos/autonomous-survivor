@@ -18,6 +18,9 @@ var ability_catalog: Array[Dictionary] = [
 	{"id": "drone_swarm", "label": "+ DRONE SWARM", "method": "upgrade_drone_swarm", "level_property": "drone_swarm_level", "rarity": "Uncommon", "base_weight": 12.0, "tags": ["pet", "projectile"], "synergy_upgrades": ["damage", "fire_rate", "cannon"], "synergy_abilities": ["footsoldier_level"]},
 	{"id": "oil_slick", "label": "+ OIL SLICK", "method": "upgrade_oil_slick", "level_property": "oil_slick_level", "rarity": "Common", "base_weight": 15.0, "tags": ["device", "crowd-control"], "synergy_upgrades": ["speed", "armor"], "synergy_abilities": ["landmine_level", "artillery_level"]},
 	{"id": "freeze_pulse", "label": "+ FREEZE PULSE", "method": "upgrade_freeze_pulse", "level_property": "freeze_pulse_level", "rarity": "Rare", "base_weight": 7.0, "late_level": 10, "late_weight_multiplier": 1.8, "tags": ["burst", "crowd-control"], "synergy_upgrades": ["armor", "barbed_wire", "damage"], "synergy_abilities": ["shock_field_level", "circular_saw_level"]},
+	{"id": "chain_lightning", "label": "+ CHAIN LIGHTNING", "method": "upgrade_chain_lightning", "level_property": "chain_lightning_level", "rarity": "Rare", "base_weight": 7.5, "late_level": 12, "late_weight_multiplier": 1.7, "tags": ["chain", "crowd-control"], "synergy_upgrades": ["damage", "fire_rate", "targeting_array"], "synergy_abilities": ["shock_field_level", "freeze_pulse_level"]},
+	{"id": "guardian_satellite", "label": "+ GUARDIAN SATELLITE", "method": "upgrade_guardian_satellite", "level_property": "guardian_satellite_level", "rarity": "Uncommon", "base_weight": 11.0, "tags": ["orbit", "defense"], "synergy_upgrades": ["armor", "payload_rack", "reactive_shield"], "synergy_abilities": ["circular_saw_level", "overdrive_core_level"]},
+	{"id": "overdrive_core", "label": "+ OVERDRIVE CORE", "method": "upgrade_overdrive_core", "level_property": "overdrive_core_level", "rarity": "Rare", "base_weight": 8.5, "late_level": 8, "late_weight_multiplier": 1.4, "tags": ["buff", "mobility"], "synergy_upgrades": ["speed", "damage", "accelerator"], "synergy_abilities": ["guardian_satellite_level", "drone_swarm_level"]},
 ]
 
 @onready var ability_buttons: Array[Button] = [
@@ -148,6 +151,14 @@ func get_upgrade_level(upgrade_id: String) -> int:
 			return player.magnet_level
 		"cannon":
 			return player.cannon_level
+		"targeting_array":
+			return player.targeting_array_level
+		"accelerator":
+			return player.accelerator_level
+		"payload_rack":
+			return player.payload_rack_level
+		"reactive_shield":
+			return player.reactive_shield_level
 	return 0
 
 

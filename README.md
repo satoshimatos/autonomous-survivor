@@ -115,16 +115,21 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Monarch, Tempest, and Bastion boss variants, bringing the boss catalog to 8 weighted types.
   - New variants unlock from 16 to 40 minutes to support longer 30-minute progression and keep late runs from repeating the same pressure mix.
   - Updated the balance projection tool and compendium with the new weighted entries.
+- Added the next power batch:
+  - Added Chain Lightning, Guardian Satellite, and Overdrive Core, bringing the ability/power catalog to 11 powers.
+  - Chain Lightning provides chaining damage and brief slows, Guardian Satellite adds orbiting defensive contact damage, and Overdrive Core buffs damage and mobility.
+  - Added Storm Grid and Guardian Protocol evolutions for late-game synergy spikes.
+  - New powers are unlockable through level and survival progression and are surfaced in ability rolls, inventory, build summaries, unlocks, and the compendium.
 
 ## Backlog
 
 ### Next
 
-- Add the next power/ability batch toward 20 powers and stronger late-game build explosions.
+- Add another enemy and boss batch toward 20 enemies and 10 bosses.
 
 ### Content
 
-- Add the next power/ability batch toward 20 powers and stronger late-game build explosions.
+- Add another enemy and boss batch toward 20 enemies and 10 bosses.
 
 ### Systems
 
