@@ -61,6 +61,7 @@ Completed setup:
   - #28 Add rarity-colored cards and prerequisite-gated rolls
   - #29 Progression communication, compendium, and juice polish pass
   - #30 Fix progression readability, pickups, bosses, and expand build content
+  - #31 Refresh all project graphics with cleaner semi-real cartoon style
 
 Completed issues:
 
@@ -94,6 +95,7 @@ Completed issues:
 - #28 Add rarity-colored cards and prerequisite-gated rolls
 - #29 Progression communication, compendium, and juice polish pass
 - #30 Fix progression readability, pickups, bosses, and expand build content
+- #31 Refresh all project graphics with cleaner semi-real cartoon style
 
 ### P1 - Replayability And Power Growth
 

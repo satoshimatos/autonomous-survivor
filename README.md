@@ -204,6 +204,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Zoomed the camera out for a wider field of view and made camera visibility math respect zoom.
   - Reworked the in-game compendium into sprite/icon cards that open detail pages with a back button.
   - Tightened tank unlock requirements so most tanks should take multiple runs or stronger play to unlock.
+- Replaced the sketchier cartoon asset set with a cleaner semi-real cartoon pass:
+  - Regenerated upgrade icons, power icons, enemy/boss sprites, pickups, projectiles, player tank pieces, effects, UI panels, cloud shadows, and both background images with cleaner bevels, stronger silhouettes, and less rough sketch texture.
+  - Preserved existing PNG paths and dimensions so scene references, import metadata, and compendium icon lookups remain stable.
+  - Added `tools/generate_semireal_assets.ps1` as the repeatable source for the current asset direction and updated `docs/VISUAL_IDENTITY.md` to make the new style target explicit.
 
 ## Backlog
 

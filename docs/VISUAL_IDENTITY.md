@@ -1,11 +1,13 @@
 # Visual Identity
 
-Current target: vivid 2D cartoon tank-survivor visuals with bold black outlines, saturated colors, readable silhouettes, and responsive juice. The game still uses Godot's default font by design.
+Current target: clean semi-real cartoon tank-survivor visuals with readable silhouettes, beveled metal shading, controlled black outlines, saturated accents, and responsive juice. The game still uses Godot's default font by design.
 
 ## Style Rules
 
-- Use chunky black outlines for gameplay objects.
-- Prefer saturated, varied colors with warm highlights and cool shadows.
+- Use controlled dark outlines for gameplay objects, avoiding rough sketch strokes.
+- Prefer saturated, varied colors with metallic highlights, cool shadows, and semi-real bevels.
+- Keep icons as clean object-symbol cards with consistent lighting instead of doodled symbols.
+- Keep backgrounds readable and low-noise so bullets, enemies, pickups, and UI remain clear.
 - Keep enemy and boss sprites tintable so the data-driven variant catalog can reuse the same scenes.
 - Keep effects readable at bullet-heaven density: short flashes, clear rings, small particles, and fast fadeouts.
 - Do not add sound in this pass.
@@ -35,4 +37,6 @@ Current target: vivid 2D cartoon tank-survivor visuals with bold black outlines,
 
 ## Regeneration
 
-The asset generator is `tools/generate_visual_identity_assets.ps1`. It takes the generated source background path and rebuilds the project-local PNG assets.
+The current semi-real cartoon asset generator is `tools/generate_semireal_assets.ps1`. It rebuilds the project-local PNG assets in place while preserving existing filenames and dimensions.
+
+The older cartoon pass generator, if present, should be treated as historical reference only; new visual refreshes should extend the semi-real generator unless a future art direction replaces it.
