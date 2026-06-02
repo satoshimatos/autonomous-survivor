@@ -155,6 +155,15 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Projected a strong 30-minute build at about 31,764 direct DPS and 37.2 regular kills/s against the 5.0 kills/s spawn cadence before splash overlap, piercing, pets, fields, or crowd-control are credited.
   - Added `docs/BALANCE_30_MIN.md` as the readable balance report linked from the README.
 
+### 2026-06-02
+
+- Expanded build variety and performance headroom:
+  - Added 20 fully wired upgrades, bringing the upgrade pool to 100 total.
+  - Added 5 fully wired powers, bringing the power pool to 40 total.
+  - Generated matching semi-real cartoon icons for every new upgrade and power through `tools/generate_semireal_assets.ps1`.
+  - Cached aggregate extra-upgrade and passive-power effects on the player so large build pools do not rescan every catalog on each stat query.
+  - Replaced per-frame enemy and boss overlap polling with body enter/exit contact tracking to reduce physics query pressure at high enemy counts.
+
 ### 2026-06-01
 
 - Added a cartoony black-outline visual identity pass:
@@ -217,7 +226,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 80 upgrades, 35 powers, 20 enemies, and 10 bosses.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 enemies, and 10 bosses.
 
 ### Systems
 

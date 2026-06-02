@@ -96,6 +96,26 @@ var upgrade_catalog: Dictionary = {
 	"target_link": {"title": "+ TARGET LINK", "tag": "PET", "hint": "Improves crit chance and pet damage after owning a pet.", "synergy": ["footsoldier_level"]},
 	"flare_core": {"title": "+ FLARE CORE", "tag": "AREA", "hint": "Improves area and power damage after Flame Wave.", "synergy": ["flame_wave_level"]},
 	"lucky_battery": {"title": "+ LUCKY BATTERY", "tag": "LUCK", "hint": "Adds EXP value and occasional extra shells after Lucky Core.", "synergy": ["lucky_core"]},
+	"thermal_jacket": {"title": "+ THERMAL JACKET", "tag": "TEMPO", "hint": "Adds armor while slightly improving firing cadence after Fire Rate.", "synergy": ["fire_rate", "armor"]},
+	"shrapnel_matrix": {"title": "+ SHRAPNEL MATRIX", "tag": "AREA", "hint": "Raises explosion damage and crit damage after Splash.", "synergy": ["splash", "targeting_array"]},
+	"hollow_point_feed": {"title": "+ HOLLOW POINT FEED", "tag": "WEAPON", "hint": "Raises cannon damage and crit damage after Damage.", "synergy": ["damage", "targeting_array"]},
+	"engine_supercharger": {"title": "+ ENGINE SUPERCHARGER", "tag": "MOBILITY", "hint": "Boosts tank speed and shell speed after Speed.", "synergy": ["speed", "accelerator"]},
+	"field_siphon": {"title": "+ FIELD SIPHON", "tag": "SUSTAIN", "hint": "Improves kill-repair chance and healing after Recycler.", "synergy": ["recycler", "nanobots"]},
+	"orbital_prism": {"title": "+ ORBITAL PRISM", "tag": "MULTISHOT", "hint": "Adds extra-shell chance and crit chance after Prism Rounds.", "synergy": ["prism_rounds", "cannon"]},
+	"nano_plating": {"title": "+ NANO PLATING", "tag": "DEFENSE", "hint": "Adds armor and stronger repairs after Nanobots.", "synergy": ["nanobots", "armor"]},
+	"kinetic_scoop": {"title": "+ KINETIC SCOOP", "tag": "ECONOMY", "hint": "Raises pickup reach and speed after Magnet.", "synergy": ["magnet", "speed"]},
+	"capacitor_mesh": {"title": "+ CAPACITOR MESH", "tag": "POWER", "hint": "Raises ability damage and crit chance after Capacitor Bank.", "synergy": ["capacitor_bank", "targeting_array"]},
+	"drone_uplink": {"title": "+ DRONE UPLINK", "tag": "PET", "hint": "Improves pet damage and projectile damage after Drone Command.", "synergy": ["drone_command", "footsoldier_level"]},
+	"blast_retainer": {"title": "+ BLAST RETAINER", "tag": "AREA", "hint": "Adds blast radius, blast damage, and area damage after Splash.", "synergy": ["splash", "combustion_mix"]},
+	"mender_tracks": {"title": "+ MENDER TRACKS", "tag": "SUSTAIN", "hint": "Adds speed and healing after Field Medic Kit.", "synergy": ["field_medic_kit", "speed"]},
+	"lucky_shrapnel": {"title": "+ LUCKY SHRAPNEL", "tag": "LUCK", "hint": "Adds extra shells and explosion damage after Lucky Core.", "synergy": ["lucky_core", "splash"]},
+	"gravity_fins": {"title": "+ GRAVITY FINS", "tag": "CONTROL", "hint": "Adds shell speed and area damage after Gravity Anchor.", "synergy": ["gravity_anchor", "accelerator"]},
+	"reinforced_ammo_belt": {"title": "+ REINFORCED AMMO BELT", "tag": "MULTISHOT", "hint": "Slightly improves fire cadence and extra-shell chance after Fire Rate.", "synergy": ["fire_rate", "cannon"]},
+	"crystal_reservoir": {"title": "+ CRYSTAL RESERVOIR", "tag": "ECONOMY", "hint": "Raises EXP value and pickup reach after EXP Value.", "synergy": ["exp", "magnet"]},
+	"storm_insulator": {"title": "+ STORM INSULATOR", "tag": "POWER", "hint": "Adds armor and power damage after Volt Coils.", "synergy": ["volt_coils", "armor"]},
+	"target_predictor": {"title": "+ TARGET PREDICTOR", "tag": "CRIT", "hint": "Adds crit chance and shell speed after Targeting Array.", "synergy": ["targeting_array", "accelerator"]},
+	"emergency_battery": {"title": "+ EMERGENCY BATTERY", "tag": "SUSTAIN", "hint": "Adds max health, power damage, and healing after Overdrive Core.", "synergy": ["overdrive_core_level", "nanobots"]},
+	"singularity_lens": {"title": "+ SINGULARITY LENS", "tag": "POWER", "hint": "Greatly improves area damage, pickup reach, and power damage after Black Hole Mines.", "synergy": ["black_hole_mines"]},
 }
 
 @onready var buttons: Array[Button] = [
@@ -164,13 +184,13 @@ func configure_card_button(button: Button, upgrade_id: String) -> void:
 
 func get_upgrade_rarity(upgrade_id: String) -> String:
 	match upgrade_id:
-		"speed", "exp", "armor", "magnet", "barbed_wire", "regeneration", "auto_loader", "pickup_scoop", "field_medic_kit", "reinforced_tracks", "supply_scanner":
+		"speed", "exp", "armor", "magnet", "barbed_wire", "regeneration", "auto_loader", "pickup_scoop", "field_medic_kit", "reinforced_tracks", "supply_scanner", "crystal_reservoir":
 			return "Common"
-		"fire_rate", "damage", "splash", "piercing", "targeting_array", "accelerator", "alloy_plating", "recycler", "payload_rack", "reactive_shield", "gyro_stabilizer", "rapid_loader", "nanobots", "kinetic_treads", "shatter_rounds", "phase_core", "salvage_magnet", "emergency_repairs", "focus_lens", "repair_gel", "chain_fuse", "reactive_tracks", "polished_barrel", "crystal_converter", "armor_gasket", "coolant_loop", "recoil_brace", "shock_absorbers", "wrench_arm", "prism_rounds":
+		"fire_rate", "damage", "splash", "piercing", "targeting_array", "accelerator", "alloy_plating", "recycler", "payload_rack", "reactive_shield", "gyro_stabilizer", "rapid_loader", "nanobots", "kinetic_treads", "shatter_rounds", "phase_core", "salvage_magnet", "emergency_repairs", "focus_lens", "repair_gel", "chain_fuse", "reactive_tracks", "polished_barrel", "crystal_converter", "armor_gasket", "coolant_loop", "recoil_brace", "shock_absorbers", "wrench_arm", "prism_rounds", "thermal_jacket", "engine_supercharger", "kinetic_scoop", "mender_tracks":
 			return "Uncommon"
-		"cannon", "high_caliber", "ammo_synthesizer", "capacitor_bank", "combustion_mix", "heat_sinks", "overclocked_barrel", "rail_stabilizer", "missile_guidance", "ordnance_bay", "field_amplifier", "volt_coils", "gravity_anchor", "repair_drones", "crystal_lens", "munition_printer", "stabilized_chassis", "vector_thrusters", "impact_fuse", "armor_piercers", "weakpoint_scanner", "med_pump", "orbit_gears", "mine_dispenser", "drone_command", "salvage_claws", "wide_nozzle", "overcharger", "boss_buster", "elite_hunter", "blast_compound", "split_chamber", "power_coupler", "battle_vault", "kinetic_capacitor", "target_link", "flare_core":
+		"cannon", "high_caliber", "ammo_synthesizer", "capacitor_bank", "combustion_mix", "heat_sinks", "overclocked_barrel", "rail_stabilizer", "missile_guidance", "ordnance_bay", "field_amplifier", "volt_coils", "gravity_anchor", "repair_drones", "crystal_lens", "munition_printer", "stabilized_chassis", "vector_thrusters", "impact_fuse", "armor_piercers", "weakpoint_scanner", "med_pump", "orbit_gears", "mine_dispenser", "drone_command", "salvage_claws", "wide_nozzle", "overcharger", "boss_buster", "elite_hunter", "blast_compound", "split_chamber", "power_coupler", "battle_vault", "kinetic_capacitor", "target_link", "flare_core", "shrapnel_matrix", "hollow_point_feed", "field_siphon", "nano_plating", "capacitor_mesh", "drone_uplink", "blast_retainer", "gravity_fins", "reinforced_ammo_belt", "storm_insulator", "target_predictor":
 			return "Rare"
-		"lucky_core", "lucky_battery":
+		"lucky_core", "lucky_battery", "orbital_prism", "lucky_shrapnel", "emergency_battery", "singularity_lens":
 			return "Epic"
 	return "Common"
 

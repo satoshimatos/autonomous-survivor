@@ -14,6 +14,15 @@ public static class SemiRealAssetGenerator {
 
     public static void Generate(string root) {
         Directory.SetCurrentDirectory(root);
+        EnsureIcons("assets/ui/icons/upgrades", "icon_upgrade_", new string[] {
+            "thermal_jacket", "shrapnel_matrix", "hollow_point_feed", "engine_supercharger", "field_siphon",
+            "orbital_prism", "nano_plating", "kinetic_scoop", "capacitor_mesh", "drone_uplink",
+            "blast_retainer", "mender_tracks", "lucky_shrapnel", "gravity_fins", "reinforced_ammo_belt",
+            "crystal_reservoir", "storm_insulator", "target_predictor", "emergency_battery", "singularity_lens"
+        });
+        EnsureIcons("assets/ui/icons/abilities", "icon_ability_", new string[] {
+            "phase_magnet", "munition_swarm", "fortress_protocol", "storm_catalyst", "golden_reactor"
+        });
         foreach (var path in Directory.GetFiles("assets/ui/icons/upgrades", "*.png")) DrawIcon(path, false);
         foreach (var path in Directory.GetFiles("assets/ui/icons/abilities", "*.png")) DrawIcon(path, true);
 
@@ -63,6 +72,15 @@ public static class SemiRealAssetGenerator {
             g.Clear(transparent ? Color.Transparent : Color.FromArgb(18, 22, 24));
         }
         return bmp;
+    }
+
+    static void EnsureIcons(string directory, string prefix, string[] ids) {
+        Directory.CreateDirectory(directory);
+        foreach (var id in ids) {
+            var path = Path.Combine(directory, prefix + id + ".png");
+            if (File.Exists(path)) continue;
+            Save(NewBmp(128, 128), path);
+        }
     }
 
     static Size GetSize(string path) {

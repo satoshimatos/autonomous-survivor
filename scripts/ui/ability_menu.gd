@@ -52,6 +52,11 @@ var ability_catalog: Array[Dictionary] = [
 	{"id": "orbital_cannon", "label": "+ ORBITAL CANNON", "method": "upgrade_orbital_cannon", "level_property": "orbital_cannon", "rarity": "Epic", "base_weight": 5.5, "tags": ["multishot", "weapon"], "summary": "Adds a chance for extra shells and raises projectile damage.", "synergy_upgrades": ["cannon", "munition_printer"], "synergy_abilities": []},
 	{"id": "ember_turret", "label": "+ EMBER TURRET", "method": "upgrade_ember_turret", "level_property": "ember_turret", "rarity": "Rare", "base_weight": 7.5, "tags": ["power", "area"], "summary": "Improves ability damage and area damage.", "synergy_upgrades": ["field_amplifier", "combustion_mix"], "synergy_abilities": ["flame_wave_level"]},
 	{"id": "time_shock", "label": "+ TIME SHOCK", "method": "upgrade_time_shock", "level_property": "time_shock", "rarity": "Epic", "base_weight": 5.0, "tags": ["crit", "power"], "summary": "Improves crit chance and ability damage.", "synergy_upgrades": ["field_amplifier"], "synergy_abilities": ["chrono_burst_level"]},
+	{"id": "phase_magnet", "label": "+ PHASE MAGNET", "method": "upgrade_phase_magnet", "level_property": "phase_magnet", "rarity": "Uncommon", "base_weight": 9.0, "tags": ["pickup", "projectile"], "summary": "Improves pickup reach and shell speed.", "synergy_upgrades": ["magnet", "accelerator"], "synergy_abilities": []},
+	{"id": "munition_swarm", "label": "+ MUNITION SWARM", "method": "upgrade_munition_swarm", "level_property": "munition_swarm", "rarity": "Epic", "base_weight": 4.8, "late_level": 14, "late_weight_multiplier": 1.55, "tags": ["multishot", "pet"], "summary": "Adds extra-shell chance while improving pets and projectile damage.", "synergy_upgrades": ["cannon", "drone_command"], "synergy_abilities": ["drone_swarm_level"]},
+	{"id": "fortress_protocol", "label": "+ FORTRESS PROTOCOL", "method": "upgrade_fortress_protocol", "level_property": "fortress_protocol", "rarity": "Rare", "base_weight": 7.0, "tags": ["defense", "sustain"], "summary": "Improves armor and all healing received.", "synergy_upgrades": ["armor", "nanobots"], "synergy_abilities": ["guardian_satellite_level"]},
+	{"id": "storm_catalyst", "label": "+ STORM CATALYST", "method": "upgrade_storm_catalyst", "level_property": "storm_catalyst", "rarity": "Rare", "base_weight": 6.8, "late_level": 12, "late_weight_multiplier": 1.45, "tags": ["power", "crit"], "summary": "Improves ability damage, crit chance, and area damage.", "synergy_upgrades": ["volt_coils", "field_amplifier"], "synergy_abilities": ["chain_lightning_level", "tesla_pylon_level"]},
+	{"id": "golden_reactor", "label": "+ GOLDEN REACTOR", "method": "upgrade_golden_reactor", "level_property": "golden_reactor", "rarity": "Epic", "base_weight": 4.5, "late_level": 16, "late_weight_multiplier": 1.6, "tags": ["economy", "power"], "summary": "Greatly improves EXP value while adding extra-shell chance and ability damage.", "synergy_upgrades": ["exp", "lucky_core"], "synergy_abilities": []},
 ]
 
 @onready var ability_buttons: Array[Button] = [
@@ -169,6 +174,14 @@ func are_ability_prerequisites_met(ability: Dictionary) -> bool:
 			return get_player_property_as_int("railgun_orbiter_level") > 0 or get_player_property_as_int("chain_lightning_level") > 0
 		"chrono_burst":
 			return get_player_property_as_int("gravity_well_level") > 0 or get_player_property_as_int("freeze_pulse_level") > 0
+		"munition_swarm":
+			return get_upgrade_level("cannon") > 0 or get_upgrade_level("drone_command") > 0 or get_player_property_as_int("drone_swarm_level") > 0
+		"fortress_protocol":
+			return get_upgrade_level("armor") > 0 or get_upgrade_level("nanobots") > 0 or get_player_property_as_int("guardian_satellite_level") > 0
+		"storm_catalyst":
+			return get_upgrade_level("volt_coils") > 0 or get_player_property_as_int("chain_lightning_level") > 0 or get_player_property_as_int("tesla_pylon_level") > 0
+		"golden_reactor":
+			return get_upgrade_level("exp") > 0 or get_upgrade_level("lucky_core") > 0
 	return true
 
 

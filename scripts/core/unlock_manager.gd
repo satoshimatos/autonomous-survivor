@@ -3,7 +3,7 @@ extends Node
 const SAVE_PATH: String = "user://unlock_state.cfg"
 
 var unlocked_tanks: Array[String] = ["vanguard", "scout"]
-var unlocked_abilities: Array[String] = ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm"]
+var unlocked_abilities: Array[String] = ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm", "phase_magnet"]
 var unlocked_modifiers: Array[String] = ["swarm_opening", "rich_crystals"]
 var completed_challenge_goals: Array[String] = []
 var best_survival_seconds: int = 0
@@ -59,7 +59,7 @@ func save_unlocks() -> void:
 func ensure_default_unlocks() -> void:
 	for tank_id in ["vanguard", "scout"]:
 		unlock_id(unlocked_tanks, tank_id)
-	for ability_id in ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm"]:
+	for ability_id in ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm", "phase_magnet"]:
 		unlock_id(unlocked_abilities, ability_id)
 	for modifier_id in ["swarm_opening", "rich_crystals"]:
 		unlock_id(unlocked_modifiers, modifier_id)
@@ -125,13 +125,16 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 	if best_level >= 14:
 		try_unlock("ability", "gravity_well", "Gravity Well ability", unlocked_messages)
 		try_unlock("ability", "black_hole_mines", "Black Hole Mines power", unlocked_messages)
+		try_unlock("ability", "munition_swarm", "Munition Swarm power", unlocked_messages)
 	if best_survival_seconds >= 900:
 		try_unlock("ability", "guardian_satellite", "Guardian Satellite ability", unlocked_messages)
 		try_unlock("ability", "ember_turret", "Ember Turret power", unlocked_messages)
+		try_unlock("ability", "fortress_protocol", "Fortress Protocol power", unlocked_messages)
 	if total_bosses_defeated >= 2:
 		try_unlock("ability", "railgun_orbiter", "Railgun Orbiter ability", unlocked_messages)
 	if best_survival_seconds >= 720:
 		try_unlock("ability", "tesla_pylon", "Tesla Pylon ability", unlocked_messages)
+		try_unlock("ability", "storm_catalyst", "Storm Catalyst power", unlocked_messages)
 	if best_level >= 16:
 		try_unlock("ability", "nanite_cloud", "Nanite Cloud ability", unlocked_messages)
 	if best_survival_seconds >= 1080:
@@ -139,6 +142,7 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 	if best_survival_seconds >= 1320:
 		try_unlock("ability", "chrono_burst", "Chrono Burst ability", unlocked_messages)
 		try_unlock("ability", "time_shock", "Time Shock power", unlocked_messages)
+		try_unlock("ability", "golden_reactor", "Golden Reactor power", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:

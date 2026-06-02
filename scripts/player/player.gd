@@ -79,6 +79,10 @@ var drone_command_level: int = 0
 var lucky_core_level: int = 0
 var extra_upgrade_levels: Dictionary = {}
 var passive_power_levels: Dictionary = {}
+var extra_upgrade_effect_cache: Dictionary = {}
+var passive_power_effect_cache: Dictionary = {}
+var extra_upgrade_effect_cache_dirty: bool = true
+var passive_power_effect_cache_dirty: bool = true
 var emergency_repair_timer: float = 0.0
 var barbed_wire_cooldowns := {}
 var selected_tank_id: String = "vanguard"
@@ -1300,6 +1304,7 @@ func apply_extra_upgrade_by_id(upgrade_id: String) -> bool:
 	if upgrade.is_empty():
 		return false
 	extra_upgrade_levels[upgrade_id] = int(extra_upgrade_levels.get(upgrade_id, 0)) + 1
+	extra_upgrade_effect_cache_dirty = true
 	var effects: Dictionary = upgrade.get("effects", {}) as Dictionary
 	if effects.has("speed_multiplier"):
 		speed *= 1.0 + float(effects.speed_multiplier)
@@ -1349,6 +1354,26 @@ func get_extra_upgrade_catalog() -> Array[Dictionary]:
 		{"id": "target_link", "effects": {"crit_chance": 0.018, "pet_damage": 0.05}, "requires": {"footsoldier": 1}},
 		{"id": "flare_core", "effects": {"splash_damage": 0.05, "power_damage": 0.04}, "requires": {"flame_wave": 1}},
 		{"id": "lucky_battery", "effects": {"extra_shot_chance": 0.035, "exp_value": 0.04}, "requires": {"lucky_core": 1}},
+		{"id": "thermal_jacket", "effects": {"fire_interval_multiplier": 0.985, "armor_levels": 1}, "requires": {"fire_rate": 1}},
+		{"id": "shrapnel_matrix", "effects": {"splash_damage": 0.06, "crit_multiplier": 0.04}, "requires": {"splash": 1}},
+		{"id": "hollow_point_feed", "effects": {"damage_multiplier": 0.06, "crit_multiplier": 0.04}, "requires": {"damage": 1}},
+		{"id": "engine_supercharger", "effects": {"speed_multiplier": 0.06, "projectile_speed": 0.03}, "requires": {"speed": 1}},
+		{"id": "field_siphon", "effects": {"recycler_chance": 0.04, "heal_multiplier": 0.05}, "requires": {"recycler": 1}},
+		{"id": "orbital_prism", "effects": {"extra_shot_chance": 0.035, "crit_chance": 0.015}, "requires": {"prism_rounds": 1}},
+		{"id": "nano_plating", "effects": {"armor_levels": 1, "heal_multiplier": 0.07}, "requires": {"nanobots": 1}},
+		{"id": "kinetic_scoop", "effects": {"pickup_radius": 18.0, "speed_multiplier": 0.03}, "requires": {"magnet": 1}},
+		{"id": "capacitor_mesh", "effects": {"power_damage": 0.05, "crit_chance": 0.012}, "requires": {"capacitor_bank": 1}},
+		{"id": "drone_uplink", "effects": {"pet_damage": 0.08, "projectile_damage": 0.03}, "requires": {"drone_command": 1}},
+		{"id": "blast_retainer", "effects": {"splash_radius": 3.0, "splash_damage": 0.03, "area_damage": 0.03}, "requires": {"splash": 1}},
+		{"id": "mender_tracks", "effects": {"speed_multiplier": 0.03, "heal_multiplier": 0.07}, "requires": {"field_medic_kit": 1}},
+		{"id": "lucky_shrapnel", "effects": {"extra_shot_chance": 0.04, "splash_damage": 0.04}, "requires": {"lucky_core": 1}},
+		{"id": "gravity_fins", "effects": {"projectile_speed": 0.05, "area_damage": 0.04}, "requires": {"gravity_anchor": 1}},
+		{"id": "reinforced_ammo_belt", "effects": {"fire_interval_multiplier": 0.985, "extra_shot_chance": 0.025}, "requires": {"fire_rate": 1}},
+		{"id": "crystal_reservoir", "effects": {"exp_value": 0.05, "pickup_radius": 12.0}, "requires": {"exp": 1}},
+		{"id": "storm_insulator", "effects": {"armor_levels": 1, "power_damage": 0.035}, "requires": {"volt_coils": 1}},
+		{"id": "target_predictor", "effects": {"crit_chance": 0.025, "projectile_speed": 0.035}, "requires": {"targeting_array": 1}},
+		{"id": "emergency_battery", "effects": {"max_health": 1, "power_damage": 0.04, "heal_multiplier": 0.05}, "requires": {"overdrive_core": 1}},
+		{"id": "singularity_lens", "effects": {"area_damage": 0.05, "pickup_radius": 16.0, "power_damage": 0.05}, "requires": {"black_hole_mines": 1}},
 	]
 
 
@@ -1357,14 +1382,23 @@ func get_extra_upgrade_level(upgrade_id: String) -> int:
 
 
 func get_extra_upgrade_effect(effect_id: String) -> float:
-	var total := 0.0
+	if extra_upgrade_effect_cache_dirty:
+		rebuild_extra_upgrade_effect_cache()
+	return float(extra_upgrade_effect_cache.get(effect_id, 0.0))
+
+
+func rebuild_extra_upgrade_effect_cache() -> void:
+	extra_upgrade_effect_cache.clear()
 	for upgrade in get_extra_upgrade_catalog():
 		var level := get_extra_upgrade_level(String(upgrade.id))
 		if level <= 0:
 			continue
 		var effects: Dictionary = upgrade.get("effects", {}) as Dictionary
-		total += float(effects.get(effect_id, 0.0)) * float(level)
-	return total
+		for effect_id in effects.keys():
+			if effect_id in ["speed_multiplier", "fire_interval_multiplier", "damage_multiplier", "max_health", "armor_levels", "magnet_levels"]:
+				continue
+			extra_upgrade_effect_cache[effect_id] = float(extra_upgrade_effect_cache.get(effect_id, 0.0)) + float(effects[effect_id]) * float(level)
+	extra_upgrade_effect_cache_dirty = false
 
 
 func upgrade_damage() -> void:
@@ -1533,7 +1567,7 @@ func get_projectile_count() -> int:
 
 
 func get_area_damage_multiplier() -> float:
-	return 1.0 + float(combustion_mix_level) * COMBUSTION_MIX_AREA_DAMAGE_PER_LEVEL + float(gravity_anchor_level) * GRAVITY_ANCHOR_AREA_DAMAGE_PER_LEVEL + get_passive_power_effect("area_damage")
+	return 1.0 + float(combustion_mix_level) * COMBUSTION_MIX_AREA_DAMAGE_PER_LEVEL + float(gravity_anchor_level) * GRAVITY_ANCHOR_AREA_DAMAGE_PER_LEVEL + get_extra_upgrade_effect("area_damage") + get_passive_power_effect("area_damage")
 
 
 func upgrade_alloy_plating() -> void:
@@ -1807,6 +1841,7 @@ func get_build_level_for_evolution(build_id: String) -> int:
 
 func upgrade_passive_power(power_id: String) -> void:
 	passive_power_levels[power_id] = get_passive_power_level(power_id) + 1
+	passive_power_effect_cache_dirty = true
 	update_evolutions()
 
 
@@ -1815,14 +1850,21 @@ func get_passive_power_level(power_id: String) -> int:
 
 
 func get_passive_power_effect(effect_id: String) -> float:
-	var total := 0.0
+	if passive_power_effect_cache_dirty:
+		rebuild_passive_power_effect_cache()
+	return float(passive_power_effect_cache.get(effect_id, 0.0))
+
+
+func rebuild_passive_power_effect_cache() -> void:
+	passive_power_effect_cache.clear()
 	for power in get_passive_power_catalog():
 		var level := get_passive_power_level(String(power.id))
 		if level <= 0:
 			continue
 		var effects: Dictionary = power.get("effects", {}) as Dictionary
-		total += float(effects.get(effect_id, 0.0)) * float(level)
-	return total
+		for effect_id in effects.keys():
+			passive_power_effect_cache[effect_id] = float(passive_power_effect_cache.get(effect_id, 0.0)) + float(effects[effect_id]) * float(level)
+	passive_power_effect_cache_dirty = false
 
 
 func get_passive_power_catalog() -> Array[Dictionary]:
@@ -1842,6 +1884,11 @@ func get_passive_power_catalog() -> Array[Dictionary]:
 		{"id": "orbital_cannon", "effects": {"extra_shot_chance": 0.06, "projectile_damage": 0.05}},
 		{"id": "ember_turret", "effects": {"power_damage": 0.08, "area_damage": 0.04}},
 		{"id": "time_shock", "effects": {"crit_chance": 0.02, "power_damage": 0.06}},
+		{"id": "phase_magnet", "effects": {"pickup_radius": 24.0, "projectile_speed": 0.05}},
+		{"id": "munition_swarm", "effects": {"extra_shot_chance": 0.05, "pet_damage": 0.06, "projectile_damage": 0.04}},
+		{"id": "fortress_protocol", "effects": {"armor": 0.03, "heal_multiplier": 0.08}},
+		{"id": "storm_catalyst", "effects": {"power_damage": 0.07, "crit_chance": 0.015, "area_damage": 0.03}},
+		{"id": "golden_reactor", "effects": {"exp_value": 0.08, "extra_shot_chance": 0.025, "power_damage": 0.03}},
 	]
 
 
@@ -1903,6 +1950,26 @@ func upgrade_ember_turret() -> void:
 
 func upgrade_time_shock() -> void:
 	upgrade_passive_power("time_shock")
+
+
+func upgrade_phase_magnet() -> void:
+	upgrade_passive_power("phase_magnet")
+
+
+func upgrade_munition_swarm() -> void:
+	upgrade_passive_power("munition_swarm")
+
+
+func upgrade_fortress_protocol() -> void:
+	upgrade_passive_power("fortress_protocol")
+
+
+func upgrade_storm_catalyst() -> void:
+	upgrade_passive_power("storm_catalyst")
+
+
+func upgrade_golden_reactor() -> void:
+	upgrade_passive_power("golden_reactor")
 
 
 func apply_evolution_runtime_updates() -> void:

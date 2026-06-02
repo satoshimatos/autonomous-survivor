@@ -28,6 +28,7 @@ var movement_timer: float = 0.0
 var slow_timer: float = 0.0
 var slow_multiplier: float = 1.0
 var death_payload: Dictionary = {}
+var contact_player: CharacterBody2D
 
 @onready var mesh_instance: Node2D = $MeshInstance2D
 @onready var collision_shape: CollisionShape2D = $CollisionShape2D
@@ -45,6 +46,8 @@ func _ready() -> void:
 	apply_variant_visuals()
 	base_modulate = mesh_instance.modulate
 	visual_base_scale = mesh_instance.scale
+	body_entered.connect(_on_body_entered)
+	body_exited.connect(_on_body_exited)
 
 
 func _process(delta: float) -> void:
@@ -55,15 +58,27 @@ func _process(delta: float) -> void:
 	if player:
 		position += get_movement_vector(delta) * speed * get_status_speed_multiplier() * delta
 	
-	var bodies = get_overlapping_bodies()
-	if bodies.size() > 0:
-		var body = bodies[0]
-		if body.is_in_group("Player"):
-			var damage_amount := contact_damage
-			if main and main.has_method("get_scaled_enemy_contact_damage"):
-				damage_amount = main.get_scaled_enemy_contact_damage(contact_damage)
-			
-			body.hit(damage_amount)
+	process_contact_damage()
+
+
+func _on_body_entered(body: Node) -> void:
+	if body.is_in_group("Player") and body is CharacterBody2D:
+		contact_player = body as CharacterBody2D
+
+
+func _on_body_exited(body: Node) -> void:
+	if body == contact_player:
+		contact_player = null
+
+
+func process_contact_damage() -> void:
+	if contact_player == null or not is_instance_valid(contact_player):
+		contact_player = null
+		return
+	var damage_amount := contact_damage
+	if main and main.has_method("get_scaled_enemy_contact_damage"):
+		damage_amount = main.get_scaled_enemy_contact_damage(contact_damage)
+	contact_player.hit(damage_amount)
 
 
 func configure_variant(config: Dictionary) -> void:
