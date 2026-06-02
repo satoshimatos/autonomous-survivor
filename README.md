@@ -217,6 +217,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Regenerated upgrade icons, power icons, enemy/boss sprites, pickups, projectiles, player tank pieces, effects, UI panels, cloud shadows, and both background images with cleaner bevels, stronger silhouettes, and less rough sketch texture.
   - Preserved existing PNG paths and dimensions so scene references, import metadata, and compendium icon lookups remain stable.
   - Added `tools/generate_semireal_assets.ps1` as the repeatable source for the current asset direction and updated `docs/VISUAL_IDENTITY.md` to make the new style target explicit.
+- Ran a performance and organization pass:
+  - Added active runtime registries in the main scene for enemies, bosses, EXP orbs, projectiles, splash areas, boss hazards, and particle bursts.
+  - Replaced repeated tree-wide enemy/EXP scans in projectiles, player systems, AI movement, and combat powers with cached runtime queries that fall back to groups outside gameplay.
+  - Routed shared lookup behavior through `RuntimeQuery` so ability scripts stay focused on their own effects instead of duplicating scene traversal logic.
+  - Tightened pooled particle bursts so recycled effects stop processing while inactive.
+  - Cached per-frame player references for cloud shadows, wrench pickup radius checks, and pickup indicators.
 
 ## Backlog
 

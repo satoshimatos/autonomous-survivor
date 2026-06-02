@@ -20,11 +20,10 @@ func _process(_delta: float) -> void:
 
 
 func _draw() -> void:
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("Player") as Node2D
 	if player == null:
-		var players := get_tree().get_nodes_in_group("Player")
-		if players.is_empty():
-			return
-		player = players[0]
+		return
 	
 	var screen_size: Vector2 = get_viewport_rect().size
 	var center: Vector2 = screen_size / 2.0

@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_RADIUS: float = 72.0
 const RADIUS_PER_LEVEL: float = 7.0
 const DAMAGE_INTERVAL: float = 0.55
@@ -54,7 +56,7 @@ func get_heal_interval() -> float:
 
 func damage_enemies() -> void:
 	var radius_squared := get_radius() * get_radius()
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

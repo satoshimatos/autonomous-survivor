@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_INTERVAL: float = 3.8
 const INTERVAL_STEP: float = 0.2
 const MIN_INTERVAL: float = 1.2
@@ -72,7 +74,7 @@ func fire_beam() -> void:
 func get_nearest_enemy() -> Node2D:
 	var nearest: Node2D = null
 	var nearest_distance := TARGET_RANGE * TARGET_RANGE
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():
@@ -86,7 +88,7 @@ func get_nearest_enemy() -> Node2D:
 
 func get_enemies_on_beam(direction: Vector2) -> Array[Node2D]:
 	var hits: Array[Dictionary] = []
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy) or not enemy is Node2D:
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

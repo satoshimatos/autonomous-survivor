@@ -32,6 +32,13 @@ var dynamite_pickup_pool
 var wrench_pickup_pool: Array[Node] = []
 var projectile_pool: Array[Node] = []
 var particle_burst_pool: Array[Node] = []
+var active_enemies: Array[Node] = []
+var active_bosses: Array[Node] = []
+var active_exp_orbs: Array[Node] = []
+var active_projectiles: Array[Node] = []
+var active_particle_bursts: Array[Node] = []
+var active_splash_areas: Array[Node] = []
+var active_boss_hazards: Array[Node] = []
 var is_player_paused: bool = false
 var enemies_defeated: int = 0
 var bosses_defeated: int = 0
@@ -375,7 +382,7 @@ func _process(delta: float) -> void:
 		enemy_speed_scale *= 1.0 + 0.01 * enemy_speed_growth_multiplier
 		update_exp_orb_drop_chances()
 		
-		for enemy in get_tree().get_nodes_in_group("Enemy"):
+		for enemy in active_enemies:
 			if enemy.has_method("apply_speed_multiplier"):
 				enemy.apply_speed_multiplier(1.0 + 0.01 * enemy_speed_growth_multiplier)
 	
@@ -653,6 +660,7 @@ func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_
 		enemy.configure_variant(variant_config)
 	enemy.defeated.connect(defeated_callback)
 	add_child(enemy)
+	register_active_enemy(enemy)
 	enemy.global_position = get_boss_spawn_point() if enemy.is_in_group("Boss") else get_spawn_point()
 	if enemy.has_method("set_global_speed_scale"):
 		enemy.set_global_speed_scale(enemy_speed_scale * get_active_run_event_multiplier("enemy_speed_multiplier"))
@@ -661,10 +669,50 @@ func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_
 	return enemy
 
 
+func register_active_enemy(enemy: Node) -> void:
+	if enemy == null:
+		return
+	if not active_enemies.has(enemy):
+		active_enemies.append(enemy)
+	if enemy.is_in_group("Boss") and not active_bosses.has(enemy):
+		active_bosses.append(enemy)
+	var exited_callback := _on_active_enemy_tree_exited.bind(enemy)
+	if not enemy.tree_exited.is_connected(exited_callback):
+		enemy.tree_exited.connect(exited_callback, CONNECT_ONE_SHOT)
+
+
+func _on_active_enemy_tree_exited(enemy: Node) -> void:
+	active_enemies.erase(enemy)
+	active_bosses.erase(enemy)
+
+
+func register_active_runtime_node(node: Node, registry: Array[Node]) -> void:
+	if node == null:
+		return
+	if not registry.has(node):
+		registry.append(node)
+	var exited_callback := _on_active_runtime_node_tree_exited.bind(node, registry)
+	if not node.tree_exited.is_connected(exited_callback):
+		node.tree_exited.connect(exited_callback, CONNECT_ONE_SHOT)
+
+
+func _on_active_runtime_node_tree_exited(node: Node, registry: Array[Node]) -> void:
+	registry.erase(node)
+
+
+func get_active_enemies() -> Array[Node]:
+	return active_enemies
+
+
+func get_active_exp_orbs() -> Array[Node]:
+	return active_exp_orbs
+
+
 func spawn_projectile(config: Dictionary, spawn_position: Vector2) -> Node:
 	var projectile := acquire_projectile()
 	projectile.global_position = spawn_position
 	projectile.launch(config)
+	register_active_projectile(projectile)
 	return projectile
 
 
@@ -682,6 +730,7 @@ func acquire_projectile() -> Node:
 func recycle_projectile(projectile: Node) -> void:
 	if projectile == null or not is_instance_valid(projectile):
 		return
+	active_projectiles.erase(projectile)
 	if projectile_pool.size() >= PROJECTILE_POOL_LIMIT:
 		if projectile.has_method("prepare_for_pool"):
 			projectile.prepare_for_pool()
@@ -692,6 +741,13 @@ func recycle_projectile(projectile: Node) -> void:
 	if projectile.has_method("prepare_for_pool"):
 		projectile.prepare_for_pool()
 	projectile_pool.append(projectile)
+
+
+func register_active_projectile(projectile: Node) -> void:
+	if projectile == null:
+		return
+	if not active_projectiles.has(projectile):
+		active_projectiles.append(projectile)
 
 
 func get_boss_spawn_point() -> Vector2:
@@ -872,11 +928,12 @@ func spawn_targeted_boss_hazard(module: Dictionary, phase_index: int) -> void:
 
 
 func spawn_boss_hazard(hazard_position: Vector2, radius: float, damage: int) -> void:
-	if get_tree().get_nodes_in_group("BossHazard").size() >= MAX_ACTIVE_BOSS_HAZARDS:
+	if active_boss_hazards.size() >= MAX_ACTIVE_BOSS_HAZARDS:
 		return
 	var hazard = BOSS_HAZARD.instantiate()
 	add_child(hazard)
 	hazard.add_to_group("BossHazard")
+	register_active_runtime_node(hazard, active_boss_hazards)
 	hazard.global_position = clamp_position_to_arena(hazard_position)
 	hazard.configure(radius, 0.85, 0.42, damage)
 
@@ -897,7 +954,7 @@ func spawn_boss_phase_burst(boss_position: Vector2, phase_index: int) -> void:
 
 
 func is_boss_alive() -> bool:
-	for boss in get_tree().get_nodes_in_group("Boss"):
+	for boss in active_bosses:
 		if is_instance_valid(boss):
 			return true
 	
@@ -905,7 +962,7 @@ func is_boss_alive() -> bool:
 
 
 func apply_enemy_health_bonus_to_active_enemies() -> void:
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in active_enemies:
 		if is_instance_valid(enemy) and enemy.has_method("apply_health_bonus"):
 			enemy.apply_health_bonus(enemy_health_bonus_total)
 
@@ -960,9 +1017,20 @@ func get_camera_viewport_rect() -> Rect2:
 func update_visibility_culling() -> void:
 	var visible_rect := get_camera_viewport_rect().grow(VISIBILITY_CULL_MARGIN)
 	for group_name in VISIBILITY_CULL_GROUPS:
-		for node in get_tree().get_nodes_in_group(group_name):
+		for node in get_visibility_cull_nodes(group_name):
 			if node is CanvasItem and is_instance_valid(node):
 				node.visible = visible_rect.has_point(node.global_position)
+
+
+func get_visibility_cull_nodes(group_name: String) -> Array:
+	match group_name:
+		"Enemy":
+			return active_enemies
+		"ExpOrb":
+			return active_exp_orbs
+		"Projectile":
+			return active_projectiles
+	return get_tree().get_nodes_in_group(group_name)
 
 
 func get_enemy_config_to_spawn() -> Dictionary:
@@ -1150,7 +1218,7 @@ func apply_elite_death_payload(enemy_position: Vector2, death_payload: Dictionar
 func apply_volatile_elite_death(enemy_position: Vector2, radius: float, damage: float) -> void:
 	shake_camera(0.16, 3.5)
 	splash_blast_active = true
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in active_enemies:
 		if not is_instance_valid(enemy) or enemy.global_position.distance_to(enemy_position) > radius:
 			continue
 		if enemy.has_method("hit"):
@@ -1177,7 +1245,7 @@ func spawn_split_elite_children(enemy_position: Vector2, death_payload: Dictiona
 
 
 func get_active_enemy_count() -> int:
-	return get_tree().get_nodes_in_group("Enemy").size()
+	return active_enemies.size()
 
 
 func _on_boss_defeated(enemy_position: Vector2, exp_drop_count: int = 30, exp_drop_min_tier: int = BLUE_ORB_TIER) -> void:
@@ -1243,12 +1311,13 @@ func _spawn_exp_orb(drop_data: Dictionary) -> void:
 	var enemy_position: Vector2 = drop_data.position
 	var min_tier: int = drop_data.get("min_tier", BLUE_ORB_TIER)
 	var orb_data := get_random_exp_orb_data(min_tier)
-	if get_tree().get_nodes_in_group("ExpOrb").size() >= MAX_ACTIVE_EXP_ORBS:
+	if active_exp_orbs.size() >= MAX_ACTIVE_EXP_ORBS:
 		merge_exp_into_existing_orb(orb_data.value)
 		return
 	
 	var exp_orb = EXP_ORB.instantiate()
 	add_child(exp_orb)
+	register_active_runtime_node(exp_orb, active_exp_orbs)
 	exp_orb.global_position = enemy_position
 	exp_orb.configure(int(ceil(float(orb_data.value) * exp_value_multiplier * get_active_run_event_multiplier("exp_value_multiplier"))), orb_data.radius, orb_data.texture, orb_data.get("visual_scale", 1.0))
 	
@@ -1289,11 +1358,10 @@ func get_violet_exp_orb_data() -> Dictionary:
 
 
 func merge_exp_into_existing_orb(additional_value: int) -> void:
-	var exp_orbs := get_tree().get_nodes_in_group("ExpOrb")
-	if exp_orbs.is_empty():
+	if active_exp_orbs.is_empty():
 		return
 	
-	var target_orb = exp_orbs.pick_random()
+	var target_orb = active_exp_orbs.pick_random()
 	if is_instance_valid(target_orb) and target_orb.has_method("merge_exp"):
 		target_orb.merge_exp(additional_value)
 
@@ -1433,10 +1501,12 @@ func spawn_exp_pickup_burst() -> void:
 
 
 func spawn_particle_burst(parent: Node, burst_position: Vector2, count: int, color: Color, speed: float, duration: float, size_range: Vector2, shrink: bool) -> void:
-	if get_tree().get_nodes_in_group("ParticleBurst").size() >= MAX_ACTIVE_PARTICLE_BURSTS:
+	if active_particle_bursts.size() >= MAX_ACTIVE_PARTICLE_BURSTS:
 		return
 	var burst = acquire_particle_burst(parent)
 	burst.add_to_group("ParticleBurst")
+	if not active_particle_bursts.has(burst):
+		active_particle_bursts.append(burst)
 	burst.global_position = burst_position
 	burst.configure(count, color, speed, duration, size_range, shrink)
 
@@ -1457,6 +1527,7 @@ func acquire_particle_burst(parent: Node) -> Node:
 func recycle_particle_burst(burst: Node) -> void:
 	if burst == null or not is_instance_valid(burst):
 		return
+	active_particle_bursts.erase(burst)
 	if particle_burst_pool.size() >= PARTICLE_BURST_POOL_LIMIT:
 		burst.queue_free()
 		return
@@ -1477,11 +1548,12 @@ func show_healing_popup(world_position: Vector2, healed_amount: int) -> void:
 
 
 func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: float, enemies: Array[Area2D]) -> void:
-	if get_tree().get_nodes_in_group("SplashArea").size() >= MAX_ACTIVE_SPLASH_AREAS:
+	if active_splash_areas.size() >= MAX_ACTIVE_SPLASH_AREAS:
 		return
 	var splash = SPLASH_AREA.instantiate()
 	add_child(splash)
 	splash.add_to_group("SplashArea")
+	register_active_runtime_node(splash, active_splash_areas)
 	splash.global_position = splash_position
 	var is_mass_splash := enemies.size() >= MASS_SPLASH_ENEMY_THRESHOLD
 	splash_blast_active = is_mass_splash
@@ -1492,7 +1564,7 @@ func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: 
 func activate_dynamite() -> void:
 	shake_camera(0.28, 7.0)
 	dynamite_flash.color = Color(1.0, 0.92, 0.25, 0.85)
-	var enemies := get_tree().get_nodes_in_group("Enemy").duplicate()
+	var enemies := active_enemies.duplicate()
 	dynamite_blast_active = true
 	for enemy in enemies:
 		if is_instance_valid(enemy) and is_position_in_arena(enemy.global_position) and enemy.has_method("hit"):
@@ -1507,8 +1579,8 @@ func activate_magnet_effect() -> void:
 
 
 func set_exp_orbs_magnet_active(active: bool) -> void:
-	for exp_orb in get_tree().get_nodes_in_group("ExpOrb"):
-		if exp_orb.has_method("set_magnet_active"):
+	for exp_orb in active_exp_orbs:
+		if is_instance_valid(exp_orb) and exp_orb.has_method("set_magnet_active"):
 			exp_orb.set_magnet_active(active, player if active else null)
 
 

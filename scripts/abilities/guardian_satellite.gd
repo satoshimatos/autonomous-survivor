@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_RADIUS: float = 92.0
 const RADIUS_STEP: float = 8.0
 const ORBIT_SPEED: float = TAU * 0.55
@@ -50,7 +52,7 @@ func update_hit_cooldowns(delta: float) -> void:
 
 func apply_contact_damage() -> void:
 	var active_enemy_ids := {}
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

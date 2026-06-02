@@ -63,6 +63,7 @@ Completed setup:
   - #30 Fix progression readability, pickups, bosses, and expand build content
   - #31 Refresh all project graphics with cleaner semi-real cartoon style
   - #32 Expand build pool to 100 upgrades and 40 powers with performance pass
+  - #33 Performance and organization pass for high enemy counts
 
 Completed issues:
 
@@ -98,6 +99,7 @@ Completed issues:
 - #30 Fix progression readability, pickups, bosses, and expand build content
 - #31 Refresh all project graphics with cleaner semi-real cartoon style
 - #32 Expand build pool to 100 upgrades and 40 powers with performance pass
+- #33 Performance and organization pass for high enemy counts
 
 ### P1 - Replayability And Power Growth
 
@@ -110,7 +112,8 @@ Completed issues:
 
 ### P2 - Performance
 
-- Profile dense late-game runs after challenge goals start pushing longer survival times.
+- Active runtime registries now cover enemies, bosses, EXP orbs, projectiles, splash areas, boss hazards, and particle bursts so hot combat loops can avoid repeated whole-tree scans.
+- Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
 

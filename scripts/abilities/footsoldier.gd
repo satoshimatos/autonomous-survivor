@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const SHOOT_RANGE: float = 400.0
 const NEAR_PLAYER_DISTANCE: float = 50.0
 const BURST_SHOT_COUNT: int = 3
@@ -253,7 +255,7 @@ func get_nearest_enemy_in_range() -> Node2D:
 	var nearest: Node2D = null
 	var nearest_distance := SHOOT_RANGE * SHOOT_RANGE
 	
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

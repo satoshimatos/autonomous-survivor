@@ -4,6 +4,7 @@ const HEAL_AMOUNT: int = 2
 
 var is_active: bool = true
 var pulse_time: float = 0.0
+var player: Node2D
 
 
 func activate(spawn_position: Vector2) -> void:
@@ -37,14 +38,15 @@ func _process(delta: float) -> void:
 
 
 func try_player_radius_pickup() -> void:
-	var player := get_tree().get_first_node_in_group("Player")
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("Player") as Node2D
 	if player == null or not player is Node2D:
 		return
 	var pickup_radius := 36.0
 	if player.has_method("get_pickup_collection_radius"):
 		pickup_radius = max(pickup_radius, float(player.get_pickup_collection_radius()))
-	if global_position.distance_to((player as Node2D).global_position) <= pickup_radius:
-		collect(player as Node2D)
+	if global_position.distance_to(player.global_position) <= pickup_radius:
+		collect(player)
 
 
 func _on_body_entered(body: Node2D) -> void:

@@ -56,6 +56,7 @@ func release() -> void:
 		return
 	is_active = false
 	visible = false
+	process_mode = Node.PROCESS_MODE_DISABLED
 	if is_in_group("ParticleBurst"):
 		remove_from_group("ParticleBurst")
 	var main := get_tree().current_scene

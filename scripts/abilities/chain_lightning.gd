@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_INTERVAL: float = 4.8
 const INTERVAL_STEP: float = 0.25
 const MIN_INTERVAL: float = 1.8
@@ -86,7 +88,7 @@ func strike() -> void:
 func get_nearest_unstruck_enemy(from_position: Vector2, struck: Dictionary) -> Node2D:
 	var nearest: Node2D = null
 	var nearest_distance := get_range() * get_range()
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if struck.has(enemy.get_instance_id()):

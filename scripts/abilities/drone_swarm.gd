@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const ORBIT_RADIUS: float = 74.0
 const ORBIT_RADIUS_STEP: float = 11.0
 const ORBIT_SPEED: float = TAU * 0.42
@@ -75,7 +77,7 @@ func get_damage() -> float:
 func get_nearest_enemy(from_position: Vector2) -> Node2D:
 	var nearest: Node2D = null
 	var nearest_distance := TARGET_RANGE * TARGET_RANGE
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

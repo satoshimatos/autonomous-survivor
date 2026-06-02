@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_INTERVAL: float = 5.8
 const INTERVAL_STEP: float = 0.28
 const MIN_INTERVAL: float = 2.1
@@ -72,7 +74,7 @@ func get_densest_enemy() -> Node2D:
 	var best_enemy: Node2D = null
 	var best_score := -1
 	var range_squared := TARGET_RANGE * TARGET_RANGE
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy) or not enemy is Node2D:
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():
@@ -89,7 +91,7 @@ func get_densest_enemy() -> Node2D:
 func get_nearby_enemy_count(center: Vector2) -> int:
 	var radius_squared := get_radius() * get_radius()
 	var count := 0
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if is_instance_valid(enemy) and center.distance_squared_to(enemy.global_position) <= radius_squared:
 			count += 1
 	return count
@@ -97,7 +99,7 @@ func get_nearby_enemy_count(center: Vector2) -> int:
 
 func zap_enemies() -> void:
 	var radius_squared := get_radius() * get_radius()
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

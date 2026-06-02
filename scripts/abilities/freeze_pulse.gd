@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_INTERVAL: float = 6.0
 const INTERVAL_STEP: float = 0.42
 const MIN_INTERVAL: float = 2.0
@@ -54,7 +56,7 @@ func get_radius() -> float:
 func apply_freeze() -> void:
 	var radius := get_radius()
 	var radius_squared := radius * radius
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

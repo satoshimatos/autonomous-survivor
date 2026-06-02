@@ -1,5 +1,7 @@
 extends Node
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const DIRECTION_CHANGE_INTERVAL: float = 1.0
 const AVOIDANCE_UPDATE_INTERVAL: float = 0.2
 const AVOIDANCE_PREDICTION_TIME: float = 0.85
@@ -293,7 +295,7 @@ func get_valid_exp_seek_target() -> Node2D:
 
 func get_nearest_enemy_distance(from_position: Vector2) -> float:
 	var nearest_distance: float = INF
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in get_runtime_nodes_in_group("Enemy"):
 		if not is_instance_valid(enemy) or not enemy is Node2D:
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():
@@ -335,7 +337,7 @@ func get_awareness_nodes_in_group(group_name: String) -> Array[Node2D]:
 func get_nodes_in_group_within_distance(group_name: String, center: Vector2, radius: float) -> Array[Node2D]:
 	var nodes: Array[Node2D] = []
 	var radius_squared: float = radius * radius
-	for node in get_tree().get_nodes_in_group(group_name):
+	for node in get_runtime_nodes_in_group(group_name):
 		if not is_instance_valid(node) or not node is Node2D:
 			continue
 		if "is_active" in node and not node.is_active:
@@ -371,7 +373,7 @@ func get_enemy_avoidance_direction(preferred_direction: Vector2) -> Vector2:
 	if player == null:
 		return preferred_direction
 	
-	var enemies: Array = get_tree().get_nodes_in_group("Enemy")
+	var enemies: Array = get_runtime_nodes_in_group("Enemy")
 	var best_direction: Vector2 = preferred_direction
 	var best_score: float = -INF
 	
@@ -383,6 +385,15 @@ func get_enemy_avoidance_direction(preferred_direction: Vector2) -> Vector2:
 	
 	current_behavior_label = behavior_label_before_dodge
 	return best_direction.normalized()
+
+
+func get_runtime_nodes_in_group(group_name: String) -> Array:
+	match group_name:
+		"Enemy":
+			return RuntimeQuery.get_active_enemies(self)
+		"ExpOrb":
+			return RuntimeQuery.get_active_exp_orbs(self)
+	return get_tree().get_nodes_in_group(group_name)
 
 
 func trigger_wall_recovery() -> void:

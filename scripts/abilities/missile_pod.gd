@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_INTERVAL: float = 4.4
 const INTERVAL_STEP: float = 0.24
 const MIN_INTERVAL: float = 1.4
@@ -79,7 +81,7 @@ func fire_missiles() -> void:
 func get_targets() -> Array[Area2D]:
 	var candidates: Array[Area2D] = []
 	var range_squared := TARGET_RANGE * TARGET_RANGE
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy) or not enemy is Area2D:
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

@@ -1,5 +1,7 @@
 extends Area2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const COLLISION_RADIUS: float = 6.0
 const DEFAULT_SPEED: float = 500.0
 const POOLED_POSITION: Vector2 = Vector2(-100000.0, -100000.0)
@@ -125,7 +127,7 @@ func check_swept_enemy_hits(start_position: Vector2, end_position: Vector2) -> v
 		var closest_hit_position: Vector2 = end_position
 		var closest_distance_along_segment: float = INF
 		
-		for enemy in get_tree().get_nodes_in_group("Enemy"):
+		for enemy in get_enemy_candidates():
 			if not is_instance_valid(enemy) or not enemy is Area2D:
 				continue
 			if hit_enemies.has(enemy):
@@ -224,7 +226,7 @@ func get_damage_for_piercing_state() -> float:
 func get_splash_enemies() -> Array[Area2D]:
 	var enemies: Array[Area2D] = []
 	var seen_enemies := {}
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in get_enemy_candidates():
 		if not is_instance_valid(enemy):
 			continue
 		if seen_enemies.has(enemy):
@@ -238,3 +240,7 @@ func get_splash_enemies() -> Array[Area2D]:
 			seen_enemies[enemy] = true
 	
 	return enemies
+
+
+func get_enemy_candidates() -> Array:
+	return RuntimeQuery.get_active_enemies(self)

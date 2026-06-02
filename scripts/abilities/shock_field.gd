@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_RADIUS: float = 78.0
 const RADIUS_PER_LEVEL: float = 14.0
 const DAMAGE_INTERVAL: float = 0.45
@@ -56,7 +58,7 @@ func update_cooldowns(delta: float) -> void:
 func pulse_enemies() -> void:
 	var radius := get_radius()
 	var radius_squared := radius * radius
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy_cooldowns.has(enemy):

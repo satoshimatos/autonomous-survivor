@@ -1,5 +1,7 @@
 extends Node2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const BASE_INTERVAL: float = 4.0
 const INTERVAL_STEP: float = 0.28
 const MIN_INTERVAL: float = 1.4
@@ -77,7 +79,7 @@ func strike_telegraph() -> void:
 func get_target_enemy() -> Node2D:
 	var candidates: Array[Node2D] = []
 	var range_squared := TARGET_RANGE * TARGET_RANGE
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():
@@ -98,7 +100,7 @@ func get_target_enemy() -> Node2D:
 func get_nearby_enemy_count(center: Vector2) -> int:
 	var count := 0
 	var radius_squared := get_radius() * get_radius()
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if is_instance_valid(enemy) and center.distance_squared_to(enemy.global_position) <= radius_squared:
 			count += 1
 	return count
@@ -107,7 +109,7 @@ func get_nearby_enemy_count(center: Vector2) -> int:
 func get_enemies_in_radius(center: Vector2, radius: float) -> Array[Area2D]:
 	var enemies: Array[Area2D] = []
 	var radius_squared := radius * radius
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():

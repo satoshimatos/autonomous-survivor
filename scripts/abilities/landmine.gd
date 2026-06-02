@@ -1,5 +1,7 @@
 extends Area2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 const TRIGGER_RADIUS: float = 17.5
 const EXPLOSION_RADIUS: float = 70.0
 const DETONATION_DELAY: float = 0.5
@@ -108,7 +110,7 @@ func get_explosion_damage() -> float:
 func get_enemies_in_radius() -> Array[Area2D]:
 	var enemies: Array[Area2D] = []
 	var seen_enemies := {}
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in RuntimeQuery.get_active_enemies(self):
 		if not is_instance_valid(enemy):
 			continue
 		if seen_enemies.has(enemy):

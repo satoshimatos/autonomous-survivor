@@ -1,5 +1,7 @@
 extends CharacterBody2D
 
+const RuntimeQuery = preload("res://scripts/core/runtime_query.gd")
+
 signal defeated
 signal upgrade_recieved
 signal exp_changed(current_exp: int, required_exp: int, level: int)
@@ -1472,7 +1474,7 @@ func process_barbed_wire(delta: float) -> void:
 	var active_enemy_ids := {}
 	var radius := BARBED_WIRE_RADIUS + get_evolution_effect_value("barbed_wire_radius_bonus")
 	var radius_squared := radius * radius
-	for enemy in get_tree().get_nodes_in_group("Enemy"):
+	for enemy in get_enemy_candidates():
 		if not is_instance_valid(enemy):
 			continue
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():
@@ -2129,7 +2131,7 @@ func process_personal_magnet() -> void:
 	
 	var pull_radius := MAGNET_BASE_RADIUS + float(magnet_level - 1) * MAGNET_RADIUS_PER_LEVEL + float(salvage_magnet_level) * SALVAGE_MAGNET_RADIUS_PER_LEVEL + get_extra_upgrade_effect("pickup_radius") + get_passive_power_effect("pickup_radius")
 	var pull_radius_squared := pull_radius * pull_radius
-	for exp_orb in get_tree().get_nodes_in_group("ExpOrb"):
+	for exp_orb in get_exp_orb_candidates():
 		if is_instance_valid(exp_orb) and global_position.distance_squared_to(exp_orb.global_position) <= pull_radius_squared:
 			if exp_orb.has_method("set_magnet_active"):
 				exp_orb.set_magnet_active(true, self)
@@ -2389,11 +2391,10 @@ func update_barbed_wire_visual() -> void:
 
 
 func get_nearest_enemy() -> Node2D:
-	var enemies: Array = get_tree().get_nodes_in_group("Enemy")
 	var nearest: Node2D = null
 	var nearest_distance: float = INF
 	
-	for enemy in enemies:
+	for enemy in get_enemy_candidates():
 		if enemy.has_method("is_damageable") and not enemy.is_damageable():
 			continue
 		
@@ -2403,3 +2404,11 @@ func get_nearest_enemy() -> Node2D:
 			nearest_distance = dist
 	
 	return nearest
+
+
+func get_enemy_candidates() -> Array:
+	return RuntimeQuery.get_active_enemies(self)
+
+
+func get_exp_orb_candidates() -> Array:
+	return RuntimeQuery.get_active_exp_orbs(self)

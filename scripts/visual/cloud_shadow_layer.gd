@@ -6,17 +6,20 @@ extends Node2D
 
 var age: float = 0.0
 var sprites: Array[Sprite2D] = []
+var player: Node2D
 
 
 func _ready() -> void:
 	for child in get_children():
 		if child is Sprite2D:
 			sprites.append(child)
+	player = get_tree().get_first_node_in_group("Player") as Node2D
 
 
 func _process(delta: float) -> void:
 	age += delta
-	var player := get_tree().get_first_node_in_group("Player")
+	if not is_instance_valid(player):
+		player = get_tree().get_first_node_in_group("Player") as Node2D
 	var parallax_offset := Vector2.ZERO
 	if player is Node2D:
 		parallax_offset = (player.global_position - arena_center) * parallax_strength
