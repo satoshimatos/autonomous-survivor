@@ -10,6 +10,8 @@ const UnlockManagerScript = preload("res://scripts/core/unlock_manager.gd")
 
 
 func _init() -> void:
+	if not validate_branding_assets():
+		return
 	if not validate_progression_catalogs():
 		return
 	var scene_paths: Array[String] = [
@@ -122,7 +124,7 @@ func validate_progression_catalogs() -> bool:
 	var modifier_ids: Array[String] = []
 	for modifier in RunModifierCatalog.get_entries():
 		modifier_ids.append(String(modifier.id))
-	for required_modifier_id in ["singularity_seed", "clockwork_dividend", "quantum_current"]:
+	for required_modifier_id in ["singularity_seed", "clockwork_dividend", "quantum_current", "solar_furnace"]:
 		if modifier_ids.has(required_modifier_id):
 			continue
 		push_error("Run modifier catalog should include %s." % required_modifier_id)
@@ -194,7 +196,59 @@ func validate_progression_catalogs() -> bool:
 		push_error("Map 13 victory should unlock Reef Savant.")
 		quit(1)
 		return false
+	unlock_manager.record_completed_victory_map({"victory": true, "map_id": "map14"})
+	unlock_manager.add_unlocks_for_victory({"victory": true, "map_id": "map14"}, unlocked_messages)
+	if not unlock_manager.unlocked_modifiers.has("solar_furnace"):
+		unlock_manager.free()
+		push_error("Map 14 victory should unlock Solar Furnace.")
+		quit(1)
+		return false
+	if not unlock_manager.unlocked_tanks.has("helio_bastion"):
+		unlock_manager.free()
+		push_error("Map 14 victory should unlock Helio Bastion.")
+		quit(1)
+		return false
 	unlock_manager.free()
+	return true
+
+
+func validate_branding_assets() -> bool:
+	if String(ProjectSettings.get_setting("application/config/name", "")) != "Autonomous Survivor":
+		push_error("Project name should be Autonomous Survivor.")
+		quit(1)
+		return false
+	var required_branding_assets: Array[String] = [
+		"res://assets/ui/branding/app_icon_1024.png",
+		"res://assets/ui/branding/app_icon_512.png",
+		"res://assets/ui/branding/app_icon_256.png",
+		"res://assets/ui/branding/app_icon_128.png",
+		"res://assets/ui/branding/app_icon_64.png",
+		"res://assets/ui/branding/app_icon_32.png",
+		"res://assets/ui/branding/app_icon.ico",
+		"res://assets/ui/branding/brand_mark_autonomous_survivor.png",
+		"res://assets/ui/branding/logo_autonomous_survivor.png",
+		"res://assets/ui/branding/wordmark_autonomous_survivor.png",
+		"res://assets/ui/branding/icon_menu_play.png",
+		"res://assets/ui/branding/icon_menu_compendium.png",
+		"res://assets/ui/branding/icon_menu_quit.png",
+	]
+	for asset_path in required_branding_assets:
+		if not FileAccess.file_exists(asset_path):
+			push_error("Missing branding asset: %s" % asset_path)
+			quit(1)
+			return false
+	if String(ProjectSettings.get_setting("application/boot_splash/image", "")) != "res://assets/ui/branding/logo_autonomous_survivor.png":
+		push_error("Boot splash should use the Autonomous Survivor logo.")
+		quit(1)
+		return false
+	if String(ProjectSettings.get_setting("application/config/icon", "")) != "res://assets/ui/branding/app_icon_1024.png":
+		push_error("Project icon should use the Autonomous Survivor app icon.")
+		quit(1)
+		return false
+	if String(ProjectSettings.get_setting("application/config/windows_native_icon", "")) != "res://assets/ui/branding/app_icon.ico":
+		push_error("Windows native icon should use the generated Autonomous Survivor ico.")
+		quit(1)
+		return false
 	return true
 
 
@@ -292,7 +346,7 @@ func validate_autonomous_tank_catalog() -> bool:
 			push_error("Autonomous tank %s references unsupported passive power %s." % [tank_id, String(power_id)])
 			quit(1)
 			return false
-	for required_tank_id in ["neon_courier", "bloom_artillerist", "gear_oracle", "reef_savant"]:
+	for required_tank_id in ["neon_courier", "bloom_artillerist", "gear_oracle", "reef_savant", "helio_bastion"]:
 		if not seen_ids.has(required_tank_id):
 			push_error("Autonomous tank catalog should include %s." % required_tank_id)
 			quit(1)

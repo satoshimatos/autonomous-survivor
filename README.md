@@ -136,6 +136,15 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Solar Bastion as map 14, unlocked by a 30:00 Quantum Reef victory.
   - Added a generated Solar Bastion background, authored mirror/pylon obstacles, a Solar Flare gimmick, five sun-forged enemies, and two solar bastion bosses.
   - Extended map unlocks, map layout bounds, scene validation, spawn weighting, the compendium, and content counts for the new postgame arena.
+- Added postgame reward wave #66:
+  - Added Helio Bastion, a Solar Bastion victory tank focused on armored heat pressure, Flame Wave, Missile Pod, Overdrive Core, and flare/splash scaling.
+  - Added Solar Furnace, a Solar Bastion victory run modifier with faster spawns, faster bosses, richer boss payouts, faster player tempo, extra dynamite, scarce supplies, and harsher enemy growth.
+  - Updated unlock hints, backfill rules, validation, backlog counts, and compendium references for the new Solar Bastion rewards.
+- Added branding polish wave #67:
+  - Rebuilt the Autonomous Survivor launcher identity around a clearer shield/tank/AS mark, square app icon, refined horizontal logo, and compact brand mark.
+  - Added generated `app_icon_512.png`, `app_icon_128.png`, `app_icon_64.png`, and `app_icon_32.png` variants alongside the existing 1024/256 PNG and Windows `.ico`.
+  - Removed the unused default Godot `icon.svg` assets so project branding resolves only to the Autonomous Survivor asset set.
+  - Added branding validation for the project name, app icons, boot splash, Windows icon, logo, wordmark, compact mark, and menu action icons.
 - Added branding polish wave #61:
   - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
   - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
@@ -379,7 +388,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 26 tanks, 86 enemies, 37 bosses, and 14 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 27 tanks, 86 enemies, 37 bosses, and 14 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

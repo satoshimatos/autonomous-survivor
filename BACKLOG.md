@@ -96,6 +96,8 @@ Completed setup:
   - #63 Add Quantum Reef map 13
   - #64 Add Quantum Reef victory rewards
   - #65 Add Solar Bastion postgame map
+  - #66 Add Solar Bastion victory rewards
+  - #67 Add proper Autonomous Survivor icons and logo polish
 
 Completed issues:
 
@@ -164,10 +166,12 @@ Completed issues:
 - #63 Add Quantum Reef map 13
 - #64 Add Quantum Reef victory rewards
 - #65 Add Solar Bastion postgame map
+- #66 Add Solar Bastion victory rewards
+- #67 Add proper Autonomous Survivor icons and logo polish
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 26 tanks, 86 enemies, 37 bosses, 14 maps.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 27 tanks, 86 enemies, 37 bosses, 14 maps.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 - 30-minute survival now completes the run as a victory and unlocks the next map in the chain.
 - Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
@@ -177,11 +181,11 @@ Completed issues:
 - Clockwork Spiral extends the postgame victory chain after Singularity Garden with a machine background, authored gear obstacles, spiral clockwork hazards, 5 additional enemies, and 2 additional bosses.
 - Quantum Reef extends the postgame victory chain after Clockwork Spiral with a prism-current background, authored coral/current obstacles, Quantum Tide hazards, 5 additional enemies, and 2 additional bosses.
 - Solar Bastion extends the postgame victory chain after Quantum Reef with a sun-forged background, authored mirror/pylon obstacles, Solar Flare hazards, 5 additional enemies, and 2 additional bosses.
-- Late-chain and postgame victories now add eight more run modifiers, bringing the modifier pool from 7 to 15 and making high-progression runs more varied.
+- Late-chain and postgame victories now add nine more run modifiers, bringing the modifier pool from 7 to 16 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
 - Run events now have a focused catalog and 15 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 - Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.
-- Late-campaign tank variety now includes Prism Sentinel, Void Anchor, Neon Courier, Bloom Artillerist, Gear Oracle, and Reef Savant, adding crystal crit/ricochet, void gravity-control, speed/supply, postgame artillery, clockwork precision-control, and quantum current/economy-control starts behind campaign-progress unlocks.
+- Late-campaign tank variety now includes Prism Sentinel, Void Anchor, Neon Courier, Bloom Artillerist, Gear Oracle, Reef Savant, and Helio Bastion, adding crystal crit/ricochet, void gravity-control, speed/supply, postgame artillery, clockwork precision-control, quantum current/economy-control, and solar heat/flare starts behind campaign-progress unlocks.
 
 ### P1 - Enemies And Bosses
 
@@ -204,7 +208,7 @@ Completed issues:
 ### P2 - UI And Feedback
 
 - Visual identity pass is complete enough for the current scope: generated arena/menu art, cartoon sprites, chunky UI, cloud shadows, player lighting, projectile trails, hit pops, and richer bursts are in-game.
-- Project branding now includes a stronger Autonomous Survivor PNG app icon, native Windows `.ico`, boot splash logo, compact brand mark, wordmark, main-menu logo asset, and generated menu action icons.
+- Project branding now includes a stronger Autonomous Survivor PNG app icon, launcher-size PNG variants, native Windows `.ico`, boot splash logo, compact brand mark, wordmark, main-menu logo asset, and generated menu action icons. Branding paths are covered by headless validation, and the unused default Godot `icon.svg` assets have been removed.
 - Singularity Garden now has dedicated map-specific enemy and boss sprites instead of falling back to generic variant art.
 - Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine now have dedicated boss sprites instead of generic variant art.
 - Global juice pass added animated button press/hover feedback, brighter upgrade and ability celebration backgrounds, selection confetti bursts, projectile hit sparks, healing particles, splash reinforcement, and capped micro-shake on strong impacts.

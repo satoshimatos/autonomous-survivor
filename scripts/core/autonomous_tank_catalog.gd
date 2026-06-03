@@ -222,5 +222,22 @@ static func get_entries() -> Array[Dictionary]:
 			"extra_upgrades": {"crystal_lens": 1, "prism_rounds": 1, "salvage_magnet": 1},
 			"passive_powers": {"phase_magnet": 1, "critical_storm": 1, "supply_beacon": 1},
 			"color": Color(0.34, 0.94, 1.0, 1.0),
+		},
+		{
+			"id": "helio_bastion",
+			"name": "Helio Bastion",
+			"summary": "Solar Bastion reward tank with armored heat pressure, flare waves, missile support, and overdrive tempo.",
+			"speed_multiplier": 0.88,
+			"health_bonus": 6,
+			"damage_multiplier": 1.04,
+			"fire_interval_multiplier": 0.94,
+			"splash_level": 1,
+			"armor_level": 2,
+			"flame_wave_level": 1,
+			"missile_pod_level": 1,
+			"overdrive_core_level": 1,
+			"extra_upgrades": {"combustion_mix": 1, "flare_core": 1, "battle_vault": 1},
+			"passive_powers": {"meteor_shell": 1, "ember_turret": 1, "guardian_wall": 1},
+			"color": Color(1.0, 0.58, 0.14, 1.0),
 		}
 	]

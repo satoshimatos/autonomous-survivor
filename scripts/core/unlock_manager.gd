@@ -85,6 +85,8 @@ func ensure_map_modifier_unlocks() -> void:
 		unlock_id(unlocked_modifiers, "clockwork_dividend")
 	if completed_victory_maps.has("map13"):
 		unlock_id(unlocked_modifiers, "quantum_current")
+	if completed_victory_maps.has("map14"):
+		unlock_id(unlocked_modifiers, "solar_furnace")
 
 
 func ensure_map_tank_unlocks() -> void:
@@ -100,6 +102,8 @@ func ensure_map_tank_unlocks() -> void:
 		unlock_id(unlocked_tanks, "gear_oracle")
 	if completed_victory_maps.has("map13"):
 		unlock_id(unlocked_tanks, "reef_savant")
+	if completed_victory_maps.has("map14"):
+		unlock_id(unlocked_tanks, "helio_bastion")
 
 
 func ensure_map_victory_unlocks() -> void:
@@ -183,6 +187,8 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("tank", "gear_oracle", "Gear Oracle tank", unlocked_messages)
 	if completed_victory_maps.has("map13"):
 		try_unlock("tank", "reef_savant", "Reef Savant tank", unlocked_messages)
+	if completed_victory_maps.has("map14"):
+		try_unlock("tank", "helio_bastion", "Helio Bastion tank", unlocked_messages)
 	if best_level >= 10:
 		try_unlock("ability", "freeze_pulse", "Freeze Pulse ability", unlocked_messages)
 		try_unlock("ability", "ion_lance", "Ion Lance power", unlocked_messages)
@@ -272,6 +278,9 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("map", "map14", "Solar Bastion map", unlocked_messages)
 			try_unlock("modifier", "quantum_current", "Quantum Current modifier", unlocked_messages)
 			try_unlock("tank", "reef_savant", "Reef Savant tank", unlocked_messages)
+		"map14":
+			try_unlock("modifier", "solar_furnace", "Solar Furnace modifier", unlocked_messages)
+			try_unlock("tank", "helio_bastion", "Helio Bastion tank", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -332,6 +341,8 @@ func get_modifier_reward_name(modifier_id: String) -> String:
 			return "Clockwork Dividend"
 		"quantum_current":
 			return "Quantum Current"
+		"solar_furnace":
+			return "Solar Furnace"
 	return modifier_id.capitalize()
 
 
@@ -404,6 +415,8 @@ func get_tank_unlock_hint(tank_id: String) -> String:
 			return "Win Clockwork Spiral at 30:00."
 		"reef_savant":
 			return "Win Quantum Reef at 30:00."
+		"helio_bastion":
+			return "Win Solar Bastion at 30:00."
 	return "Progress further to reveal this unlock."
 
 
@@ -458,7 +471,9 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Modifier: Win Clockwork Spiral at 30:00 to unlock Clockwork Dividend.")
 	elif not is_modifier_unlocked("quantum_current"):
 		lines.append("- Modifier: Win Quantum Reef at 30:00 to unlock Quantum Current.")
-	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor", "neon_courier", "bloom_artillerist", "gear_oracle", "reef_savant"]:
+	elif not is_modifier_unlocked("solar_furnace"):
+		lines.append("- Modifier: Win Solar Bastion at 30:00 to unlock Solar Furnace.")
+	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor", "neon_courier", "bloom_artillerist", "gear_oracle", "reef_savant", "helio_bastion"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
 	for ability_goal in get_ability_goal_catalog():

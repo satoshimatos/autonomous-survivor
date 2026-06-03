@@ -117,6 +117,53 @@ function Draw-HighlightStripe($Graphics, [System.Drawing.RectangleF]$Rect, [Syst
 	$path.Dispose()
 }
 
+function New-LinearBrush([System.Drawing.RectangleF]$Rect, [System.Drawing.Color]$StartColor, [System.Drawing.Color]$EndColor, [float]$Angle) {
+	return New-Object System.Drawing.Drawing2D.LinearGradientBrush($Rect, $StartColor, $EndColor, $Angle)
+}
+
+function Draw-AngledPanel($Graphics, [System.Drawing.RectangleF]$Rect, [System.Drawing.Color]$StartColor, [System.Drawing.Color]$EndColor, [float]$Radius, [float]$OutlineWidth) {
+	$black = [System.Drawing.Color]::FromArgb(255, 7, 9, 14)
+	$brush = New-LinearBrush $Rect $StartColor $EndColor 25
+	Draw-RoundedRectangle $Graphics $Rect $Radius $brush (New-Pen $black $OutlineWidth)
+	$brush.Dispose()
+	$inset = [System.Drawing.RectangleF]::new($Rect.X + $OutlineWidth * 1.5, $Rect.Y + $OutlineWidth * 1.5, $Rect.Width - $OutlineWidth * 3.0, $Rect.Height - $OutlineWidth * 3.0)
+	Draw-RoundedRectangle $Graphics $inset ($Radius * 0.72) $null (New-Pen ([System.Drawing.Color]::FromArgb(175, 92, 224, 255)) ($OutlineWidth * 0.34))
+}
+
+function Draw-EnergyRays($Graphics, [float]$CenterX, [float]$CenterY, [float]$Radius, [System.Drawing.Color]$Color) {
+	$brush = New-SolidBrush ([System.Drawing.Color]::FromArgb(90, $Color.R, $Color.G, $Color.B))
+	for ($i = 0; $i -lt 16; $i++) {
+		$angle = ($i * 22.5) * [Math]::PI / 180.0
+		$nextAngle = (($i * 22.5) + 7.0) * [Math]::PI / 180.0
+		$inner = $Radius * 0.30
+		$outer = $Radius * (0.76 + (($i % 3) * 0.06))
+		$path = New-Object System.Drawing.Drawing2D.GraphicsPath
+		$path.AddPolygon(@(
+			[System.Drawing.PointF]::new($CenterX + [Math]::Cos($angle) * $inner, $CenterY + [Math]::Sin($angle) * $inner),
+			[System.Drawing.PointF]::new($CenterX + [Math]::Cos(($angle + $nextAngle) * 0.5) * $outer, $CenterY + [Math]::Sin(($angle + $nextAngle) * 0.5) * $outer),
+			[System.Drawing.PointF]::new($CenterX + [Math]::Cos($nextAngle) * $inner, $CenterY + [Math]::Sin($nextAngle) * $inner)
+		))
+		$Graphics.FillPath($brush, $path)
+		$path.Dispose()
+	}
+	$brush.Dispose()
+}
+
+function Draw-LauncherBase($Graphics, [int]$Size) {
+	$rect = [System.Drawing.RectangleF]::new($Size * 0.035, $Size * 0.035, $Size * 0.93, $Size * 0.93)
+	Draw-AngledPanel $Graphics $rect ([System.Drawing.Color]::FromArgb(255, 11, 19, 34)) ([System.Drawing.Color]::FromArgb(255, 31, 53, 84)) ($Size * 0.17) ($Size * 0.035)
+	Draw-EnergyRays $Graphics ($Size * 0.5) ($Size * 0.48) ($Size * 0.56) ([System.Drawing.Color]::FromArgb(255, 255, 199, 65))
+	$Graphics.FillEllipse((New-SolidBrush ([System.Drawing.Color]::FromArgb(82, 78, 225, 255))), $Size * 0.18, $Size * 0.18, $Size * 0.64, $Size * 0.64)
+	$Graphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(210, 76, 226, 255)) ($Size * 0.018)), $Size * 0.18, $Size * 0.18, $Size * 0.64, $Size * 0.64)
+}
+
+function Draw-ASBadge($Graphics, [float]$X, [float]$Y, [float]$Size) {
+	$black = [System.Drawing.Color]::FromArgb(255, 7, 9, 14)
+	$badge = [System.Drawing.RectangleF]::new($X, $Y, $Size, $Size * 0.58)
+	Draw-RoundedRectangle $Graphics $badge ($Size * 0.12) (New-SolidBrush ([System.Drawing.Color]::FromArgb(245, 255, 211, 76))) (New-Pen $black ($Size * 0.055))
+	Draw-CenteredText $Graphics "AS" "Arial Black" ($Size * 0.34) $badge (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 20, 27, 40))) $null 0
+}
+
 function Draw-TankGlyph($Graphics, [float]$X, [float]$Y, [float]$Size) {
 	$black = [System.Drawing.Color]::FromArgb(255, 14, 16, 22)
 	$steel = [System.Drawing.Color]::FromArgb(255, 87, 119, 139)
@@ -268,39 +315,37 @@ function Save-Ico([string]$SourcePath, [string]$Path, [int[]]$Sizes) {
 $icon = New-Canvas 1024 1024
 $iconBitmap = $icon[0]
 $iconGraphics = $icon[1]
-$iconGraphics.FillEllipse((New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 9, 13, 24))), 44, 44, 936, 936)
-$iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 10, 10, 16)) 38), 44, 44, 936, 936)
-$iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 72, 212, 240)) 18), 90, 90, 844, 844)
-$iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 255, 194, 70)) 10), 130, 130, 764, 764)
-Draw-BrandMark $iconGraphics 150 98 724
-Draw-TankGlyph $iconGraphics 284 222 456
-Draw-CenteredText $iconGraphics "AS" "Arial" 176 ([System.Drawing.RectangleF]::new(0, 764, 1024, 168)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 18, 20, 28))) 8
+Draw-LauncherBase $iconGraphics 1024
+Draw-BrandMark $iconGraphics 214 126 596
+Draw-TankGlyph $iconGraphics 286 246 452
+Draw-ASBadge $iconGraphics 328 774 368
 Save-Png $iconBitmap $iconGraphics (Join-Path $OutDir "app_icon_1024.png")
 
 $mark = New-Canvas 512 512
 $markBitmap = $mark[0]
 $markGraphics = $mark[1]
-Draw-BrandMark $markGraphics 34 26 444
-Draw-TankGlyph $markGraphics 132 104 252
+Draw-LauncherBase $markGraphics 512
+Draw-BrandMark $markGraphics 100 62 312
+Draw-TankGlyph $markGraphics 146 130 220
 Save-Png $markBitmap $markGraphics (Join-Path $OutDir "brand_mark_autonomous_survivor.png")
 
-$smallIcon = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
-$smallGraphics = [System.Drawing.Graphics]::FromImage($smallIcon)
-$smallGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
-$sourceIcon = [System.Drawing.Image]::FromFile((Join-Path $OutDir "app_icon_1024.png"))
-$smallGraphics.DrawImage($sourceIcon, 0, 0, 256, 256)
-$sourceIcon.Dispose()
-Save-Png $smallIcon $smallGraphics (Join-Path $OutDir "app_icon_256.png")
+foreach ($size in @(512, 256, 128, 64, 32)) {
+	$scaledIcon = New-ScaledBitmap (Join-Path $OutDir "app_icon_1024.png") $size
+	$scaledGraphics = [System.Drawing.Graphics]::FromImage($scaledIcon)
+	Save-Png $scaledIcon $scaledGraphics (Join-Path $OutDir ("app_icon_{0}.png" -f $size))
+}
 
 $logo = New-Canvas 1536 512
 $logoBitmap = $logo[0]
 $logoGraphics = $logo[1]
-Draw-LogoPlate $logoGraphics ([System.Drawing.RectangleF]::new(28, 30, 1480, 442))
-Draw-BrandMark $logoGraphics 58 62 388
-Draw-TankGlyph $logoGraphics 148 150 210
-Draw-CenteredText $logoGraphics "AUTONOMOUS" "Arial Black" 116 ([System.Drawing.RectangleF]::new(438, 62, 1016, 144)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 116, 230, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 7
-Draw-CenteredText $logoGraphics "SURVIVOR" "Arial Black" 150 ([System.Drawing.RectangleF]::new(438, 188, 1016, 176)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 9
-Draw-CenteredText $logoGraphics "AUTONOMOUS TANK BULLET HEAVEN" "Arial" 40 ([System.Drawing.RectangleF]::new(442, 374, 1012, 58)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 226, 244, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 3
+Draw-LogoPlate $logoGraphics ([System.Drawing.RectangleF]::new(24, 28, 1488, 456))
+Draw-EnergyRays $logoGraphics 260 250 280 ([System.Drawing.Color]::FromArgb(255, 255, 199, 65))
+Draw-BrandMark $logoGraphics 68 62 384
+Draw-TankGlyph $logoGraphics 150 150 220
+Draw-ASBadge $logoGraphics 202 360 116
+Draw-CenteredText $logoGraphics "AUTONOMOUS" "Arial Black" 92 ([System.Drawing.RectangleF]::new(470, 58, 998, 126)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 114, 234, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 5, 8, 15))) 7
+Draw-CenteredText $logoGraphics "SURVIVOR" "Arial Black" 150 ([System.Drawing.RectangleF]::new(470, 176, 998, 180)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 216, 72))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 5, 8, 15))) 10
+Draw-CenteredText $logoGraphics "TANK BULLET HEAVEN" "Arial Black" 42 ([System.Drawing.RectangleF]::new(480, 374, 980, 62)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 236, 249, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 5, 8, 15))) 4
 Save-Png $logoBitmap $logoGraphics (Join-Path $OutDir "logo_autonomous_survivor.png")
 
 $wordmark = New-Canvas 1280 320

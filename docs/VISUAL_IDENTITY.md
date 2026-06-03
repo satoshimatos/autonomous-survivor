@@ -16,7 +16,7 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 
 | Area | Assets |
 |---|---|
-| Branding | `assets/ui/branding/app_icon_1024.png`, `app_icon_256.png`, `app_icon.ico`, `brand_mark_autonomous_survivor.png`, `logo_autonomous_survivor.png`, `wordmark_autonomous_survivor.png`, `icon_menu_play.png`, `icon_menu_compendium.png`, `icon_menu_quit.png` |
+| Branding | `assets/ui/branding/app_icon_1024.png`, `app_icon_512.png`, `app_icon_256.png`, `app_icon_128.png`, `app_icon_64.png`, `app_icon_32.png`, `app_icon.ico`, `brand_mark_autonomous_survivor.png`, `logo_autonomous_survivor.png`, `wordmark_autonomous_survivor.png`, `icon_menu_play.png`, `icon_menu_compendium.png`, `icon_menu_quit.png` |
 | World | `assets/backgrounds/wasteland_arena_generated.png`, cloud shadow textures |
 | Menu | `assets/backgrounds/menu_backdrop_generated.png`, `assets/visual/ui/chunky_panel.png` |
 | Player | `assets/visual/player/tank_base_cartoon.png`, `assets/visual/player/tank_cannon_cartoon.png`, `assets/visual/effects/radial_player_light.png` |
@@ -41,13 +41,13 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 
 ## Branding
 
-The game name is `Autonomous Survivor`. The project icon, native Windows icon, boot splash, main menu logo, and main menu action icons use the generated branding set in `assets/ui/branding/`. The visual mark combines a shield, tank silhouette, cyan/yellow energy accents, and the `AS` monogram so the icon remains readable at launcher size. `brand_mark_autonomous_survivor.png` is the compact reusable mark for smaller UI placements, while `icon_menu_play.png`, `icon_menu_compendium.png`, and `icon_menu_quit.png` keep primary menu actions visually branded.
+The game name is `Autonomous Survivor`. The project icon, native Windows icon, boot splash, main menu logo, and main menu action icons use the generated branding set in `assets/ui/branding/`. The visual mark combines a shield, tank silhouette, cyan/yellow energy accents, a compact `AS` badge, and a square launcher-safe silhouette so it remains readable at desktop and small taskbar sizes. `brand_mark_autonomous_survivor.png` is the compact reusable mark for smaller UI placements, while `icon_menu_play.png`, `icon_menu_compendium.png`, and `icon_menu_quit.png` keep primary menu actions visually branded. The old default Godot `icon.svg` assets are intentionally removed so the project only exposes Autonomous Survivor branding.
 
 ## Regeneration
 
 The current semi-real cartoon asset generator is `tools/generate_semireal_assets.ps1`. It rebuilds the project-local PNG assets in place while preserving existing filenames and dimensions.
 
-The branding generator is `tools/generate_branding_assets.ps1`. It creates the PNG app icons, compact brand mark, full logo, wordmark, menu action icons, and multi-size Windows `.ico` with deterministic vector-like drawing through `System.Drawing`.
+The branding generator is `tools/generate_branding_assets.ps1`. It creates the PNG app icons at 1024, 512, 256, 128, 64, and 32 pixels, compact brand mark, full logo, wordmark, menu action icons, and multi-size Windows `.ico` with deterministic vector-like drawing through `System.Drawing`.
 
 The Clockwork Spiral generator is `tools/generate_map12_assets.ps1`. It creates the map 12 machine background and dedicated clockwork enemy/boss sprites under `assets/visual/enemies/map12/`.
 
