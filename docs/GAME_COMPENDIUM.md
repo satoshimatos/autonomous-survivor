@@ -274,7 +274,7 @@ Ability menus roll 3 weighted options from unlocked abilities. Weight increases 
 
 ## Evolved Synergies
 
-Evolutions are checked after upgrade and ability picks. Active evolutions appear in the upgrade inventory and defeat build summary.
+Evolutions are checked after upgrade and ability picks. Active evolutions appear in the upgrade inventory and defeat build summary. Evolution definitions live in `scripts/player/evolution_catalog.gd`; `player.gd` owns requirement checks, active effect reads, and runtime feedback.
 
 | Evolution | Requirements | Effects |
 |---|---|---|

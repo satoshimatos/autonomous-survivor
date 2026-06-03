@@ -75,6 +75,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Updated the project icon and boot splash to use the new Autonomous Survivor branding.
   - Added the logo to the main menu and kept the title text aligned with the game name.
   - Extracted ability menu data into `scripts/core/ability_catalog.gd` so ability definitions are not owned by UI presentation code.
+- Added organization wave #50:
+  - Extracted evolution definitions from `scripts/player/player.gd` into `scripts/player/evolution_catalog.gd`.
+  - Kept player runtime code responsible for detecting requirements, applying active effects, and triggering evolution feedback.
+  - Updated the backlog and compendium to document the new evolution catalog boundary.
 
 ### 2026-05-30
 

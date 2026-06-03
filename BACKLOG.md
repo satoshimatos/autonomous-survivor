@@ -80,6 +80,7 @@ Completed setup:
   - #47 Expand and extract enemy affix catalog
   - #48 Expand permanent challenge goals
   - #49 Add Autonomous Survivor branding assets and extract ability catalog
+  - #50 Extract player evolution catalog
 
 Completed issues:
 
@@ -132,6 +133,7 @@ Completed issues:
 - #47 Expand and extract enemy affix catalog
 - #48 Expand permanent challenge goals
 - #49 Add Autonomous Survivor branding assets and extract ability catalog
+- #50 Extract player evolution catalog
 
 ### P1 - Replayability And Power Growth
 
@@ -160,6 +162,7 @@ Completed issues:
 - Run event data now lives in a focused catalog helper while `main.gd` keeps ownership of event scheduling, active multipliers, risk spawning, and rewards.
 - Enemy affix data now lives in a focused catalog helper while `main.gd` keeps ownership of spawn rolling, pressure checks, stat application, and death payload execution.
 - Ability selection data now lives in a focused catalog helper while `ability_menu.gd` keeps ownership of rolling, prerequisites, icons, and card presentation.
+- Evolution data now lives in a focused player catalog helper while `player.gd` keeps ownership of requirement checks, active effect reads, and runtime feedback.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
