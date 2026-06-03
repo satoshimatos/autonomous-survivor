@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 20 tanks, 41 enemies, 29 bosses, and 10 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 20 tanks, 66 enemies, 29 bosses, and 10 maps.
 
 ## Menu
 
@@ -118,6 +118,16 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Frozen Scar | Win Neon Grid at 30:00 | Long frozen battlefield with ridges and a center ice core. | Heavy health scaling and slower but tougher pressure. | Frost Lock: hazards form a loose ring around the player with icy burst feedback. | Frost Leviathan, Blizzard Matriarch |
 | Ember Rift | Win Frozen Scar at 30:00 | Compact lava arena with side gates and a central ember core. | Brutal damage growth, extreme boss cadence, and funnel pressure. | Ember Eruption: random walkable eruptions detonate across the arena with camera shake. | Magma Tyrant, Cinder Prophet |
 | Astral Engine | Win Ember Rift at 30:00 | Massive final arena with engine-wall blockers on all sides. | Highest pressure cap, extreme elite odds, and fastest boss cadence. | Astral Collapse: hazards and Astral Echo spawns converge near the player. | Astral Archon, Engine Heart |
+
+### Autonomous Content Wave Enemy Rosters
+
+| Map | Regular Enemy Roster | Spawn Identity |
+|---|---|---|
+| Moonlit Graveyard | Grave Crawler, Moon Wisp, Tomb Guard, Bell Specter, Crypt Colossus | Starts with slow spectral crawlers, adds orbiting wisps, then ramps into slow high-health guards and late colossal blockers. |
+| Neon Grid | Neon Bit, Grid Skater, Circuit Guard, Pulse Lancer, Firewall Titan | Starts fast and stays fast, mixing tiny bits, lane skaters, sprinting lancers, and large defensive titans. |
+| Frozen Scar | Frost Tick, Ice Dasher, Rime Guard, Glacier Beast, Whiteout Wraith | Slower, tougher pressure with burst dashers and late whiteout orbiters layered on heavy blockers. |
+| Ember Rift | Ember Imp, Lava Skimmer, Cinder Knight, Magma Brute, Ash Reaper | High-contact-damage roster with aggressive sprinters, armored knights, magma heavies, and late ash pursuit. |
+| Astral Engine | Astral Mote, Engine Sentinel, Star Lancer, Gravity Bastion, Cosmic Apex | Final-map roster with high baseline speed, heavier rewards, orbiting bastions, and late apex elites. |
 
 ## Player Baseline
 
@@ -321,7 +331,7 @@ clamp(base_weight + minutes_since_unlock * growth_per_minute, min_weight, max_we
 
 ### Map-Specific Enemies
 
-These enemies only enter the spawn table on their listed map. The selected map's own enemies are weighted normally, while global enemies are down-weighted on maps 2-5 so each arena keeps its identity.
+These enemies only enter the spawn table on their listed map. The selected map's own enemies are weighted normally, while global enemies are down-weighted on maps 2-10 so each arena keeps its identity.
 
 | Enemy | Map | Unlock | Movement | Health | Speed | Damage | EXP Drops | Weight Profile |
 |---|---|---:|---|---:|---:|---:|---|---|
@@ -346,6 +356,31 @@ These enemies only enter the spawn table on their listed map. The selected map's
 | Gravity Knight | Void Crucible | 300s | orbiter | 150 | 46 | 10 | 7 tier 3+ | 28 base, +2.3/min, max 54 |
 | Event Horizon | Void Crucible | 620s | stalker | 120 | 78 | 9 | 6 tier 4+ | 26 base, +2.7/min, max 58 |
 | Cosmic Devourer | Void Crucible | 980s | drifter | 320 | 34 | 16 | 12 tier 4+ | 20 base, +2.2/min, max 46 |
+| Grave Crawler | Moonlit Graveyard | 0s | weaver | 62 | 92 | 5 | 2 tier 2+ | 98 base, -2.4/min, min 28 |
+| Moon Wisp | Moonlit Graveyard | 120s | orbiter | 48 | 136 | 5 | 2 tier 2+ | 38 base, +2.8/min, max 70 |
+| Tomb Guard | Moonlit Graveyard | 300s | chase | 170 | 38 | 11 | 7 tier 3+ | 30 base, +2/min, max 54 |
+| Bell Specter | Moonlit Graveyard | 620s | stalker | 96 | 106 | 9 | 5 tier 4+ | 30 base, +2.6/min, max 64 |
+| Crypt Colossus | Moonlit Graveyard | 980s | drifter | 360 | 28 | 17 | 12 tier 4+ | 18 base, +2/min, max 44 |
+| Neon Bit | Neon Grid | 0s | zigzag | 46 | 132 | 5 | 2 tier 2+ | 112 base, -2/min, min 36 |
+| Grid Skater | Neon Grid | 90s | sprinter | 54 | 172 | 7 | 3 tier 2+ | 44 base, +3.4/min, max 82 |
+| Circuit Guard | Neon Grid | 260s | chase | 150 | 52 | 11 | 6 tier 3+ | 30 base, +2.2/min, max 58 |
+| Pulse Lancer | Neon Grid | 560s | sprinter | 86 | 150 | 10 | 5 tier 4+ | 32 base, +3/min, max 72 |
+| Firewall Titan | Neon Grid | 940s | drifter | 320 | 40 | 18 | 12 tier 4+ | 20 base, +2.4/min, max 50 |
+| Frost Tick | Frozen Scar | 0s | weaver | 70 | 82 | 6 | 3 tier 2+ | 104 base, -1.8/min, min 34 |
+| Ice Dasher | Frozen Scar | 120s | drifter | 58 | 142 | 7 | 3 tier 2+ | 40 base, +2.8/min, max 76 |
+| Rime Guard | Frozen Scar | 320s | chase | 220 | 30 | 13 | 8 tier 3+ | 34 base, +2.1/min, max 64 |
+| Glacier Beast | Frozen Scar | 640s | stalker | 260 | 48 | 15 | 9 tier 4+ | 28 base, +2.2/min, max 58 |
+| Whiteout Wraith | Frozen Scar | 1020s | orbiter | 130 | 124 | 12 | 7 tier 4+ | 24 base, +2.8/min, max 58 |
+| Ember Imp | Ember Rift | 0s | weaver | 64 | 128 | 7 | 3 tier 2+ | 116 base, -1.4/min, min 40 |
+| Lava Skimmer | Ember Rift | 90s | sprinter | 72 | 164 | 9 | 4 tier 3+ | 46 base, +3.3/min, max 86 |
+| Cinder Knight | Ember Rift | 280s | chase | 210 | 46 | 15 | 8 tier 3+ | 34 base, +2.5/min, max 68 |
+| Magma Brute | Ember Rift | 620s | stalker | 300 | 54 | 18 | 10 tier 4+ | 30 base, +2.5/min, max 62 |
+| Ash Reaper | Ember Rift | 1000s | drifter | 150 | 132 | 14 | 8 tier 4+ | 24 base, +3/min, max 64 |
+| Astral Mote | Astral Engine | 0s | weaver | 90 | 146 | 8 | 4 tier 3+ | 128 base, -1/min, min 48 |
+| Engine Sentinel | Astral Engine | 160s | chase | 260 | 44 | 16 | 9 tier 4+ | 42 base, +2.8/min, max 78 |
+| Star Lancer | Astral Engine | 360s | sprinter | 108 | 178 | 13 | 6 tier 4+ | 42 base, +3.5/min, max 88 |
+| Gravity Bastion | Astral Engine | 720s | orbiter | 420 | 32 | 22 | 13 tier 4+ | 32 base, +2.8/min, max 70 |
+| Cosmic Apex | Astral Engine | 1080s | stalker | 360 | 92 | 20 | 12 tier 4+ | 26 base, +3.2/min, max 72 |
 
 ### Enemy Movement Styles
 

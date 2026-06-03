@@ -29,6 +29,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added 5 new generated map background textures and scene-authored obstacle groups for the new maps.
   - Added 5 map gimmicks: ghost surges, laser lattice strikes, frost locks, ember eruptions, and astral collapse waves.
   - Added 10 map-specific bosses with phase thresholds and combinations of minion calls, hazard rings, targeted hazards, and high-pressure stat profiles.
+- Added autonomous content wave #39:
+  - Added 25 map-specific regular enemy variants for Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine.
+  - Added generated sprites and Godot import metadata for each new late-map enemy under `assets/visual/enemies/map6` through `assets/visual/enemies/map10`.
+  - Updated the compendium and backlog so late maps document both their boss identity and their normal spawn-table identity.
 
 ### 2026-05-30
 
@@ -267,7 +271,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 tanks, 41 enemies, 29 bosses, and 10 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 tanks, 66 enemies, 29 bosses, and 10 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 
