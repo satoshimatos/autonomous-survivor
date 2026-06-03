@@ -64,6 +64,7 @@ func ensure_default_unlocks() -> void:
 	for modifier_id in ["swarm_opening", "rich_crystals"]:
 		unlock_id(unlocked_modifiers, modifier_id)
 	ensure_map_modifier_unlocks()
+	ensure_map_tank_unlocks()
 
 
 func ensure_map_modifier_unlocks() -> void:
@@ -79,6 +80,17 @@ func ensure_map_modifier_unlocks() -> void:
 			unlock_id(unlocked_modifiers, String(map_modifier_unlocks[map_id]))
 	if completed_victory_maps.has("map11"):
 		unlock_id(unlocked_modifiers, "singularity_seed")
+
+
+func ensure_map_tank_unlocks() -> void:
+	if unlocked_maps.has("map4"):
+		unlock_id(unlocked_tanks, "prism_sentinel")
+	if unlocked_maps.has("map8"):
+		unlock_id(unlocked_tanks, "neon_courier")
+	if unlocked_maps.has("map6") and total_bosses_defeated >= 20:
+		unlock_id(unlocked_tanks, "void_anchor")
+	if completed_victory_maps.has("map11"):
+		unlock_id(unlocked_tanks, "bloom_artillerist")
 
 
 func record_run_result(result: Dictionary) -> Array[String]:
@@ -149,6 +161,10 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("tank", "storm_foundry", "Storm Foundry tank", unlocked_messages)
 	if is_map_unlocked("map6") and total_bosses_defeated >= 20:
 		try_unlock("tank", "void_anchor", "Void Anchor tank", unlocked_messages)
+	if is_map_unlocked("map8"):
+		try_unlock("tank", "neon_courier", "Neon Courier tank", unlocked_messages)
+	if completed_victory_maps.has("map11"):
+		try_unlock("tank", "bloom_artillerist", "Bloom Artillerist tank", unlocked_messages)
 	if best_level >= 10:
 		try_unlock("ability", "freeze_pulse", "Freeze Pulse ability", unlocked_messages)
 		try_unlock("ability", "ion_lance", "Ion Lance power", unlocked_messages)
@@ -217,6 +233,7 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 		"map7":
 			try_unlock("map", "map8", "Frozen Scar map", unlocked_messages)
 			try_unlock("modifier", "frost_cache", "Frost Cache modifier", unlocked_messages)
+			try_unlock("tank", "neon_courier", "Neon Courier tank", unlocked_messages)
 		"map8":
 			try_unlock("map", "map9", "Ember Rift map", unlocked_messages)
 			try_unlock("modifier", "ember_bounty", "Ember Bounty modifier", unlocked_messages)
@@ -227,6 +244,7 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("map", "map11", "Singularity Garden map", unlocked_messages)
 		"map11":
 			try_unlock("modifier", "singularity_seed", "Singularity Seed modifier", unlocked_messages)
+			try_unlock("tank", "bloom_artillerist", "Bloom Artillerist tank", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -347,6 +365,10 @@ func get_tank_unlock_hint(tank_id: String) -> String:
 			return "Win Crystal Expanse at 30:00."
 		"void_anchor":
 			return "Win Void Crucible and defeat 20 total bosses."
+		"neon_courier":
+			return "Win Neon Grid at 30:00."
+		"bloom_artillerist":
+			return "Win Singularity Garden at 30:00."
 	return "Progress further to reveal this unlock."
 
 
@@ -391,7 +413,7 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Astral Engine at 30:00 to unlock Singularity Garden.")
 	elif not is_modifier_unlocked("singularity_seed"):
 		lines.append("- Modifier: Win Singularity Garden at 30:00 to unlock Singularity Seed.")
-	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor"]:
+	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor", "neon_courier", "bloom_artillerist"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
 	for ability_goal in get_ability_goal_catalog():

@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 22 tanks, 71 enemies, 31 bosses, and 11 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 24 tanks, 71 enemies, 31 bosses, and 11 maps.
 
 ## Menu
 
@@ -184,6 +184,8 @@ Each level-up:
 | Storm Foundry | Win any map and defeat 18 total bosses | 0.86 speed, +6 health, starts with Shock Field 1, Tesla Pylon 1, Capacitor Bank 1, and Storm Catalyst | Heavy electric factory. |
 | Prism Sentinel | Win Crystal Expanse at 30:00 | 1.06 speed, -2 health, 1.08 damage, 1.06 fire interval, starts with Piercing 1, Targeting Array 1, Ricochet Rounds 1, Crystal Lens, Prism Rounds, and Critical Storm | Crystal crit and ricochet controller. |
 | Void Anchor | Win Void Crucible and defeat 20 total bosses | 0.8 speed, +10 health, 1.12 damage, 1.14 fire interval, starts with Gravity Well 2, Armor 1, Barbed Wire 1, Gravity Anchor, Singularity Lens, Black Hole Mines, and Fortress Protocol | Heavy gravity-control bruiser. |
+| Neon Courier | Win Neon Grid at 30:00 | 1.32 speed, -4 health, 0.92 damage, 0.94 fire interval, starts with Overdrive Core 1, Magnet 2, Vector Thrusters, Kinetic Treads, Salvage Magnet, Phase Magnet, and Supply Beacon | Fast supply and pickup runner. |
+| Bloom Artillerist | Win Singularity Garden at 30:00 | 0.76 speed, +4 health, 1.1 damage, 1.1 fire interval, starts with Artillery 1, Missile Pod 1, Splash 1, Ordnance Bay, Munition Printer, Impact Fuse, Orbital Cannon, and Munition Swarm | Postgame siege platform. |
 
 ## Core Upgrades
 
@@ -537,6 +539,8 @@ Progress is saved in `user://unlock_state.cfg`.
 | Best survival time >= 1320s | Chrono Burst ability |
 | Win Crystal Expanse at 30:00 | Prism Sentinel tank |
 | Win Void Crucible and total bosses defeated >= 20 | Void Anchor tank |
+| Win Neon Grid at 30:00 | Neon Courier tank |
+| Win Singularity Garden at 30:00 | Bloom Artillerist tank |
 
 ### Map Unlocks
 

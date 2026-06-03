@@ -2,6 +2,7 @@ extends SceneTree
 
 const RunModifierCatalog = preload("res://scripts/core/run_modifier_catalog.gd")
 const RunEventCatalog = preload("res://scripts/core/run_event_catalog.gd")
+const AutonomousTankCatalog = preload("res://scripts/core/autonomous_tank_catalog.gd")
 const UnlockManagerScript = preload("res://scripts/core/unlock_manager.gd")
 
 
@@ -109,6 +110,8 @@ func _init() -> void:
 func validate_progression_catalogs() -> bool:
 	if not validate_run_event_catalog():
 		return false
+	if not validate_autonomous_tank_catalog():
+		return false
 	var modifier_ids: Array[String] = []
 	for modifier in RunModifierCatalog.get_entries():
 		modifier_ids.append(String(modifier.id))
@@ -119,6 +122,13 @@ func validate_progression_catalogs() -> bool:
 
 	var unlock_manager = UnlockManagerScript.new()
 	var unlocked_messages: Array[String] = []
+	unlock_manager.unlocked_maps.append("map8")
+	unlock_manager.ensure_map_tank_unlocks()
+	if not unlock_manager.unlocked_tanks.has("neon_courier"):
+		unlock_manager.free()
+		push_error("Map 8 access should backfill Neon Courier.")
+		quit(1)
+		return false
 	unlock_manager.record_completed_victory_map({"victory": true, "map_id": "map11"})
 	unlock_manager.add_unlocks_for_victory({"victory": true, "map_id": "map11"}, unlocked_messages)
 	if not unlock_manager.completed_victory_maps.has("map11"):
@@ -131,7 +141,37 @@ func validate_progression_catalogs() -> bool:
 		push_error("Map 11 victory should unlock Singularity Seed.")
 		quit(1)
 		return false
+	if not unlock_manager.unlocked_tanks.has("bloom_artillerist"):
+		unlock_manager.free()
+		push_error("Map 11 victory should unlock Bloom Artillerist.")
+		quit(1)
+		return false
 	unlock_manager.free()
+	return true
+
+
+func validate_autonomous_tank_catalog() -> bool:
+	var seen_ids: Array[String] = []
+	for tank in AutonomousTankCatalog.get_entries():
+		var tank_id := String(tank.get("id", ""))
+		if tank_id.is_empty() or seen_ids.has(tank_id):
+			push_error("Autonomous tank catalog needs unique non-empty ids.")
+			quit(1)
+			return false
+		seen_ids.append(tank_id)
+		if String(tank.get("name", "")).is_empty():
+			push_error("Autonomous tank %s needs a display name." % tank_id)
+			quit(1)
+			return false
+		if String(tank.get("summary", "")).is_empty():
+			push_error("Autonomous tank %s needs a summary for the tank selector." % tank_id)
+			quit(1)
+			return false
+	for required_tank_id in ["neon_courier", "bloom_artillerist"]:
+		if not seen_ids.has(required_tank_id):
+			push_error("Autonomous tank catalog should include %s." % required_tank_id)
+			quit(1)
+			return false
 	return true
 
 

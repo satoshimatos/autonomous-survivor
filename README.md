@@ -112,6 +112,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - New events reuse existing supported event hooks for temporary multipliers, bounded elite waves, supply crates, and bonus upgrade/ability choices.
   - Added event catalog validation so future event entries must use supported effect, risk, and reward keys.
   - Updated the compendium and backlog with the new run-event count and event details.
+- Added tank content wave #59:
+  - Added Neon Courier, a Neon Grid victory tank focused on speed, overdrive tempo, pickup reach, and supply routing.
+  - Added Bloom Artillerist, a Singularity Garden victory tank focused on artillery, missiles, splash upgrades, and ordnance passives.
+  - Updated unlock hints, next-goal reporting, catalog validation, backlog counts, and compendium tank references.
 
 ### 2026-05-30
 
@@ -350,7 +354,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 22 tanks, 71 enemies, 31 bosses, and 11 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 24 tanks, 71 enemies, 31 bosses, and 11 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 
