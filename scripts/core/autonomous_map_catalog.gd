@@ -137,5 +137,22 @@ static func get_entries() -> Array[Dictionary]:
 			"gimmick_interval": 6.6,
 			"mood_color": Color(0.62, 0.94, 1.0, 1.0),
 			"background_texture": "res://assets/backgrounds/map13_quantum_reef.png",
+		},
+		{
+			"id": "map14",
+			"name": "Solar Bastion",
+			"summary": "Sun-forged citadel arena with radiant mirror walls, brutal heat pressure, solar flare lanes, and heavy bastion enemies.",
+			"spawn_interval_multiplier": 0.22,
+			"boss_spawn_interval_multiplier": 0.2,
+			"enemy_speed_growth_multiplier": 2.16,
+			"enemy_health_growth_multiplier": 2.78,
+			"enemy_damage_growth_multiplier": 2.5,
+			"active_enemy_cap_bonus": 350,
+			"active_enemy_cap_limit": 570,
+			"elite_chance_multiplier": 4.25,
+			"map_gimmick": "solar_flare",
+			"gimmick_interval": 6.2,
+			"mood_color": Color(1.0, 0.88, 0.58, 1.0),
+			"background_texture": "res://assets/backgrounds/map14_solar_bastion.png",
 		}
 	]

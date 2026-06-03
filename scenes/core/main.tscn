@@ -715,6 +715,89 @@ polygon = PackedVector2Array(-115, -65, 115, -65, 115, 65, -115, 65)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map13Obstacles/CurrentGateEast"]
 shape = SubResource("RectangleShape2D_map2_block")
 
+[node name="Map14Obstacles" type="Node2D" parent="MapLayout"]
+visible = false
+
+[node name="MirrorWallNorthWest" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(-340, -420)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/MirrorWallNorthWest"]
+color = Color(0.42, 0.2, 0.06, 1)
+polygon = PackedVector2Array(-310, -48, 310, -48, 310, 48, -310, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/MirrorWallNorthWest"]
+shape = SubResource("RectangleShape2D_map4_wall")
+
+[node name="MirrorWallSouthEast" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(1492, 1068)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/MirrorWallSouthEast"]
+color = Color(0.46, 0.22, 0.06, 1)
+polygon = PackedVector2Array(-310, -48, 310, -48, 310, 48, -310, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/MirrorWallSouthEast"]
+shape = SubResource("RectangleShape2D_map4_wall")
+
+[node name="SolarPylonWest" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(-760, 324)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/SolarPylonWest"]
+color = Color(0.34, 0.14, 0.04, 1)
+polygon = PackedVector2Array(-52, -195, 52, -195, 52, 195, -52, 195)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/SolarPylonWest"]
+shape = SubResource("RectangleShape2D_map5_rib")
+
+[node name="SolarPylonEast" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(1912, 324)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/SolarPylonEast"]
+color = Color(0.36, 0.16, 0.04, 1)
+polygon = PackedVector2Array(-52, -195, 52, -195, 52, 195, -52, 195)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/SolarPylonEast"]
+shape = SubResource("RectangleShape2D_map5_rib")
+
+[node name="HelioCoreNorth" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(246, -300)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/HelioCoreNorth"]
+color = Color(0.52, 0.26, 0.08, 1)
+polygon = PackedVector2Array(-125, -65, 125, -65, 125, 65, -125, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/HelioCoreNorth"]
+shape = SubResource("RectangleShape2D_map5_core")
+
+[node name="HelioCoreSouth" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(906, 948)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/HelioCoreSouth"]
+color = Color(0.56, 0.28, 0.08, 1)
+polygon = PackedVector2Array(-125, -65, 125, -65, 125, 65, -125, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/HelioCoreSouth"]
+shape = SubResource("RectangleShape2D_map5_core")
+
+[node name="MirrorGateWestInner" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(-40, 744)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/MirrorGateWestInner"]
+color = Color(0.44, 0.18, 0.04, 1)
+polygon = PackedVector2Array(-115, -65, 115, -65, 115, 65, -115, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/MirrorGateWestInner"]
+shape = SubResource("RectangleShape2D_map2_block")
+
+[node name="MirrorGateEastInner" type="StaticBody2D" parent="MapLayout/Map14Obstacles" groups=["MapObstacle"]]
+position = Vector2(1192, -96)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map14Obstacles/MirrorGateEastInner"]
+color = Color(0.48, 0.2, 0.05, 1)
+polygon = PackedVector2Array(-115, -65, 115, -65, 115, 65, -115, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map14Obstacles/MirrorGateEastInner"]
+shape = SubResource("RectangleShape2D_map2_block")
+
 [node name="Player" parent="." unique_id=992026406 instance=ExtResource("1_o5qli")]
 position = Vector2(576, 324)
 

@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 26 tanks, 81 enemies, 35 bosses, and 13 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 26 tanks, 86 enemies, 37 bosses, and 14 maps.
 
 ## Menu
 
@@ -121,6 +121,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Singularity Garden | Win Astral Engine at 30:00 | Huge bioluminescent postgame arena with root walls, seed pods, and off-center root spires. | New highest pressure cap, extreme health/damage growth, and near-constant boss cadence. | Singularity Bloom: spiraling hazards bloom around the player and can spawn Bloom Echo enemies. | Bloom Crowned, Garden Singularity |
 | Clockwork Spiral | Win Singularity Garden at 30:00 | Large machine arena with horizontal gear lanes, outer spiral ribs, off-center gear hubs, and inner clock gates. | Harshest postgame pressure cap, fastest boss cadence, extreme elite odds, and the strongest health/damage growth yet. | Clockwork Spiral: hazards wind outward from the player in a spiral and can spawn Gear Echo enemies. | Gear Judge, Time Foundry |
 | Quantum Reef | Win Clockwork Spiral at 30:00 | Wide prism-current arena with coral bars, reef spires, prism coral blocks, and current gates. | New postgame peak pressure with faster spawns, stronger all-growth multipliers, and slippery ranged pressure. | Quantum Tide: current-lane hazards sweep across the arena and can spawn Reef Echo enemies. | Reef Leviathan, Quantum Kraken |
+| Solar Bastion | Win Quantum Reef at 30:00 | Large sun-forged citadel with mirror walls, solar pylons, helio cores, and inner mirror gates. | New hottest postgame pressure with the highest active cap, brutal health/damage growth, and dense flare lanes. | Solar Flare: radial flare bursts and mirror-lane hazards strike around the player and can spawn Solar Echo enemies. | Solar Judicator, Helios Citadel |
 
 ### Autonomous Content Wave Enemy Rosters
 
@@ -134,6 +135,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Singularity Garden | Bloom Mote, Root Guardian, Spore Lancer, Garden Bastion, Singularity Apex | Postgame roster with fast orbiters, heavy root blockers, sprinting spores, and late singularity hunters. |
 | Clockwork Spiral | Gear Mite, Pendulum Lancer, Brass Guardian, Spring Horror, Clockwork Titan | Machine roster with fast zigzag gears, brutal sprinting lancers, armored brass blockers, spring stalkers, and slow reward-heavy titans. |
 | Quantum Reef | Quantum Fry, Phase Eel, Coral Bulwark, Tide Wraith, Reef Colossus | Prism-current roster with fast weavers, extreme-speed eels, armored coral blockers, orbiting tide wraiths, and late colossi. |
+| Solar Bastion | Sun Spark, Flare Lancer, Heliostat Guard, Corona Wraith, Bastion Colossus | Sun-forged roster with zigzag sparks, ultra-fast lancers, armored mirror guards, orbiting corona enemies, and late heavy citadel blockers. |
 
 ## Player Baseline
 
@@ -408,6 +410,11 @@ These enemies only enter the spawn table on their listed map. The selected map's
 | Coral Bulwark | Quantum Reef | 390s | chase | 430 | 36 | 24 | 12 tier 4+ | 44 base, +3.4/min, max 94 |
 | Tide Wraith | Quantum Reef | 720s | orbiter | 240 | 142 | 23 | 12 tier 4+ | 38 base, +3.6/min, max 88 |
 | Reef Colossus | Quantum Reef | 1120s | drifter | 720 | 24 | 34 | 20 tier 4+ | 32 base, +3.2/min, max 86 |
+| Sun Spark | Solar Bastion | 0s | zigzag | 170 | 188 | 12 | 6 tier 4+ | 160 base, -0.2/min, min 70 |
+| Flare Lancer | Solar Bastion | 140s | sprinter | 190 | 222 | 18 | 8 tier 4+ | 56 base, +4.4/min, max 118 |
+| Heliostat Guard | Solar Bastion | 360s | chase | 480 | 40 | 26 | 13 tier 4+ | 48 base, +3.6/min, max 98 |
+| Corona Wraith | Solar Bastion | 700s | orbiter | 270 | 154 | 25 | 13 tier 4+ | 42 base, +3.8/min, max 92 |
+| Bastion Colossus | Solar Bastion | 1100s | drifter | 820 | 26 | 37 | 22 tier 4+ | 34 base, +3.4/min, max 90 |
 
 ### Enemy Movement Styles
 
@@ -484,6 +491,8 @@ Only one boss can be alive at a time. Bosses normally spawn every 180s, modified
 | Time Foundry | Clockwork Spiral | 640s | bastion | 22400 | 22 | 44 | 244 tier 4+ | 104 base, +3.2/min, max 158 | Seven phases; massive gear rings, target hazards, and heavy minion pressure. |
 | Reef Leviathan | Quantum Reef | 0s | singularity | 24600 | 32 | 46 | 260 tier 4+ | 136 base, -0.1/min, min 92 | Six phases; sweeping tide rings, target hazards, and reef support waves. |
 | Quantum Kraken | Quantum Reef | 660s | monarch | 29200 | 26 | 50 | 292 tier 4+ | 108 base, +3.4/min, max 164 | Seven phases; rapid target hazards, massive rings, and heavy minion pressure. |
+| Solar Judicator | Solar Bastion | 0s | overlord | 31800 | 36 | 52 | 310 tier 4+ | 140 base, -0.1/min, min 94 | Six phases; fast flare targets, dense solar rings, and support calls. |
+| Helios Citadel | Solar Bastion | 640s | bastion | 35600 | 20 | 56 | 330 tier 4+ | 112 base, +3.6/min, max 170 | Seven phases; massive radiant rings, target hazards, and heavy bastion pressure. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
@@ -582,6 +591,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Astral Engine at 30:00 | Singularity Garden |
 | Win Singularity Garden at 30:00 | Clockwork Spiral |
 | Win Clockwork Spiral at 30:00 | Quantum Reef |
+| Win Quantum Reef at 30:00 | Solar Bastion |
 | Win Singularity Garden at 30:00 | Singularity Seed modifier |
 | Win Clockwork Spiral at 30:00 | Clockwork Dividend modifier |
 | Win Quantum Reef at 30:00 | Quantum Current modifier |

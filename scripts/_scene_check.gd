@@ -3,6 +3,9 @@ extends SceneTree
 const RunModifierCatalog = preload("res://scripts/core/run_modifier_catalog.gd")
 const RunEventCatalog = preload("res://scripts/core/run_event_catalog.gd")
 const AutonomousTankCatalog = preload("res://scripts/core/autonomous_tank_catalog.gd")
+const AutonomousMapCatalog = preload("res://scripts/core/autonomous_map_catalog.gd")
+const LateMapEnemyCatalog = preload("res://scripts/core/late_map_enemy_catalog.gd")
+const LateMapBossCatalog = preload("res://scripts/core/late_map_boss_catalog.gd")
 const UnlockManagerScript = preload("res://scripts/core/unlock_manager.gd")
 
 
@@ -65,7 +68,7 @@ func _init() -> void:
 				quit(1)
 				return
 			map_layout.obstacle_root = map_layout
-			for map_id in ["map1", "map2", "map3", "map4", "map5", "map6", "map7", "map8", "map9", "map10", "map11", "map12", "map13"]:
+			for map_id in ["map1", "map2", "map3", "map4", "map5", "map6", "map7", "map8", "map9", "map10", "map11", "map12", "map13", "map14"]:
 				map_layout.apply_map(map_id)
 				if not map_layout.is_walkable(map_layout.arena_center, 0.0) and map_id != "map5":
 					push_error("Map center should be walkable for %s." % map_id)
@@ -111,6 +114,10 @@ func validate_progression_catalogs() -> bool:
 	if not validate_run_event_catalog():
 		return false
 	if not validate_autonomous_tank_catalog():
+		return false
+	if not validate_autonomous_map_catalog():
+		return false
+	if not validate_late_map_texture_catalogs():
 		return false
 	var modifier_ids: Array[String] = []
 	for modifier in RunModifierCatalog.get_entries():
@@ -177,6 +184,11 @@ func validate_progression_catalogs() -> bool:
 		push_error("Map 13 victory should unlock Quantum Current.")
 		quit(1)
 		return false
+	if not unlock_manager.unlocked_maps.has("map14"):
+		unlock_manager.free()
+		push_error("Map 13 victory should unlock Solar Bastion.")
+		quit(1)
+		return false
 	if not unlock_manager.unlocked_tanks.has("reef_savant"):
 		unlock_manager.free()
 		push_error("Map 13 victory should unlock Reef Savant.")
@@ -184,6 +196,70 @@ func validate_progression_catalogs() -> bool:
 		return false
 	unlock_manager.free()
 	return true
+
+
+func validate_autonomous_map_catalog() -> bool:
+	var seen_ids: Array[String] = []
+	for map_config in AutonomousMapCatalog.get_entries():
+		var map_id := String(map_config.get("id", ""))
+		if map_id.is_empty() or seen_ids.has(map_id):
+			push_error("Autonomous map catalog needs unique non-empty ids.")
+			quit(1)
+			return false
+		seen_ids.append(map_id)
+		if String(map_config.get("name", "")).is_empty():
+			push_error("Autonomous map %s needs a display name." % map_id)
+			quit(1)
+			return false
+		var background_texture := String(map_config.get("background_texture", ""))
+		if background_texture != "" and not ResourceLoader.exists(background_texture):
+			push_error("Autonomous map %s references missing background texture %s." % [map_id, background_texture])
+			quit(1)
+			return false
+	for required_map_id in ["map13", "map14"]:
+		if seen_ids.has(required_map_id):
+			continue
+		push_error("Autonomous map catalog should include %s." % required_map_id)
+		quit(1)
+		return false
+	return true
+
+
+func validate_late_map_texture_catalogs() -> bool:
+	var enemy_scene := load("res://scenes/enemies/enemy.tscn") as PackedScene
+	var brown_enemy_scene := load("res://scenes/enemies/brown_enemy.tscn") as PackedScene
+	var shielded_enemy_scene := load("res://scenes/enemies/shielded_enemy.tscn") as PackedScene
+	var boss_scene := load("res://scenes/enemies/boss_enemy.tscn") as PackedScene
+	var map14_enemy_count := 0
+	for enemy_config in LateMapEnemyCatalog.get_entries(enemy_scene, brown_enemy_scene, shielded_enemy_scene):
+		if not validate_optional_texture_path(enemy_config, "Late enemy"):
+			return false
+		if (enemy_config.get("maps", []) as Array).has("map14"):
+			map14_enemy_count += 1
+	if map14_enemy_count < 5:
+		push_error("Map 14 needs at least 5 map-specific late enemy entries.")
+		quit(1)
+		return false
+	var map14_boss_count := 0
+	for boss_config in LateMapBossCatalog.get_entries(boss_scene):
+		if not validate_optional_texture_path(boss_config, "Late boss"):
+			return false
+		if (boss_config.get("maps", []) as Array).has("map14"):
+			map14_boss_count += 1
+	if map14_boss_count < 2:
+		push_error("Map 14 needs at least 2 map-specific boss entries.")
+		quit(1)
+		return false
+	return true
+
+
+func validate_optional_texture_path(config: Dictionary, label: String) -> bool:
+	var texture_path := String(config.get("texture", ""))
+	if texture_path == "" or ResourceLoader.exists(texture_path):
+		return true
+	push_error("%s %s references missing texture %s." % [label, String(config.get("id", "")), texture_path])
+	quit(1)
+	return false
 
 
 func validate_autonomous_tank_catalog() -> bool:

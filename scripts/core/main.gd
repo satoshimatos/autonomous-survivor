@@ -1100,6 +1100,8 @@ func process_map_gimmick(delta: float) -> void:
 			trigger_clockwork_spiral()
 		"quantum_tide":
 			trigger_quantum_tide()
+		"solar_flare":
+			trigger_solar_flare()
 
 
 func trigger_crystal_storm() -> void:
@@ -1337,6 +1339,43 @@ func trigger_quantum_tide() -> void:
 			spawn_enemy(ENEMY, _on_enemy_defeated, reef_config)
 	spawn_particle_burst(self, player.global_position, 50, Color(0.3, 0.94, 1.0, 1.0), 440.0, 0.44, Vector2(5.0, 12.0), true)
 	shake_camera(0.18, 5.2)
+
+
+func trigger_solar_flare() -> void:
+	if player == null:
+		return
+	var flare_count := clampi(11 + int(run_time / 260.0), 11, 22)
+	var arena_rect := get_arena_rect().grow(-130.0)
+	for i in range(flare_count):
+		var angle := TAU * float(i) / float(flare_count) + sin(run_time * 0.12) * 0.28
+		var distance := randf_range(150.0, 660.0)
+		var flare_position := player.global_position + Vector2.RIGHT.rotated(angle) * distance
+		flare_position.x = clamp(flare_position.x, arena_rect.position.x, arena_rect.end.x)
+		flare_position.y = clamp(flare_position.y, arena_rect.position.y, arena_rect.end.y)
+		spawn_boss_hazard(flare_position, 44.0 + float(i % 5) * 8.0, 10 + int(run_time / 480.0))
+	for i in range(maxi(3, int(flare_count / 5))):
+		var x := lerpf(arena_rect.position.x, arena_rect.end.x, randf_range(0.08, 0.92))
+		spawn_boss_hazard(Vector2(x, randf_range(arena_rect.position.y, arena_rect.end.y)), 58.0, 10 + int(run_time / 520.0))
+	if has_enemy_pressure_room(9):
+		var flare_config := {
+			"id": "solar_echo",
+			"scene": ENEMY,
+			"health": 132 + int(run_time / 16.0),
+			"speed": 190.0,
+			"contact_damage": 11,
+			"exp_drop_count": 5,
+			"exp_drop_min_tier": VIOLET_ORB_TIER,
+			"color": Color(1.0, 0.72, 0.18, 1.0),
+			"scale": 0.64,
+			"movement_style": "zigzag",
+			"texture": "res://assets/visual/enemies/map14/sun_spark.png",
+		}
+		for i in range(9):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, flare_config)
+	spawn_particle_burst(self, player.global_position, 54, Color(1.0, 0.66, 0.12, 1.0), 470.0, 0.44, Vector2(6.0, 13.0), true)
+	shake_camera(0.2, 5.8)
 
 
 func get_random_arena_position(inset: float = 0.0) -> Vector2:
@@ -1641,6 +1680,8 @@ func get_map_entry_weight_multiplier(config: Dictionary) -> float:
 			return 0.06
 		"map13":
 			return 0.05
+		"map14":
+			return 0.04
 	return 1.0
 
 
