@@ -61,6 +61,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted run events into `scripts/core/run_event_catalog.gd`.
   - Expanded the mid-run event pool from 4 to 10 events while preserving the existing seeded scheduler.
   - Added new supply, elite-risk, EXP, spawn-pressure, upgrade, and ability-choice event combinations for more distinct runs.
+- Added replayability and organization wave #47:
+  - Extracted elite affixes into `scripts/core/enemy_affix_catalog.gd`.
+  - Expanded the affix pool from 5 to 10 with Glass, Bulwark, Overcharged, Brood, and Champion elites.
+  - New affixes reuse existing stat, reward, volatile-death, and split-death hooks so every map gains more random enemy pressure without adding scene churn.
 
 ### 2026-05-30
 
@@ -100,7 +104,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Tanks, ability choices, and run modifiers are now filtered by unlocked content, with locked tanks shown on the main menu.
   - Defeat summaries now report newly unlocked content so progression rewards are visible after each run.
 - Added elite enemy affixes:
-  - Regular enemy spawns can gradually roll Hasty, Armored, Rich, Volatile, or Splitting affixes as run time advances.
+  - Regular enemy spawns can gradually roll Hasty, Armored, Glass, Rich, Bulwark, Volatile, Overcharged, Splitting, Brood, or Champion affixes as run time advances.
   - Affixes are data-driven and modify stats, colors, scale, rewards, and death effects without creating duplicate scenes.
   - Volatile elites damage nearby enemies on death, while Splitting elites spawn bounded child enemies to keep pressure high without unbounded growth.
 - Expanded boss behaviors:

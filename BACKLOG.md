@@ -77,6 +77,7 @@ Completed setup:
   - #44 Extract run modifier catalog
   - #45 Expand and extract challenge goal catalog
   - #46 Expand and extract run event catalog
+  - #47 Expand and extract enemy affix catalog
 
 Completed issues:
 
@@ -126,6 +127,7 @@ Completed issues:
 - #44 Extract run modifier catalog
 - #45 Expand and extract challenge goal catalog
 - #46 Expand and extract run event catalog
+- #47 Expand and extract enemy affix catalog
 
 ### P1 - Replayability And Power Growth
 
@@ -138,6 +140,7 @@ Completed issues:
 - Late-chain victories now add five more run modifiers, bringing the modifier pool from 7 to 12 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 12 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, and economy builds.
 - Run events now have a focused catalog and 10 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
+- Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.
 
 ### P1 - Enemies And Bosses
 
@@ -151,6 +154,7 @@ Completed issues:
 - Run modifier data now lives in a focused catalog helper while `run_config.gd` keeps ownership of seed rolling, unlock filtering, and multiplier queries.
 - Challenge goal data now lives in a focused catalog helper while `unlock_manager.gd` keeps ownership of save state, completion checks, and reward application.
 - Run event data now lives in a focused catalog helper while `main.gd` keeps ownership of event scheduling, active multipliers, risk spawning, and rewards.
+- Enemy affix data now lives in a focused catalog helper while `main.gd` keeps ownership of spawn rolling, pressure checks, stat application, and death payload execution.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback

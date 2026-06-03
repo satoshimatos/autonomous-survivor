@@ -396,15 +396,20 @@ These enemies only enter the spawn table on their listed map. The selected map's
 
 ## Elite Affixes
 
-Elites begin appearing after 90s and ramp to an 18% spawn chance by 900s. Split elites are prevented when active pressure is too high.
+Elites begin appearing after 90s and ramp to an 18% spawn chance by 900s. Split elites are prevented when active pressure is too high. Affixes are owned by `scripts/core/enemy_affix_catalog.gd` and use shared stat, reward, color, volatile-death, and split-death hooks.
 
 | Affix | Unlock | Weight | Effects |
 |---|---:|---:|---|
 | Hasty | 90s | 28 | Speed *1.45, health *0.85. |
 | Armored | 150s | 24 | Speed *0.82, health *1.85, scale *1.12. |
+| Glass | 180s | 18 | Speed *1.28, health *0.55, damage *1.65, EXP drop count *1.25. |
 | Rich | 210s | 18 | Health *1.2, EXP drop count *2.4, minimum EXP tier +1. |
+| Bulwark | 270s | 14 | Speed *0.58, health *2.8, damage *1.2, scale *1.24, EXP drop count *1.35. |
 | Volatile | 300s | 16 | Speed *1.18, health *0.9. On death, damages nearby enemies in a 92px radius for 34 damage. |
+| Overcharged | 360s | 14 | Speed *1.22, health *1.1, damage *1.25. On death, damages nearby enemies in a 72px radius for 22 damage. |
 | Splitting | 420s | 14 | Health *1.35. On death, splits into 2 small weaver children with 8 health, 82 speed, and 1 damage. |
+| Brood | 540s | 10 | Health *1.1. On death, splits into 3 small weaver children with 6 health, 96 speed, and 1 damage. |
+| Champion | 720s | 8 | Speed *1.08, health *2.2, damage *1.45, scale *1.18, EXP drop count *2.0, minimum EXP tier +1. |
 
 ## Bosses
 

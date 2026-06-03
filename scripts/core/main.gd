@@ -4,6 +4,7 @@ const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
 const PauseInputRouter = preload("res://scripts/core/pause_input_router.gd")
 const LateMapEnemyCatalog = preload("res://scripts/core/late_map_enemy_catalog.gd")
 const LateMapBossCatalog = preload("res://scripts/core/late_map_boss_catalog.gd")
+const EnemyAffixCatalog = preload("res://scripts/core/enemy_affix_catalog.gd")
 const RunEventCatalog = preload("res://scripts/core/run_event_catalog.gd")
 
 var player: CharacterBody2D
@@ -180,13 +181,7 @@ var boss_variant_catalog: Array[Dictionary] = [
 	{"id": "void_emperor", "maps": ["map5"], "scene": BOSS_ENEMY, "unlock_seconds": 480.0, "weight": 96.0, "growth_per_minute": 2.4, "min_weight": 0.0, "max_weight": 128.0, "health": 7200, "speed": 28.0, "contact_damage": 24, "exp_drop_count": 128, "exp_drop_min_tier": 4, "color": Color(0.34, 0.08, 0.66, 1.0), "scale": 1.58, "behavior": "singularity", "texture": "res://assets/visual/enemies/map5/boss_void_emperor.png", "phase_thresholds": [0.84, 0.66, 0.48, 0.3, 0.14], "ability_modules": [{"type": "hazard_ring", "cooldown": 4.8, "initial_delay": 1.5, "count": 10, "phase_count_bonus": 2, "radius": 72.0, "ring_distance": 195.0, "damage": 7}, {"type": "target_hazard", "cooldown": 3.9, "initial_delay": 3.0, "radius": 74.0, "damage": 7}, {"type": "minion_call", "cooldown": 5.8, "initial_delay": 4.8, "count": 6, "phase_count_bonus": 2}]},
 ]
 
-var enemy_affix_catalog: Array[Dictionary] = [
-	{"id": "hasty", "name": "Hasty", "unlock_seconds": 90.0, "weight": 28.0, "speed_multiplier": 1.45, "health_multiplier": 0.85, "color": Color(1.0, 0.95, 0.16, 1.0)},
-	{"id": "armored", "name": "Armored", "unlock_seconds": 150.0, "weight": 24.0, "speed_multiplier": 0.82, "health_multiplier": 1.85, "scale_multiplier": 1.12, "color": Color(0.62, 0.72, 0.84, 1.0)},
-	{"id": "rich", "name": "Rich", "unlock_seconds": 210.0, "weight": 18.0, "health_multiplier": 1.2, "exp_drop_multiplier": 2.4, "exp_drop_min_tier_bonus": 1, "color": Color(0.46, 1.0, 0.35, 1.0)},
-	{"id": "volatile", "name": "Volatile", "unlock_seconds": 300.0, "weight": 16.0, "speed_multiplier": 1.18, "health_multiplier": 0.9, "death_effect": "volatile", "death_radius": 92.0, "death_damage": 34.0, "color": Color(1.0, 0.18, 0.08, 1.0)},
-	{"id": "splitting", "name": "Splitting", "unlock_seconds": 420.0, "weight": 14.0, "health_multiplier": 1.35, "death_effect": "split", "split_count": 2, "split_health": 8, "split_speed": 82.0, "color": Color(0.95, 0.36, 1.0, 1.0)},
-]
+var enemy_affix_catalog: Array[Dictionary] = EnemyAffixCatalog.get_entries()
 
 var run_event_catalog: Array[Dictionary] = RunEventCatalog.get_entries()
 
