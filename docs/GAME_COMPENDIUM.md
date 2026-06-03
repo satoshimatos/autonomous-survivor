@@ -534,6 +534,13 @@ Completed challenge IDs persist separately and can grant meta rewards.
 | Elite Sweeper | Defeat 8 elites in a run | Wrench drop multiplier *1.15 |
 | Heavy Build | Damage + Fire Rate + Cannon levels total at least 7 | +1 starting Damage level |
 | Collector Build | Magnet + EXP levels total at least 5 | +1 starting EXP level |
+| Storm Build | Volt Coils + Field Amplifier + Capacitor Bank levels total at least 4 | +1 starting Magnet level |
+| Control Build | Gravity Anchor + Field Amplifier + Barbed Wire levels total at least 5 | +1 starting Health |
+| Marathon Plate | Survive 30:00 in a run | +1 starting Health |
+| Boss Harvester | Defeat 6 bosses in a run | Dynamite drop multiplier *1.25 |
+| Elite Recycler | Defeat 20 elites in a run | Wrench drop multiplier *1.2 |
+| Storm Mastery | Volt Coils + Field Amplifier + Capacitor Bank levels total at least 8 | +1 starting Damage level |
+| Magnet Empire | Magnet + EXP levels total at least 9 | +1 starting Magnet and +1 starting EXP |
 
 ## Pickups And Rewards
 

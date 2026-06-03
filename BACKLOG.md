@@ -75,6 +75,7 @@ Completed setup:
   - #42 Add late-chain victory run modifiers
   - #43 Extract autonomous tank and map catalogs
   - #44 Extract run modifier catalog
+  - #45 Expand and extract challenge goal catalog
 
 Completed issues:
 
@@ -122,6 +123,7 @@ Completed issues:
 - #42 Add late-chain victory run modifiers
 - #43 Extract autonomous tank and map catalogs
 - #44 Extract run modifier catalog
+- #45 Expand and extract challenge goal catalog
 
 ### P1 - Replayability And Power Growth
 
@@ -132,6 +134,7 @@ Completed issues:
 - Crystal Expanse, Toxic Foundry, and Void Crucible now add larger/different arenas, map gimmicks, 15 additional map-specific enemies, and 6 additional bosses.
 - Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine extend the victory chain with new backgrounds, obstacle groups, pressure profiles, gimmicks, 25 map-specific regular enemies, and 10 additional map-specific bosses.
 - Late-chain victories now add five more run modifiers, bringing the modifier pool from 7 to 12 and making high-progression runs more varied.
+- Challenge goals now have a focused catalog and 12 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, and economy builds.
 
 ### P1 - Enemies And Bosses
 
@@ -143,6 +146,7 @@ Completed issues:
 - Late-map enemy and boss data now live in focused catalog helpers instead of expanding the core gameplay controller, preserving behavior while improving editor readability.
 - Autonomous tank and late-map config data now live in focused run-config catalog helpers, keeping `run_config.gd` smaller and easier to maintain.
 - Run modifier data now lives in a focused catalog helper while `run_config.gd` keeps ownership of seed rolling, unlock filtering, and multiplier queries.
+- Challenge goal data now lives in a focused catalog helper while `unlock_manager.gd` keeps ownership of save state, completion checks, and reward application.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback

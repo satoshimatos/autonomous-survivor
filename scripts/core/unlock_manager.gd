@@ -1,6 +1,7 @@
 extends Node
 
 const SAVE_PATH: String = "user://unlock_state.cfg"
+const ChallengeGoalCatalog = preload("res://scripts/core/challenge_goal_catalog.gd")
 
 var unlocked_tanks: Array[String] = ["vanguard", "scout"]
 var unlocked_maps: Array[String] = ["map1"]
@@ -12,15 +13,7 @@ var best_level: int = 1
 var best_enemies_defeated: int = 0
 var total_bosses_defeated: int = 0
 
-var challenge_goal_catalog: Array[Dictionary] = [
-	{"id": "hold_the_line", "name": "Hold the Line", "metric": "survival_seconds", "threshold": 180, "reward_text": "+1 starting armor", "rewards": {"starting_armor_level": 1}},
-	{"id": "boss_breaker", "name": "Boss Breaker", "metric": "bosses_defeated", "threshold": 1, "reward_text": "Overclock Cache modifier", "rewards": {"unlock_modifier": "overclock_cache"}},
-	{"id": "elite_sweeper", "name": "Elite Sweeper", "metric": "elites_defeated", "threshold": 8, "reward_text": "+15% wrench drops", "rewards": {"wrench_drop_multiplier": 1.15}},
-	{"id": "heavy_build", "name": "Heavy Build", "metric": "build_sum", "build_keys": ["damage", "fire_rate", "cannon"], "threshold": 7, "reward_text": "+1 starting damage", "rewards": {"starting_damage_level": 1}},
-	{"id": "collector_build", "name": "Collector Build", "metric": "build_sum", "build_keys": ["magnet", "exp"], "threshold": 5, "reward_text": "+1 starting EXP", "rewards": {"starting_exp_level": 1}},
-	{"id": "storm_build", "name": "Storm Build", "metric": "build_sum", "build_keys": ["volt_coils", "field_amplifier", "capacitor_bank"], "threshold": 4, "reward_text": "+1 starting magnet", "rewards": {"starting_magnet_level": 1}},
-	{"id": "control_build", "name": "Control Build", "metric": "build_sum", "build_keys": ["gravity_anchor", "field_amplifier", "barbed_wire"], "threshold": 5, "reward_text": "+1 starting health", "rewards": {"starting_health_bonus": 1}},
-]
+var challenge_goal_catalog: Array[Dictionary] = ChallengeGoalCatalog.get_entries()
 
 
 func _ready() -> void:

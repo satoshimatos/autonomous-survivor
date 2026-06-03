@@ -53,6 +53,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted the full run modifier pool into `scripts/core/run_modifier_catalog.gd`.
   - Kept run seeding, unlock filtering, modifier rolling, and multiplier lookup in `run_config.gd`.
   - Revalidated scene catalog and direct gameplay/menu startup after the extraction.
+- Added meta-progression wave #45:
+  - Extracted challenge goals into `scripts/core/challenge_goal_catalog.gd`.
+  - Added 5 late-run challenge goals: Marathon Plate, Boss Harvester, Elite Recycler, Storm Mastery, and Magnet Empire.
+  - New rewards use existing permanent bonus hooks for starting health, damage, magnet, EXP, wrench drops, and dynamite drops.
 
 ### 2026-05-30
 
