@@ -110,6 +110,7 @@ func hit_enemy(area: Area2D, hit_position: Vector2) -> void:
 	piercing_hp -= 1
 	var is_final_hit := piercing_hp <= 0
 	global_position = hit_position
+	spawn_hit_feedback(hit_position, is_final_hit, splash_radius > 0.0)
 	
 	if splash_radius > 0.0:
 		spawn_splash(hit_damage * splash_damage_multiplier)
@@ -205,6 +206,12 @@ func _draw() -> void:
 func spawn_splash(splash_damage: float) -> void:
 	var enemies := get_splash_enemies()
 	get_tree().current_scene.call_deferred("_spawn_splash_area", global_position, splash_radius, splash_damage, enemies)
+
+
+func spawn_hit_feedback(hit_position: Vector2, is_final_hit: bool, is_splash_hit: bool) -> void:
+	var main := get_tree().current_scene
+	if main and main.has_method("spawn_projectile_hit_feedback"):
+		main.call_deferred("spawn_projectile_hit_feedback", hit_position, is_final_hit, is_splash_hit)
 
 
 func record_player_damage(amount: int) -> void:

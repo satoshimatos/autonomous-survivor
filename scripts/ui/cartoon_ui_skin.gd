@@ -18,6 +18,7 @@ static func apply_button(button: Button, accent: Color = BUTTON_NORMAL) -> void:
 	button.add_theme_color_override("font_disabled_color", Color(0.55, 0.57, 0.62, 1.0))
 	button.add_theme_color_override("font_outline_color", OUTLINE)
 	button.add_theme_constant_override("outline_size", 4)
+	attach_button_motion(button)
 
 
 static func apply_option_button(button: OptionButton) -> void:
@@ -44,3 +45,34 @@ static func apply_label_pop(label: Label, color: Color = Color(1.0, 0.93, 0.45, 
 	label.add_theme_color_override("font_color", color)
 	label.add_theme_color_override("font_outline_color", OUTLINE)
 	label.add_theme_constant_override("outline_size", 5)
+
+
+static func attach_button_motion(button: Button) -> void:
+	if button.has_meta("juice_motion_connected"):
+		return
+	button.set_meta("juice_motion_connected", true)
+	button.mouse_entered.connect(func(): animate_button(button, Vector2(1.045, 1.045), -0.012, 0.09))
+	button.focus_entered.connect(func(): animate_button(button, Vector2(1.045, 1.045), -0.012, 0.09))
+	button.mouse_exited.connect(func(): animate_button(button, Vector2.ONE, 0.0, 0.12))
+	button.focus_exited.connect(func(): animate_button(button, Vector2.ONE, 0.0, 0.12))
+	button.button_down.connect(func(): animate_button(button, Vector2(0.965, 0.965), 0.018, 0.055))
+	button.button_up.connect(func():
+		var target_scale := Vector2.ONE
+		var target_rotation := 0.0
+		if button.has_focus():
+			target_scale = Vector2(1.045, 1.045)
+			target_rotation = -0.012
+		animate_button(button, target_scale, target_rotation, 0.09)
+	)
+
+
+static func animate_button(button: Button, target_scale: Vector2, target_rotation: float, duration: float) -> void:
+	if button == null or not is_instance_valid(button):
+		return
+	button.pivot_offset = button.size * 0.5
+	var tween := button.create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(button, "scale", target_scale, duration)
+	tween.tween_property(button, "rotation", target_rotation, duration)

@@ -67,6 +67,7 @@ Completed setup:
   - #34 Add 30-minute victory and unlockable obstacle map 2
   - #35 Make map 2 a harder distinct experience
   - #36 Add maps 3-5 with unlock chain, distinct pressure, gimmicks, and performance pass
+  - #37 Add global gameplay and UI juice pass
 
 Completed issues:
 
@@ -106,6 +107,7 @@ Completed issues:
 - #34 Add 30-minute victory and unlockable obstacle map 2
 - #35 Make map 2 a harder distinct experience
 - #36 Add maps 3-5 with unlock chain, distinct pressure, gimmicks, and performance pass
+- #37 Add global gameplay and UI juice pass
 
 ### P1 - Replayability And Power Growth
 
@@ -127,5 +129,6 @@ Completed issues:
 ### P2 - UI And Feedback
 
 - Visual identity pass is complete enough for the current scope: generated arena/menu art, cartoon sprites, chunky UI, cloud shadows, player lighting, projectile trails, hit pops, and richer bursts are in-game.
+- Global juice pass added animated button press/hover feedback, brighter upgrade and ability celebration backgrounds, selection confetti bursts, projectile hit sparks, healing particles, splash reinforcement, and capped micro-shake on strong impacts.
 - Continue improving individual power-specific animations after hands-on playtest feedback identifies weak effects.
 - First in-game compendium and permanent unlock communication pass is complete; future work should refine content presentation and add more visual thumbnails where useful.

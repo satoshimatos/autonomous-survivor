@@ -14,6 +14,16 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ## Current Changelog
 
+### 2026-06-03
+
+- Added a global juice pass across gameplay and selection UI:
+  - Upgrade and ability cards now punch, tilt, and settle on hover/focus/press so mouse, keyboard, and gamepad actions feel acknowledged.
+  - Upgrade and ability selection screens now render richer moving celebration layers with rotating rays, soft bubbles, drifting confetti, and a burst at the selected card before the run resumes.
+  - Player projectile impacts now emit capped spark bursts, with stronger orange bursts for splash hits and light shake for final splash impacts.
+  - Repairs now spawn green healing particles in addition to the heal popup.
+  - Large splash detonations add an extra burst and mass-splash camera shake while still respecting the existing particle and splash budgets.
+- Added GitHub issue #37 for this polish slice and updated the backlog with the completed global juice pass.
+
 ### 2026-05-30
 
 - Added a data-driven enemy variant catalog with 10 enemy types that unlock over time and enter the spawn table with weighted chances.

@@ -79,6 +79,7 @@ var map_gimmick_interval: float = 0.0
 var map_gimmick_timer: float = 0.0
 var run_completed: bool = false
 var run_was_victory: bool = false
+var projectile_hit_feedback_this_frame: int = 0
 
 const ENEMY = preload("uid://kxdifr4760x4")
 const BROWN_ENEMY = preload("res://scenes/enemies/brown_enemy.tscn")
@@ -220,6 +221,7 @@ const MAX_ACTIVE_EXP_ORBS: int = 100
 const PROJECTILE_POOL_LIMIT: int = 220
 const PARTICLE_BURST_POOL_LIMIT: int = 48
 const MAX_DAMAGE_NUMBERS_PER_FRAME: int = 18
+const MAX_PROJECTILE_HIT_FEEDBACK_PER_FRAME: int = 10
 const MAX_ACTIVE_PARTICLE_BURSTS: int = 36
 const MAX_ACTIVE_SPLASH_AREAS: int = 24
 const MAX_ACTIVE_BOSS_HAZARDS: int = 18
@@ -463,6 +465,7 @@ func _process(delta: float) -> void:
 		return
 	
 	damage_numbers_this_frame = 0
+	projectile_hit_feedback_this_frame = 0
 	cancel_ai_on_manual_movement_input()
 	low_health_vignette.set_low_health_active(player.health > 0 and player.get_health_ratio() <= 0.4)
 	dynamite_flash.color.a = move_toward(dynamite_flash.color.a, 0.0, 7.0 * delta)
@@ -1736,6 +1739,27 @@ func spawn_exp_pickup_burst() -> void:
 	spawn_particle_burst($CanvasLayer, burst_position, 18, Color(1, 0.95, 0.08, 1), 220.0, 0.28, Vector2(2.0, 5.0), false)
 
 
+func spawn_projectile_hit_feedback(hit_position: Vector2, is_final_hit: bool, is_splash_hit: bool) -> void:
+	if projectile_hit_feedback_this_frame >= MAX_PROJECTILE_HIT_FEEDBACK_PER_FRAME:
+		return
+	projectile_hit_feedback_this_frame += 1
+	var spark_count := 5
+	var spark_size := Vector2(1.4, 3.2)
+	var spark_speed := 95.0
+	var spark_color := Color(1.0, 0.78, 0.16, 1.0)
+	if is_final_hit:
+		spark_count += 3
+		spark_speed += 45.0
+	if is_splash_hit:
+		spark_count += 5
+		spark_size = Vector2(2.8, 6.0)
+		spark_speed += 90.0
+		spark_color = Color(1.0, 0.42, 0.08, 1.0)
+	spawn_particle_burst(self, hit_position, spark_count, spark_color, spark_speed, 0.16, spark_size, true)
+	if is_splash_hit and is_final_hit:
+		shake_camera(0.08, 1.6)
+
+
 func spawn_particle_burst(parent: Node, burst_position: Vector2, count: int, color: Color, speed: float, duration: float, size_range: Vector2, shrink: bool) -> void:
 	if active_particle_bursts.size() >= MAX_ACTIVE_PARTICLE_BURSTS:
 		return
@@ -1781,6 +1805,7 @@ func show_healing_popup(world_position: Vector2, healed_amount: int) -> void:
 	var popup = HEALING_POPUP.instantiate()
 	add_child(popup)
 	popup.configure(world_position, healed_amount)
+	spawn_particle_burst(self, world_position, 12, Color(0.38, 1.0, 0.54, 1.0), 150.0, 0.22, Vector2(2.0, 5.0), true)
 
 
 func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: float, enemies: Array[Area2D]) -> void:
@@ -1795,6 +1820,10 @@ func _spawn_splash_area(splash_position: Vector2, splash_radius: float, damage: 
 	splash_blast_active = is_mass_splash
 	splash.configure(splash_radius, damage, enemies, not is_mass_splash)
 	splash_blast_active = false
+	if enemies.size() >= 4 or splash_radius >= 90.0:
+		spawn_particle_burst(self, splash_position, 14, Color(1.0, 0.72, 0.18, 1.0), 210.0, 0.22, Vector2(4.0, 9.0), true)
+	if is_mass_splash:
+		shake_camera(0.14, 3.0)
 
 
 func activate_dynamite() -> void:

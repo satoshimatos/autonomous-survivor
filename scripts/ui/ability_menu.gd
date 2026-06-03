@@ -14,6 +14,7 @@ const RARITY_COLORS: Dictionary = {
 
 var player: CharacterBody2D
 var ai_pick_in_progress: bool = false
+var selection_locked: bool = false
 var displayed_abilities: Array[Dictionary] = []
 
 var ability_catalog: Array[Dictionary] = [
@@ -65,6 +66,7 @@ var ability_catalog: Array[Dictionary] = [
 	$CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/AbilityButton3,
 ]
 @onready var detail_label: Label = $CanvasLayer/ColorRect/MarginContainer/VBoxContainer/DetailLabel
+@onready var celebration: Control = $CanvasLayer/ChoiceCelebration
 
 
 func _ready() -> void:
@@ -371,15 +373,45 @@ func update_detail_for_slot(slot_index: int) -> void:
 
 
 func apply_ability(slot_index: int) -> void:
-	if slot_index >= displayed_abilities.size():
+	if selection_locked or slot_index >= displayed_abilities.size():
 		return
 	
+	selection_locked = true
+	await play_selection_feedback(slot_index)
+	if not is_inside_tree():
+		return
 	var method_name := String(displayed_abilities[slot_index].method)
 	if player and player.has_method(method_name):
 		player.call(method_name)
 		if player.has_method("update_evolutions"):
 			player.update_evolutions()
 	complete_selection()
+
+
+func play_selection_feedback(slot_index: int) -> void:
+	for button in ability_buttons:
+		button.disabled = true
+	if slot_index < 0 or slot_index >= ability_buttons.size():
+		return
+
+	update_detail_for_slot(slot_index)
+	var selected_button := ability_buttons[slot_index]
+	var ability := displayed_abilities[slot_index]
+	var rarity := String(ability.get("rarity", "Common"))
+	var accent: Color = RARITY_COLORS.get(rarity, RARITY_COLORS["Common"]) as Color
+	if celebration and celebration.has_method("celebrate_pick"):
+		celebration.call("celebrate_pick", selected_button.get_global_rect().get_center(), accent)
+
+	selected_button.pivot_offset = selected_button.size * 0.5
+	var tween := selected_button.create_tween()
+	tween.set_parallel(true)
+	tween.set_trans(Tween.TRANS_BACK)
+	tween.set_ease(Tween.EASE_OUT)
+	tween.tween_property(selected_button, "scale", Vector2(1.12, 1.12), 0.12)
+	tween.tween_property(selected_button, "rotation", 0.035, 0.12)
+	tween.chain().tween_property(selected_button, "scale", Vector2(1.0, 1.0), 0.16)
+	tween.tween_property(selected_button, "rotation", 0.0, 0.16)
+	await get_tree().create_timer(0.2, true, false, true).timeout
 
 
 func complete_selection() -> void:
