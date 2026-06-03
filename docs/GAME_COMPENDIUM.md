@@ -183,7 +183,7 @@ Each level-up:
 
 ## Core Upgrades
 
-Upgrade choices show 3 random options from the valid upgrade pool. Regeneration only appears while it can still improve the current regen state.
+Upgrade choices show 3 random options from the valid upgrade pool. Regeneration only appears while it can still improve the current regen state. Upgrade card metadata lives in `scripts/core/upgrade_catalog.gd`; `upgrade.gd` owns roll presentation, icons, rarity colors, and synergy display.
 
 | Upgrade | Effect | Scaling | Synergy Hints |
 |---|---|---|---|

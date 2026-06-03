@@ -79,6 +79,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted evolution definitions from `scripts/player/player.gd` into `scripts/player/evolution_catalog.gd`.
   - Kept player runtime code responsible for detecting requirements, applying active effects, and triggering evolution feedback.
   - Updated the backlog and compendium to document the new evolution catalog boundary.
+- Added organization wave #51:
+  - Extracted upgrade card metadata from `scripts/ui/upgrade.gd` into `scripts/core/upgrade_catalog.gd`.
+  - Kept upgrade UI code responsible for rolling valid choices, rarity colors, prerequisite-aware details, icons, and card presentation.
+  - Preserved existing upgrade labels, tags, hints, and synergy references while reducing UI-owned data bulk.
 
 ### 2026-05-30
 
