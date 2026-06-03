@@ -4,6 +4,7 @@ const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
 const PauseInputRouter = preload("res://scripts/core/pause_input_router.gd")
 const LateMapEnemyCatalog = preload("res://scripts/core/late_map_enemy_catalog.gd")
 const LateMapBossCatalog = preload("res://scripts/core/late_map_boss_catalog.gd")
+const RunEventCatalog = preload("res://scripts/core/run_event_catalog.gd")
 
 var player: CharacterBody2D
 var pause_input_router: PauseInputRouter
@@ -187,12 +188,7 @@ var enemy_affix_catalog: Array[Dictionary] = [
 	{"id": "splitting", "name": "Splitting", "unlock_seconds": 420.0, "weight": 14.0, "health_multiplier": 1.35, "death_effect": "split", "split_count": 2, "split_health": 8, "split_speed": 82.0, "color": Color(0.95, 0.36, 1.0, 1.0)},
 ]
 
-var run_event_catalog: Array[Dictionary] = [
-	{"id": "crystal_bloom", "name": "Crystal Bloom", "summary": "Richer EXP while enemy damage spikes.", "duration": 48.0, "weight": 28.0, "effects": {"exp_value_multiplier": 1.35, "enemy_damage_multiplier": 1.12}},
-	{"id": "supply_cache", "name": "Supply Cache", "summary": "A cache drops offscreen.", "duration": 0.0, "weight": 24.0, "rewards": {"green_supply": 2, "blue_supply": 1}},
-	{"id": "elite_bounty", "name": "Elite Bounty", "summary": "An elite wave arrives with an upgrade reward.", "duration": 0.0, "weight": 22.0, "risks": {"elite_wave_count": 5}, "rewards": {"upgrade_choices": 1}},
-	{"id": "overrun_gambit", "name": "Overrun Gambit", "summary": "Enemy pressure surges, then grants an ability choice.", "duration": 36.0, "weight": 20.0, "effects": {"spawn_interval_multiplier": 0.72, "enemy_speed_multiplier": 1.1}, "rewards": {"ability_choices": 1}},
-]
+var run_event_catalog: Array[Dictionary] = RunEventCatalog.get_entries()
 
 
 func add_autonomous_enemy_content() -> void:

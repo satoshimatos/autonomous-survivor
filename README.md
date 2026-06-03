@@ -57,6 +57,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted challenge goals into `scripts/core/challenge_goal_catalog.gd`.
   - Added 5 late-run challenge goals: Marathon Plate, Boss Harvester, Elite Recycler, Storm Mastery, and Magnet Empire.
   - New rewards use existing permanent bonus hooks for starting health, damage, magnet, EXP, wrench drops, and dynamite drops.
+- Added replayability wave #46:
+  - Extracted run events into `scripts/core/run_event_catalog.gd`.
+  - Expanded the mid-run event pool from 4 to 10 events while preserving the existing seeded scheduler.
+  - Added new supply, elite-risk, EXP, spawn-pressure, upgrade, and ability-choice event combinations for more distinct runs.
 
 ### 2026-05-30
 

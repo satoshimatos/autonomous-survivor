@@ -459,6 +459,12 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 | Supply Cache | Instant | 24 | None. | Spawns 2 green supply boxes and 1 blue supply box offscreen. |
 | Elite Bounty | Instant | 22 | Spawns a bounded 5-enemy guaranteed elite wave respecting pressure caps. | Queues 1 bonus upgrade choice. |
 | Overrun Gambit | 36s | 20 | Spawn interval *0.72 and enemy speed *1.1 while active. | Queues 1 bonus ability choice. |
+| Repair Convoy | Instant | 18 | Spawns a bounded 3-enemy guaranteed elite wave. | Spawns 3 green supply boxes. |
+| Blue Moon | Instant | 16 | None. | Spawns 1 blue supply box and queues 1 bonus ability choice. |
+| Overclock Bloom | 42s | 17 | Spawn interval *0.82 and enemy speed *1.08 while active. | EXP value *1.18 while active and queues 1 bonus upgrade choice. |
+| Siege Cache | Instant | 15 | Spawns a bounded 7-enemy guaranteed elite wave. | Spawns 1 green supply box and queues 1 bonus upgrade choice. |
+| Salvage Comet | 40s | 16 | Enemy damage *1.08 while active. | EXP value *1.22 while active and spawns 1 blue supply box. |
+| Blackout Rush | 32s | 14 | Spawn interval *0.64 and enemy speed *1.18 while active. | Spawns 1 green supply box and queues 1 bonus ability choice. |
 
 ## Run Modifiers
 

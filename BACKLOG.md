@@ -76,6 +76,7 @@ Completed setup:
   - #43 Extract autonomous tank and map catalogs
   - #44 Extract run modifier catalog
   - #45 Expand and extract challenge goal catalog
+  - #46 Expand and extract run event catalog
 
 Completed issues:
 
@@ -124,6 +125,7 @@ Completed issues:
 - #43 Extract autonomous tank and map catalogs
 - #44 Extract run modifier catalog
 - #45 Expand and extract challenge goal catalog
+- #46 Expand and extract run event catalog
 
 ### P1 - Replayability And Power Growth
 
@@ -135,6 +137,7 @@ Completed issues:
 - Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine extend the victory chain with new backgrounds, obstacle groups, pressure profiles, gimmicks, 25 map-specific regular enemies, and 10 additional map-specific bosses.
 - Late-chain victories now add five more run modifiers, bringing the modifier pool from 7 to 12 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 12 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, and economy builds.
+- Run events now have a focused catalog and 10 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 
 ### P1 - Enemies And Bosses
 
@@ -147,6 +150,7 @@ Completed issues:
 - Autonomous tank and late-map config data now live in focused run-config catalog helpers, keeping `run_config.gd` smaller and easier to maintain.
 - Run modifier data now lives in a focused catalog helper while `run_config.gd` keeps ownership of seed rolling, unlock filtering, and multiplier queries.
 - Challenge goal data now lives in a focused catalog helper while `unlock_manager.gd` keeps ownership of save state, completion checks, and reward application.
+- Run event data now lives in a focused catalog helper while `main.gd` keeps ownership of event scheduling, active multipliers, risk spawning, and rewards.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
