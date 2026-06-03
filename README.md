@@ -33,6 +33,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added 25 map-specific regular enemy variants for Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine.
   - Added generated sprites and Godot import metadata for each new late-map enemy under `assets/visual/enemies/map6` through `assets/visual/enemies/map10`.
   - Updated the compendium and backlog so late maps document both their boss identity and their normal spawn-table identity.
+- Added organization pass #40:
+  - Extracted the late-map enemy roster from `scripts/core/main.gd` into `scripts/core/late_map_enemy_catalog.gd`.
+  - Kept the existing registration hook and spawn behavior unchanged while reducing core controller catalog bulk.
+  - Revalidated scene catalog and direct gameplay/menu startup after the extraction.
 
 ### 2026-05-30
 

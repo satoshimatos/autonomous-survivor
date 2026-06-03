@@ -70,6 +70,7 @@ Completed setup:
   - #37 Add global gameplay and UI juice pass
   - #38 Add autonomous content wave: tanks, bosses, maps, backgrounds, and gimmicks
   - #39 Add late-map enemy rosters and sprites
+  - #40 Extract late-map enemy catalog from main controller
 
 Completed issues:
 
@@ -112,6 +113,7 @@ Completed issues:
 - #37 Add global gameplay and UI juice pass
 - #38 Add autonomous content wave: tanks, bosses, maps, backgrounds, and gimmicks
 - #39 Add late-map enemy rosters and sprites
+- #40 Extract late-map enemy catalog from main controller
 
 ### P1 - Replayability And Power Growth
 
@@ -129,6 +131,7 @@ Completed issues:
 ### P2 - Performance
 
 - Active runtime registries now cover enemies, bosses, EXP orbs, projectiles, splash areas, boss hazards, and particle bursts so hot combat loops can avoid repeated whole-tree scans.
+- Late-map enemy data now lives in a focused catalog helper instead of expanding the core gameplay controller, preserving behavior while improving editor readability.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
