@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 20 enemies, and 10 bosses.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 26 enemies, and 13 bosses.
 
 ## Menu
 
@@ -74,6 +74,10 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 - Larger arena than Dust Bowl.
 - Contains authored wreckage obstacles that block player movement and enemy movement.
 - EXP crystals, wrench drops, dynamite drops, supply boxes, and enemy spawns resolve to nearby walkable space if their first position overlaps an obstacle.
+- Harder pressure profile: regular spawns are faster, bosses arrive sooner, enemy speed/health/damage scaling is stronger, active enemy pressure cap is higher, and elite odds are increased.
+- Map-specific enemy roster: Scrap Scout, Gear Runner, Slag Brute, Magnet Wraith, Crusher Drone, and Furnace Reaper enter the spawn table over time.
+- Map-specific boss roster: Scrapyard Warden, Magnetar Colossus, and Foundry Overlord add heavier hazard rings, targeted hazards, and minion calls.
+- Original Dust Bowl enemies and bosses can still appear, but their weights are reduced so Scrapborn enemies dominate this map.
 
 ## Player Baseline
 

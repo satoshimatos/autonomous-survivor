@@ -70,6 +70,9 @@ var active_run_events: Array[Dictionary] = []
 var completed_run_event_names: Array[String] = []
 var last_boss_variant_id: String = ""
 var selected_map_name: String = "Dust Bowl"
+var selected_map_id: String = "map1"
+var active_enemy_cap_bonus: int = 0
+var elite_chance_multiplier: float = 1.0
 var run_completed: bool = false
 var run_was_victory: bool = false
 
@@ -124,6 +127,12 @@ var enemy_variant_catalog: Array[Dictionary] = [
 	{"id": "specter", "scene": ENEMY, "unlock_seconds": 2100.0, "base_weight": 18.0, "growth_per_minute": 2.2, "min_weight": 0.0, "max_weight": 42.0, "health": 58, "speed": 98.0, "contact_damage": 6, "exp_drop_count": 5, "exp_drop_min_tier": 4, "color": Color(0.58, 0.38, 1.0, 1.0), "scale": 0.72, "movement_style": "orbiter", "texture": "res://assets/visual/enemies/variants/enemy_orbiter_cartoon.png"},
 	{"id": "sapper", "scene": BROWN_ENEMY, "unlock_seconds": 2220.0, "base_weight": 14.0, "growth_per_minute": 1.8, "min_weight": 0.0, "max_weight": 34.0, "health": 76, "speed": 74.0, "contact_damage": 8, "exp_drop_count": 6, "exp_drop_min_tier": 4, "color": Color(1.0, 0.42, 0.18, 1.0), "scale": 0.95, "movement_style": "stalker", "texture": "res://assets/visual/enemies/variants/enemy_stalker_cartoon.png"},
 	{"id": "voidling", "scene": ENEMY, "unlock_seconds": 2340.0, "base_weight": 20.0, "growth_per_minute": 2.4, "min_weight": 0.0, "max_weight": 44.0, "health": 88, "speed": 84.0, "contact_damage": 8, "exp_drop_count": 7, "exp_drop_min_tier": 4, "color": Color(0.22, 0.05, 0.42, 1.0), "scale": 0.86, "movement_style": "weaver", "texture": "res://assets/visual/enemies/variants/enemy_zigzag_cartoon.png"},
+	{"id": "scrap_scout", "maps": ["map2"], "scene": ENEMY, "unlock_seconds": 0.0, "base_weight": 88.0, "growth_per_minute": -3.5, "min_weight": 18.0, "max_weight": 88.0, "health": 16, "speed": 74.0, "contact_damage": 1, "exp_drop_count": 1, "exp_drop_min_tier": 1, "color": Color(0.95, 0.5, 0.24, 1.0), "scale": 0.8, "movement_style": "zigzag", "texture": "res://assets/visual/enemies/map2/scrap_scout.png"},
+	{"id": "gear_runner", "maps": ["map2"], "scene": ENEMY, "unlock_seconds": 90.0, "base_weight": 36.0, "growth_per_minute": 2.4, "min_weight": 0.0, "max_weight": 58.0, "health": 14, "speed": 116.0, "contact_damage": 2, "exp_drop_count": 1, "exp_drop_min_tier": 1, "color": Color(0.32, 0.85, 1.0, 1.0), "scale": 0.66, "movement_style": "sprinter", "texture": "res://assets/visual/enemies/map2/gear_runner.png"},
+	{"id": "slag_brute", "maps": ["map2"], "scene": BROWN_ENEMY, "unlock_seconds": 210.0, "base_weight": 24.0, "growth_per_minute": 2.0, "min_weight": 0.0, "max_weight": 46.0, "health": 42, "speed": 48.0, "contact_damage": 4, "exp_drop_count": 3, "exp_drop_min_tier": 2, "color": Color(1.0, 0.28, 0.13, 1.0), "scale": 1.1, "movement_style": "chase", "texture": "res://assets/visual/enemies/map2/slag_brute.png"},
+	{"id": "magnet_wraith", "maps": ["map2"], "scene": ENEMY, "unlock_seconds": 360.0, "base_weight": 28.0, "growth_per_minute": 2.8, "min_weight": 0.0, "max_weight": 54.0, "health": 32, "speed": 88.0, "contact_damage": 3, "exp_drop_count": 2, "exp_drop_min_tier": 2, "color": Color(0.65, 0.4, 1.0, 1.0), "scale": 0.78, "movement_style": "orbiter", "texture": "res://assets/visual/enemies/map2/magnet_wraith.png"},
+	{"id": "crusher_drone", "maps": ["map2"], "scene": SHIELDED_ENEMY, "unlock_seconds": 540.0, "base_weight": 18.0, "growth_per_minute": 1.7, "min_weight": 0.0, "max_weight": 36.0, "health": 76, "speed": 36.0, "contact_damage": 5, "exp_drop_count": 4, "exp_drop_min_tier": 3, "color": Color(0.56, 0.62, 0.65, 1.0), "scale": 1.18, "movement_style": "drifter", "texture": "res://assets/visual/enemies/map2/crusher_drone.png"},
+	{"id": "furnace_reaper", "maps": ["map2"], "scene": ENEMY, "unlock_seconds": 840.0, "base_weight": 16.0, "growth_per_minute": 2.1, "min_weight": 0.0, "max_weight": 38.0, "health": 108, "speed": 72.0, "contact_damage": 8, "exp_drop_count": 7, "exp_drop_min_tier": 4, "color": Color(1.0, 0.18, 0.05, 1.0), "scale": 1.05, "movement_style": "stalker", "texture": "res://assets/visual/enemies/map2/furnace_reaper.png"},
 ]
 
 var boss_variant_catalog: Array[Dictionary] = [
@@ -137,6 +146,9 @@ var boss_variant_catalog: Array[Dictionary] = [
 	{"id": "bastion", "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 72.0, "growth_per_minute": 1.2, "min_weight": 0.0, "max_weight": 92.0, "health": 3200, "speed": 13.0, "contact_damage": 14, "exp_drop_count": 84, "exp_drop_min_tier": 4, "color": Color(0.4, 0.44, 0.52, 1.0), "scale": 1.48, "behavior": "bastion", "texture": "res://assets/visual/enemies/variants/enemy_tank_cartoon.png", "phase_thresholds": [0.75, 0.5, 0.25], "ability_modules": [{"type": "hazard_ring", "cooldown": 7.0, "initial_delay": 2.8, "count": 7, "phase_count_bonus": 2, "radius": 82.0, "ring_distance": 190.0, "damage": 4}, {"type": "minion_call", "cooldown": 10.0, "initial_delay": 6.0, "count": 3, "phase_count_bonus": 2}]},
 	{"id": "overlord", "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 76.0, "growth_per_minute": 1.2, "min_weight": 0.0, "max_weight": 94.0, "health": 3600, "speed": 20.0, "contact_damage": 15, "exp_drop_count": 92, "exp_drop_min_tier": 4, "color": Color(0.9, 0.12, 0.35, 1.0), "scale": 1.28, "behavior": "overlord", "texture": "res://assets/visual/enemies/variants/enemy_reaper_cartoon.png", "phase_thresholds": [0.78, 0.55, 0.32, 0.16], "ability_modules": [{"type": "minion_call", "cooldown": 6.8, "initial_delay": 2.0, "count": 5, "phase_count_bonus": 1}, {"type": "hazard_ring", "cooldown": 8.0, "initial_delay": 4.0, "count": 8, "phase_count_bonus": 1, "radius": 70.0, "ring_distance": 210.0, "damage": 4}, {"type": "target_hazard", "cooldown": 6.2, "initial_delay": 6.0, "radius": 62.0, "damage": 4}]},
 	{"id": "singularity", "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 80.0, "growth_per_minute": 1.1, "min_weight": 0.0, "max_weight": 96.0, "health": 2950, "speed": 32.0, "contact_damage": 13, "exp_drop_count": 100, "exp_drop_min_tier": 4, "color": Color(0.18, 0.02, 0.32, 1.0), "scale": 1.08, "behavior": "singularity", "texture": "res://assets/visual/enemies/variants/enemy_zigzag_cartoon.png", "phase_thresholds": [0.7, 0.45, 0.22], "ability_modules": [{"type": "target_hazard", "cooldown": 4.8, "initial_delay": 1.8, "radius": 66.0, "damage": 5}, {"type": "hazard_ring", "cooldown": 6.2, "initial_delay": 3.2, "count": 9, "phase_count_bonus": 2, "radius": 56.0, "ring_distance": 145.0, "damage": 4}]},
+	{"id": "scrapyard_warden", "maps": ["map2"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 120.0, "growth_per_minute": -2.0, "min_weight": 64.0, "max_weight": 120.0, "health": 1850, "speed": 24.0, "contact_damage": 9, "exp_drop_count": 48, "exp_drop_min_tier": 3, "color": Color(0.95, 0.45, 0.12, 1.0), "scale": 1.14, "behavior": "crusher", "texture": "res://assets/visual/enemies/map2/boss_scrapyard_warden.png", "phase_thresholds": [0.68, 0.36], "ability_modules": [{"type": "hazard_ring", "cooldown": 6.0, "initial_delay": 2.0, "count": 6, "phase_count_bonus": 2, "radius": 62.0, "ring_distance": 155.0, "damage": 4}, {"type": "minion_call", "cooldown": 8.0, "initial_delay": 4.0, "count": 3, "phase_count_bonus": 2}]},
+	{"id": "magnetar_colossus", "maps": ["map2"], "scene": BOSS_ENEMY, "unlock_seconds": 420.0, "weight": 82.0, "growth_per_minute": 1.8, "min_weight": 0.0, "max_weight": 108.0, "health": 2700, "speed": 28.0, "contact_damage": 12, "exp_drop_count": 72, "exp_drop_min_tier": 4, "color": Color(0.5, 0.22, 1.0, 1.0), "scale": 1.24, "behavior": "singularity", "texture": "res://assets/visual/enemies/map2/boss_magnetar_colossus.png", "phase_thresholds": [0.72, 0.48, 0.24], "ability_modules": [{"type": "target_hazard", "cooldown": 4.6, "initial_delay": 1.7, "radius": 68.0, "damage": 5}, {"type": "hazard_ring", "cooldown": 6.0, "initial_delay": 3.6, "count": 8, "phase_count_bonus": 1, "radius": 58.0, "ring_distance": 170.0, "damage": 4}]},
+	{"id": "foundry_overlord", "maps": ["map2"], "scene": BOSS_ENEMY, "unlock_seconds": 900.0, "weight": 72.0, "growth_per_minute": 2.0, "min_weight": 0.0, "max_weight": 112.0, "health": 3800, "speed": 19.0, "contact_damage": 16, "exp_drop_count": 96, "exp_drop_min_tier": 4, "color": Color(1.0, 0.16, 0.08, 1.0), "scale": 1.42, "behavior": "overlord", "texture": "res://assets/visual/enemies/map2/boss_foundry_overlord.png", "phase_thresholds": [0.8, 0.6, 0.38, 0.18], "ability_modules": [{"type": "minion_call", "cooldown": 5.8, "initial_delay": 1.8, "count": 5, "phase_count_bonus": 2}, {"type": "hazard_ring", "cooldown": 6.8, "initial_delay": 3.2, "count": 9, "phase_count_bonus": 1, "radius": 74.0, "ring_distance": 215.0, "damage": 5}, {"type": "target_hazard", "cooldown": 5.4, "initial_delay": 5.5, "radius": 70.0, "damage": 5}]},
 ]
 
 var enemy_affix_catalog: Array[Dictionary] = [
@@ -336,9 +348,17 @@ func configure_run_seed_and_modifiers() -> void:
 
 func configure_selected_map() -> void:
 	var map_config: Dictionary = get_run_config().get_selected_map()
+	selected_map_id = String(map_config.get("id", "map1"))
 	selected_map_name = String(map_config.get("name", "Dust Bowl"))
+	spawn_interval *= float(map_config.get("spawn_interval_multiplier", 1.0))
+	boss_spawn_interval *= float(map_config.get("boss_spawn_interval_multiplier", 1.0))
+	enemy_speed_growth_multiplier *= float(map_config.get("enemy_speed_growth_multiplier", 1.0))
+	enemy_health_growth_multiplier *= float(map_config.get("enemy_health_growth_multiplier", 1.0))
+	enemy_damage_growth_multiplier *= float(map_config.get("enemy_damage_growth_multiplier", 1.0))
+	active_enemy_cap_bonus = int(map_config.get("active_enemy_cap_bonus", 0))
+	elite_chance_multiplier = float(map_config.get("elite_chance_multiplier", 1.0))
 	if map_layout and map_layout.has_method("apply_map"):
-		map_layout.apply_map(String(map_config.get("id", "map1")))
+		map_layout.apply_map(selected_map_id)
 		apply_map_scene_dimensions()
 
 
@@ -893,7 +913,7 @@ func has_enemy_pressure_room(reserved_slots: int = 0) -> bool:
 func get_active_enemy_cap() -> int:
 	var minutes: float = run_time / 60.0
 	return clampi(
-		BASE_ACTIVE_ENEMY_CAP + int(floor(minutes * ACTIVE_ENEMY_CAP_GROWTH_PER_MINUTE)),
+		BASE_ACTIVE_ENEMY_CAP + active_enemy_cap_bonus + int(floor(minutes * ACTIVE_ENEMY_CAP_GROWTH_PER_MINUTE)),
 		BASE_ACTIVE_ENEMY_CAP,
 		MAX_ACTIVE_ENEMY_CAP
 	)
@@ -1171,7 +1191,7 @@ func get_elite_spawn_chance() -> float:
 		return 0.0
 	
 	var progress: float = clamp((run_time - ELITE_CHANCE_START_SECONDS) / (ELITE_CHANCE_FULL_SECONDS - ELITE_CHANCE_START_SECONDS), 0.0, 1.0)
-	return lerpf(0.02, ELITE_CHANCE_MAX, progress)
+	return clamp(lerpf(0.02, ELITE_CHANCE_MAX, progress) * elite_chance_multiplier, 0.0, 0.45)
 
 
 func get_affix_config_to_apply() -> Dictionary:
@@ -1230,6 +1250,8 @@ func build_split_child_config(enemy_config: Dictionary, affix: Dictionary) -> Di
 func get_unlocked_weighted_entries(catalog: Array[Dictionary]) -> Array[Dictionary]:
 	var entries: Array[Dictionary] = []
 	for config in catalog:
+		if not is_catalog_entry_available_for_selected_map(config):
+			continue
 		var unlock_seconds := float(config.get("unlock_seconds", 0.0))
 		if run_time < unlock_seconds:
 			continue
@@ -1238,12 +1260,29 @@ func get_unlocked_weighted_entries(catalog: Array[Dictionary]) -> Array[Dictiona
 		var weight: float = float(config.get("weight", config.get("base_weight", 0.0)))
 		weight += minutes_since_unlock * float(config.get("growth_per_minute", 0.0))
 		weight = clamp(weight, float(config.get("min_weight", 0.0)), float(config.get("max_weight", weight)))
+		weight *= get_map_entry_weight_multiplier(config)
 		if weight <= 0.0:
 			continue
 		
 		entries.append({"config": config, "weight": weight})
 	
 	return entries
+
+
+func is_catalog_entry_available_for_selected_map(config: Dictionary) -> bool:
+	var maps: Array = config.get("maps", []) as Array
+	if maps.is_empty():
+		return true
+	return maps.has(selected_map_id)
+
+
+func get_map_entry_weight_multiplier(config: Dictionary) -> float:
+	if selected_map_id != "map2":
+		return 1.0
+	var maps: Array = config.get("maps", []) as Array
+	if maps.has("map2"):
+		return 1.0
+	return 0.42
 
 
 func pick_weighted_entry(weighted_entries: Array[Dictionary]) -> Dictionary:

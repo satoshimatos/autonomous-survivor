@@ -229,6 +229,11 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - The main menu now lets unlocked maps be selected and shows locked map requirements.
   - Scrap Maze is a larger arena with authored obstacle nodes that block the player and enemies.
   - Enemy spawns, EXP drops, wrench/dynamite drops, and supply pickups now resolve to nearby walkable positions when an obstacle would overlap them.
+- Made Scrap Maze a harder second-map experience:
+  - Scrap Maze now applies faster regular spawns, faster boss cadence, stronger enemy scaling, a higher active enemy cap, and more elite pressure.
+  - Added six Scrapborn regular enemies that enter the map 2 spawn pool over time and down-weight the original Dust Bowl roster.
+  - Added three Scrap Maze bosses with heavier hazard/minion patterns and distinct reward profiles.
+  - Generated distinct Scrap Maze enemy and boss sprites under `assets/visual/enemies/map2`.
 
 ## Backlog
 
@@ -240,6 +245,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 - Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 enemies, and 10 bosses.
 - Surviving 30:00 is now a victory condition and unlocks map 2, Scrap Maze.
+- Scrap Maze has its own enemy/boss roster and pressure modifiers so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 
 ### Systems
 

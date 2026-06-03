@@ -65,6 +65,7 @@ Completed setup:
   - #32 Expand build pool to 100 upgrades and 40 powers with performance pass
   - #33 Performance and organization pass for high enemy counts
   - #34 Add 30-minute victory and unlockable obstacle map 2
+  - #35 Make map 2 a harder distinct experience
 
 Completed issues:
 
@@ -102,12 +103,14 @@ Completed issues:
 - #32 Expand build pool to 100 upgrades and 40 powers with performance pass
 - #33 Performance and organization pass for high enemy counts
 - #34 Add 30-minute victory and unlockable obstacle map 2
+- #35 Make map 2 a harder distinct experience
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 20 enemies, 10 bosses.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 26 enemies, 13 bosses.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 - 30-minute survival now completes the run as a victory and unlocks Scrap Maze, the second map.
+- Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
 
 ### P1 - Enemies And Bosses
 
