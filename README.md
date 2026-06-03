@@ -37,6 +37,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted the late-map enemy roster from `scripts/core/main.gd` into `scripts/core/late_map_enemy_catalog.gd`.
   - Kept the existing registration hook and spawn behavior unchanged while reducing core controller catalog bulk.
   - Revalidated scene catalog and direct gameplay/menu startup after the extraction.
+- Added organization pass #41:
+  - Extracted the late-map boss roster from `scripts/core/main.gd` into `scripts/core/late_map_boss_catalog.gd`.
+  - Kept boss registration, phase thresholds, ability modules, map gates, and spawn behavior unchanged.
+  - Revalidated scene catalog and direct gameplay/menu startup after the extraction.
 
 ### 2026-05-30
 
