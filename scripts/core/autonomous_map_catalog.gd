@@ -120,5 +120,22 @@ static func get_entries() -> Array[Dictionary]:
 			"gimmick_interval": 7.0,
 			"mood_color": Color(0.94, 0.86, 0.72, 1.0),
 			"background_texture": "res://assets/backgrounds/map12_clockwork_spiral.png",
+		},
+		{
+			"id": "map13",
+			"name": "Quantum Reef",
+			"summary": "Post-clockwork prism reef with coral gates, current lanes, unstable tide bursts, and slippery ranged pressure.",
+			"spawn_interval_multiplier": 0.24,
+			"boss_spawn_interval_multiplier": 0.22,
+			"enemy_speed_growth_multiplier": 2.08,
+			"enemy_health_growth_multiplier": 2.62,
+			"enemy_damage_growth_multiplier": 2.32,
+			"active_enemy_cap_bonus": 315,
+			"active_enemy_cap_limit": 545,
+			"elite_chance_multiplier": 3.95,
+			"map_gimmick": "quantum_tide",
+			"gimmick_interval": 6.6,
+			"mood_color": Color(0.62, 0.94, 1.0, 1.0),
+			"background_texture": "res://assets/backgrounds/map13_quantum_reef.png",
 		}
 	]

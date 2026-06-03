@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 25 tanks, 76 enemies, 33 bosses, and 12 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 25 tanks, 81 enemies, 35 bosses, and 13 maps.
 
 ## Menu
 
@@ -120,6 +120,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Astral Engine | Win Ember Rift at 30:00 | Massive final arena with engine-wall blockers on all sides. | Highest pressure cap, extreme elite odds, and fastest boss cadence. | Astral Collapse: hazards and Astral Echo spawns converge near the player. | Astral Archon, Engine Heart |
 | Singularity Garden | Win Astral Engine at 30:00 | Huge bioluminescent postgame arena with root walls, seed pods, and off-center root spires. | New highest pressure cap, extreme health/damage growth, and near-constant boss cadence. | Singularity Bloom: spiraling hazards bloom around the player and can spawn Bloom Echo enemies. | Bloom Crowned, Garden Singularity |
 | Clockwork Spiral | Win Singularity Garden at 30:00 | Large machine arena with horizontal gear lanes, outer spiral ribs, off-center gear hubs, and inner clock gates. | Harshest postgame pressure cap, fastest boss cadence, extreme elite odds, and the strongest health/damage growth yet. | Clockwork Spiral: hazards wind outward from the player in a spiral and can spawn Gear Echo enemies. | Gear Judge, Time Foundry |
+| Quantum Reef | Win Clockwork Spiral at 30:00 | Wide prism-current arena with coral bars, reef spires, prism coral blocks, and current gates. | New postgame peak pressure with faster spawns, stronger all-growth multipliers, and slippery ranged pressure. | Quantum Tide: current-lane hazards sweep across the arena and can spawn Reef Echo enemies. | Reef Leviathan, Quantum Kraken |
 
 ### Autonomous Content Wave Enemy Rosters
 
@@ -132,6 +133,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Astral Engine | Astral Mote, Engine Sentinel, Star Lancer, Gravity Bastion, Cosmic Apex | Final-map roster with high baseline speed, heavier rewards, orbiting bastions, and late apex elites. |
 | Singularity Garden | Bloom Mote, Root Guardian, Spore Lancer, Garden Bastion, Singularity Apex | Postgame roster with fast orbiters, heavy root blockers, sprinting spores, and late singularity hunters. |
 | Clockwork Spiral | Gear Mite, Pendulum Lancer, Brass Guardian, Spring Horror, Clockwork Titan | Machine roster with fast zigzag gears, brutal sprinting lancers, armored brass blockers, spring stalkers, and slow reward-heavy titans. |
+| Quantum Reef | Quantum Fry, Phase Eel, Coral Bulwark, Tide Wraith, Reef Colossus | Prism-current roster with fast weavers, extreme-speed eels, armored coral blockers, orbiting tide wraiths, and late colossi. |
 
 ## Player Baseline
 
@@ -400,6 +402,11 @@ These enemies only enter the spawn table on their listed map. The selected map's
 | Brass Guardian | Clockwork Spiral | 420s | chase | 380 | 42 | 22 | 11 tier 4+ | 42 base, +3.2/min, max 90 |
 | Spring Horror | Clockwork Spiral | 760s | stalker | 480 | 120 | 26 | 14 tier 4+ | 36 base, +3.2/min, max 84 |
 | Clockwork Titan | Clockwork Spiral | 1120s | drifter | 660 | 28 | 32 | 18 tier 4+ | 30 base, +3/min, max 82 |
+| Quantum Fry | Quantum Reef | 0s | weaver | 148 | 178 | 11 | 5 tier 4+ | 152 base, -0.4/min, min 64 |
+| Phase Eel | Quantum Reef | 160s | sprinter | 164 | 210 | 17 | 8 tier 4+ | 52 base, +4.2/min, max 110 |
+| Coral Bulwark | Quantum Reef | 390s | chase | 430 | 36 | 24 | 12 tier 4+ | 44 base, +3.4/min, max 94 |
+| Tide Wraith | Quantum Reef | 720s | orbiter | 240 | 142 | 23 | 12 tier 4+ | 38 base, +3.6/min, max 88 |
+| Reef Colossus | Quantum Reef | 1120s | drifter | 720 | 24 | 34 | 20 tier 4+ | 32 base, +3.2/min, max 86 |
 
 ### Enemy Movement Styles
 
@@ -474,6 +481,8 @@ Only one boss can be alive at a time. Bosses normally spawn every 180s, modified
 | Garden Singularity | Singularity Garden | 620s | singularity | 17600 | 24 | 38 | 196 tier 4+ | 98 base, +3/min, max 152 | Six phases; heavy rings, target hazards, and large bloom calls. |
 | Gear Judge | Clockwork Spiral | 0s | overlord | 18800 | 34 | 40 | 210 tier 4+ | 132 base, -0.1/min, min 90 | Five phases; fast target hazards, gear rings, and support waves. |
 | Time Foundry | Clockwork Spiral | 640s | bastion | 22400 | 22 | 44 | 244 tier 4+ | 104 base, +3.2/min, max 158 | Seven phases; massive gear rings, target hazards, and heavy minion pressure. |
+| Reef Leviathan | Quantum Reef | 0s | singularity | 24600 | 32 | 46 | 260 tier 4+ | 136 base, -0.1/min, min 92 | Six phases; sweeping tide rings, target hazards, and reef support waves. |
+| Quantum Kraken | Quantum Reef | 660s | monarch | 29200 | 26 | 50 | 292 tier 4+ | 108 base, +3.4/min, max 164 | Seven phases; rapid target hazards, massive rings, and heavy minion pressure. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
@@ -569,6 +578,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Ember Rift at 30:00 | Astral Engine |
 | Win Astral Engine at 30:00 | Singularity Garden |
 | Win Singularity Garden at 30:00 | Clockwork Spiral |
+| Win Clockwork Spiral at 30:00 | Quantum Reef |
 | Win Singularity Garden at 30:00 | Singularity Seed modifier |
 | Win Clockwork Spiral at 30:00 | Clockwork Dividend modifier |
 

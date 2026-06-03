@@ -23,6 +23,7 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 | Enemies | `assets/visual/enemies/enemy_scout_cartoon.png`, `enemy_bruiser_cartoon.png`, `enemy_shield_cartoon.png` |
 | Bosses | `assets/visual/enemies/boss_core_cartoon.png` |
 | Clockwork Spiral | `assets/backgrounds/map12_clockwork_spiral.png`, `assets/visual/enemies/map12/*.png` |
+| Quantum Reef | `assets/backgrounds/map13_quantum_reef.png`, `assets/visual/enemies/map13/*.png` |
 | Pickups | EXP crystals, dynamite, magnet, supply boxes, wrench |
 | Projectiles | Tank shell and soldier projectile sprites |
 | Ability Items | Landmine, circular saw, footsoldier sprites |
@@ -48,5 +49,7 @@ The current semi-real cartoon asset generator is `tools/generate_semireal_assets
 The branding generator is `tools/generate_branding_assets.ps1`. It creates the PNG app icons, compact brand mark, full logo, wordmark, menu action icons, and multi-size Windows `.ico` with deterministic vector-like drawing through `System.Drawing`.
 
 The Clockwork Spiral generator is `tools/generate_map12_assets.ps1`. It creates the map 12 machine background and dedicated clockwork enemy/boss sprites under `assets/visual/enemies/map12/`.
+
+The Quantum Reef generator is `tools/generate_map13_assets.ps1`. It creates the map 13 prism-current background and dedicated reef enemy/boss sprites under `assets/visual/enemies/map13/`.
 
 The older cartoon pass generator, if present, should be treated as historical reference only; new visual refreshes should extend the semi-real generator unless a future art direction replaces it.

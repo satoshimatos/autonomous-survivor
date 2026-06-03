@@ -1098,6 +1098,8 @@ func process_map_gimmick(delta: float) -> void:
 			trigger_singularity_bloom()
 		"clockwork_spiral":
 			trigger_clockwork_spiral()
+		"quantum_tide":
+			trigger_quantum_tide()
 
 
 func trigger_crystal_storm() -> void:
@@ -1302,6 +1304,39 @@ func trigger_clockwork_spiral() -> void:
 			spawn_enemy(ENEMY, _on_enemy_defeated, gear_config)
 	spawn_particle_burst(self, player.global_position, 46, Color(1.0, 0.76, 0.26, 1.0), 420.0, 0.42, Vector2(5.0, 12.0), true)
 	shake_camera(0.2, 5.5)
+
+
+func trigger_quantum_tide() -> void:
+	if player == null:
+		return
+	var tide_count := clampi(10 + int(run_time / 280.0), 10, 20)
+	var arena_rect := get_arena_rect().grow(-120.0)
+	for i in range(tide_count):
+		var lane_t := (float(i) + randf_range(0.15, 0.85)) / float(tide_count)
+		var x := lerpf(arena_rect.position.x, arena_rect.end.x, lane_t)
+		var y := player.global_position.y + sin(run_time * 0.08 + float(i)) * randf_range(110.0, 420.0)
+		y = clamp(y, arena_rect.position.y, arena_rect.end.y)
+		spawn_boss_hazard(Vector2(x, y), 42.0 + float(i % 4) * 9.0, 9 + int(run_time / 500.0))
+	if has_enemy_pressure_room(8):
+		var reef_config := {
+			"id": "reef_echo",
+			"scene": ENEMY,
+			"health": 116 + int(run_time / 18.0),
+			"speed": 178.0,
+			"contact_damage": 10,
+			"exp_drop_count": 5,
+			"exp_drop_min_tier": VIOLET_ORB_TIER,
+			"color": Color(0.26, 0.92, 1.0, 1.0),
+			"scale": 0.62,
+			"movement_style": "weaver",
+			"texture": "res://assets/visual/enemies/map13/quantum_fry.png",
+		}
+		for i in range(8):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, reef_config)
+	spawn_particle_burst(self, player.global_position, 50, Color(0.3, 0.94, 1.0, 1.0), 440.0, 0.44, Vector2(5.0, 12.0), true)
+	shake_camera(0.18, 5.2)
 
 
 func get_random_arena_position(inset: float = 0.0) -> Vector2:
@@ -1604,6 +1639,8 @@ func get_map_entry_weight_multiplier(config: Dictionary) -> float:
 			return 0.08
 		"map12":
 			return 0.06
+		"map13":
+			return 0.05
 	return 1.0
 
 

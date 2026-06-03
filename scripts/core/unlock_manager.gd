@@ -253,6 +253,7 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("modifier", "singularity_seed", "Singularity Seed modifier", unlocked_messages)
 			try_unlock("tank", "bloom_artillerist", "Bloom Artillerist tank", unlocked_messages)
 		"map12":
+			try_unlock("map", "map13", "Quantum Reef map", unlocked_messages)
 			try_unlock("modifier", "clockwork_dividend", "Clockwork Dividend modifier", unlocked_messages)
 			try_unlock("tank", "gear_oracle", "Gear Oracle tank", unlocked_messages)
 
@@ -427,6 +428,8 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Astral Engine at 30:00 to unlock Singularity Garden.")
 	elif not is_map_unlocked("map12"):
 		lines.append("- Map: Win Singularity Garden at 30:00 to unlock Clockwork Spiral.")
+	elif not is_map_unlocked("map13"):
+		lines.append("- Map: Win Clockwork Spiral at 30:00 to unlock Quantum Reef.")
 	elif not is_modifier_unlocked("singularity_seed"):
 		lines.append("- Modifier: Win Singularity Garden at 30:00 to unlock Singularity Seed.")
 	elif not is_modifier_unlocked("clockwork_dividend"):
@@ -534,6 +537,8 @@ func get_map_unlock_hint(map_id: String) -> String:
 			return "Win Astral Engine at 30:00."
 		"map12":
 			return "Win Singularity Garden at 30:00."
+		"map13":
+			return "Win Clockwork Spiral at 30:00."
 	return "Progress further to reveal this map."
 
 

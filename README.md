@@ -124,6 +124,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Gear Oracle, a Clockwork Spiral victory tank focused on precision beams, Tesla control, Chrono Burst tempo, and boss payout scaling.
   - Added Clockwork Dividend, a Clockwork Spiral victory run modifier with denser spawns, faster bosses, richer boss EXP, faster player tempo, scarcer supplies, and sharper enemy growth.
   - Updated unlock hints, backfill rules, validation, backlog counts, and compendium references for the new postgame rewards.
+- Added postgame map wave #63:
+  - Added Quantum Reef as map 13, unlocked by a 30:00 Clockwork Spiral victory.
+  - Added a generated Quantum Reef background, authored coral/current obstacles, a Quantum Tide gimmick, five prism reef enemies, and two aquatic-prism bosses.
+  - Extended map unlocks, map layout bounds, scene validation, spawn weighting, the compendium, and content counts for the new postgame arena.
 - Added branding polish wave #61:
   - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
   - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
@@ -367,7 +371,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 25 tanks, 76 enemies, 33 bosses, and 12 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 25 tanks, 81 enemies, 35 bosses, and 13 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 
