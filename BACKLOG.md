@@ -82,6 +82,7 @@ Completed setup:
   - #49 Add Autonomous Survivor branding assets and extract ability catalog
   - #50 Extract player evolution catalog
   - #51 Extract upgrade metadata catalog
+  - #52 Add late-campaign tank archetypes
 
 Completed issues:
 
@@ -136,10 +137,11 @@ Completed issues:
 - #49 Add Autonomous Survivor branding assets and extract ability catalog
 - #50 Extract player evolution catalog
 - #51 Extract upgrade metadata catalog
+- #52 Add late-campaign tank archetypes
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 20 tanks, 66 enemies, 29 bosses, 10 maps.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 22 tanks, 66 enemies, 29 bosses, 10 maps.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 - 30-minute survival now completes the run as a victory and unlocks the next map in the chain.
 - Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
@@ -149,6 +151,7 @@ Completed issues:
 - Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
 - Run events now have a focused catalog and 10 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 - Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.
+- Late-campaign tank variety now includes Prism Sentinel and Void Anchor, adding crystal crit/ricochet and void gravity-control starts behind campaign-progress unlocks.
 
 ### P1 - Enemies And Bosses
 

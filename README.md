@@ -83,6 +83,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted upgrade card metadata from `scripts/ui/upgrade.gd` into `scripts/core/upgrade_catalog.gd`.
   - Kept upgrade UI code responsible for rolling valid choices, rarity colors, prerequisite-aware details, icons, and card presentation.
   - Preserved existing upgrade labels, tags, hints, and synergy references while reducing UI-owned data bulk.
+- Added tank content wave #52:
+  - Added Prism Sentinel, a Crystal Expanse victory tank focused on crits, ricochets, piercing, and crystal economy scaling.
+  - Added Void Anchor, a Void Crucible plus boss-mastery tank focused on gravity wells, black-hole control, armor, and close pressure.
+  - Updated unlock hints, next-goal reporting, backlog counts, and compendium tank references.
 
 ### 2026-05-30
 
@@ -321,7 +325,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 tanks, 66 enemies, 29 bosses, and 10 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 22 tanks, 66 enemies, 29 bosses, and 10 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

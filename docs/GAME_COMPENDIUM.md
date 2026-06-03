@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 20 tanks, 66 enemies, 29 bosses, and 10 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 22 tanks, 66 enemies, 29 bosses, and 10 maps.
 
 ## Menu
 
@@ -162,10 +162,10 @@ Each level-up:
 |---|---|---|---|
 | Vanguard | Default | 1.0 speed, +0 health, 1.0 damage, 1.0 fire interval | Balanced baseline. |
 | Scout | Default | 1.28 speed, -2 health, 0.92 damage, starts with Magnet 1 | Fast economy start. |
-| Fortress | Survive 120s | 0.82 speed, +8 health, 1.08 damage, starts with Armor 2 | Slow durable tank. |
-| Twin Cannon | Defeat 1 total boss | 0.95 speed, 0.88 damage, starts with Cannon 1, 1.08 fire interval | Early multishot. |
-| Engineer | Best enemies defeated >= 250 | 0.94 speed, +2 health, starts with Landmine 1 and Oil Slick 1 | Device specialist. |
-| Collector | Reach level 5 | 1.05 speed, -1 health, 0.95 damage, starts with EXP 1 and Magnet 2 | Economy and pickup specialist. |
+| Fortress | Survive 7:00 | 0.82 speed, +8 health, 1.08 damage, starts with Armor 2 | Slow durable tank. |
+| Twin Cannon | Defeat 3 total bosses | 0.95 speed, 0.88 damage, starts with Cannon 1, 1.08 fire interval | Early multishot. |
+| Engineer | Best enemies defeated >= 900 | 0.94 speed, +2 health, starts with Landmine 1 and Oil Slick 1 | Device specialist. |
+| Collector | Reach level 12 | 1.05 speed, -1 health, 0.95 damage, starts with EXP 1 and Magnet 2 | Economy and pickup specialist. |
 | Storm Chaser | Reach level 18 | 1.18 speed, -1 health, 0.96 damage, starts with Shock Field 1 and Chain Lightning 1 | Electric raider. |
 | Pyroclast | Survive 15:00 | 0.94 speed, +2 health, 1.04 damage, starts with Splash 1 and Flame Wave 1 | Burn-and-blast specialist. |
 | Medic | Defeat 8 total bosses | 0.98 speed, +4 health, starts with Regeneration 1, Repair Beacon 1, and Nanite Cloud 1 | Sustain support. |
@@ -180,6 +180,8 @@ Each level-up:
 | Fortress Medic | Defeat 14 total bosses | 0.74 speed, +14 health, 0.9 damage, starts with Armor 2, Regeneration 2, Repair Beacon 1, Guardian Wall, and Repair Burst | Durable repair tank. |
 | Meteor Twins | Reach level 28 | 0.94 speed, 0.96 damage, starts with Cannon 2, Splash 1, and Orbital Cannon | Explosive multishot. |
 | Storm Foundry | Win any map and defeat 18 total bosses | 0.86 speed, +6 health, starts with Shock Field 1, Tesla Pylon 1, Capacitor Bank 1, and Storm Catalyst | Heavy electric factory. |
+| Prism Sentinel | Win Crystal Expanse at 30:00 | 1.06 speed, -2 health, 1.08 damage, 1.06 fire interval, starts with Piercing 1, Targeting Array 1, Ricochet Rounds 1, Crystal Lens, Prism Rounds, and Critical Storm | Crystal crit and ricochet controller. |
+| Void Anchor | Win Void Crucible and defeat 20 total bosses | 0.8 speed, +10 health, 1.12 damage, 1.14 fire interval, starts with Gravity Well 2, Armor 1, Barbed Wire 1, Gravity Anchor, Singularity Lens, Black Hole Mines, and Fortress Protocol | Heavy gravity-control bruiser. |
 
 ## Core Upgrades
 
@@ -255,9 +257,9 @@ Ability menus roll 3 weighted options from unlocked abilities. Weight increases 
 | Circular Saw | Common | orbit, contact | Default | Adds orbiting saws. Each saw orbits at radius 100 and damages overlapping enemies every 0.35s for ceil(player damage / 3). |
 | Footsoldier | Uncommon | pet, projectile | Default | Adds a follower that trails the player, seeks enemies within 400px, winds up, then fires 3 shots with 0.06s burst spacing. Soldier shot damage is floor(player damage * 0.3125). |
 | Shock Field | Uncommon | aura, crowd-control | Default | Adds an electric aura. Radius is 78 + 14 per extra level. Every 0.45s it damages enemies for player damage * 0.22 * level and slows them for 0.8s at 58% speed. |
-| Oil Slick | Common | device, crowd-control | Survive 120s | Drops slicks behind the player. Drop interval is 3.8s, -0.28s per level, minimum 1.35s. Each slick lasts 7s, radius 56 + 7 per extra level, damages every 0.55s for player damage * 0.16 * level, and slows enemies for 0.75s at 42% speed. Max active slicks: 4 + level * 2. |
-| Drone Swarm | Uncommon | pet, projectile | Reach level 5 | Adds orbiting drones. Fire interval starts at 0.65s, -0.035s per level, minimum 0.22s. Drone count is min(2 + level, 10). Each shot deals player damage * 0.38 * 1.08^(level - 1). |
-| Artillery | Rare | area, burst | Defeat 1 total boss | Targets dense enemy clusters within 520px. Base interval 4s, -0.28s per level, minimum 1.4s. Telegraphs for 0.55s, then creates a splash radius 82 + 9 per extra level. Damage is player damage * 2.1 * 1.18^(level - 1). Gains late weight at player level 12. |
+| Oil Slick | Common | device, crowd-control | Survive 7:00 | Drops slicks behind the player. Drop interval is 3.8s, -0.28s per level, minimum 1.35s. Each slick lasts 7s, radius 56 + 7 per extra level, damages every 0.55s for player damage * 0.16 * level, and slows enemies for 0.75s at 42% speed. Max active slicks: 4 + level * 2. |
+| Drone Swarm | Uncommon | pet, projectile | Reach level 12 | Adds orbiting drones. Fire interval starts at 0.65s, -0.035s per level, minimum 0.22s. Drone count is min(2 + level, 10). Each shot deals player damage * 0.38 * 1.08^(level - 1). |
+| Artillery | Rare | area, burst | Defeat 3 total bosses | Targets dense enemy clusters within 520px. Base interval 4s, -0.28s per level, minimum 1.4s. Telegraphs for 0.55s, then creates a splash radius 82 + 9 per extra level. Damage is player damage * 2.1 * 1.18^(level - 1). Gains late weight at player level 12. |
 | Freeze Pulse | Rare | burst, crowd-control | Reach level 10 | Periodically bursts around the player. Base interval 6s, -0.42s per level, minimum 2s. Radius is 120 + 15 per extra level. Damage is player damage * 0.58 * 1.12^(level - 1). Slows for 1.25s + 0.08s per level at 16% speed. Gains late weight at player level 10. |
 | Overdrive Core | Rare | buff, mobility | Reach level 12 | Adds a permanent power core. Damage multiplier starts at +8% and adds +3.5% per extra level. Move speed multiplier starts at +4% and adds +1.5% per extra level. |
 | Flame Wave | Uncommon | area, burn | Survive 240s | Periodically emits a radial heat wave. Base interval 5.2s, -0.32s per level, minimum 1.8s. Radius is 112 + 14 per extra level. Damage is player damage * 0.72 * 1.13^(level - 1), scaled by area and power damage bonuses, and briefly slows enemies. |
@@ -477,10 +479,10 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 |---|---|---|
 | Swarm Opening | Default | Spawn interval *0.72, enemy health growth *0.92. |
 | Rich Crystals | Default | EXP value *1.28, enemy damage growth *1.2. |
-| Supply Rain | Survive 120s | Supply interval *0.72, supply chance *2.4. |
-| Boss Contract | Defeat 1 total boss | Boss spawn interval *0.55, boss EXP *1.45. |
+| Supply Rain | Survive 7:00 | Supply interval *0.72, supply chance *2.4. |
+| Boss Contract | Defeat 3 total bosses | Boss spawn interval *0.55, boss EXP *1.45. |
 | Unstable Engine | Reach level 10 | Player fire interval *0.88, enemy speed growth *1.25. |
-| Salvage Field | Best enemies defeated >= 250 | Wrench drops *1.75, dynamite drops *2.0, supply chance *0.65. |
+| Salvage Field | Best enemies defeated >= 900 | Wrench drops *1.75, dynamite drops *2.0, supply chance *0.65. |
 | Overclock Cache | Complete Boss Breaker challenge | Player fire interval *0.9, supply chance *0.8. |
 | Grave Moon | Win Void Crucible at 30:00 | EXP value *1.18, boss spawn interval *0.86, enemy health growth *1.16. |
 | Neon Overdrive | Win Moonlit Graveyard at 30:00 | Player fire interval *0.84, spawn interval *0.82, enemy speed growth *1.28. |
@@ -502,12 +504,11 @@ Progress is saved in `user://unlock_state.cfg`.
 
 | Requirement | Unlocks |
 |---|---|
-| Best survival time >= 120s | Fortress tank, Oil Slick ability, Supply Rain modifier |
-| Best level >= 5 | Collector tank, Drone Swarm ability |
-| Total bosses defeated >= 1 | Twin Cannon tank, Artillery ability, Boss Contract modifier |
-| Best enemies defeated >= 250 | Engineer tank, Salvage Field modifier |
+| Best survival time >= 420s | Fortress tank, Oil Slick ability, Supply Rain modifier |
+| Best level >= 12 | Collector tank, Drone Swarm ability, Overdrive Core ability |
+| Total bosses defeated >= 3 | Twin Cannon tank, Artillery ability, Boss Contract modifier |
+| Best enemies defeated >= 900 | Engineer tank, Salvage Field modifier |
 | Best level >= 10 | Freeze Pulse ability, Unstable Engine modifier |
-| Best level >= 12 | Overdrive Core ability |
 | Best survival time >= 240s | Flame Wave ability |
 | Best survival time >= 300s | Repair Beacon ability |
 | Best survival time >= 480s | Missile Pod ability |
@@ -519,6 +520,8 @@ Progress is saved in `user://unlock_state.cfg`.
 | Best level >= 16 | Nanite Cloud ability |
 | Best survival time >= 1080s | Ricochet Rounds ability |
 | Best survival time >= 1320s | Chrono Burst ability |
+| Win Crystal Expanse at 30:00 | Prism Sentinel tank |
+| Win Void Crucible and total bosses defeated >= 20 | Void Anchor tank |
 
 ### Map Unlocks
 

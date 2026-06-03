@@ -133,6 +133,8 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("tank", "meteor_twins", "Meteor Twins tank", unlocked_messages)
 	if best_survival_seconds >= 1800 and total_bosses_defeated >= 18:
 		try_unlock("tank", "storm_foundry", "Storm Foundry tank", unlocked_messages)
+	if is_map_unlocked("map6") and total_bosses_defeated >= 20:
+		try_unlock("tank", "void_anchor", "Void Anchor tank", unlocked_messages)
 	if best_level >= 10:
 		try_unlock("ability", "freeze_pulse", "Freeze Pulse ability", unlocked_messages)
 		try_unlock("ability", "ion_lance", "Ion Lance power", unlocked_messages)
@@ -187,11 +189,14 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("map", "map3", "Crystal Expanse map", unlocked_messages)
 		"map3":
 			try_unlock("map", "map4", "Toxic Foundry map", unlocked_messages)
+			try_unlock("tank", "prism_sentinel", "Prism Sentinel tank", unlocked_messages)
 		"map4":
 			try_unlock("map", "map5", "Void Crucible map", unlocked_messages)
 		"map5":
 			try_unlock("map", "map6", "Moonlit Graveyard map", unlocked_messages)
 			try_unlock("modifier", "grave_moon", "Grave Moon modifier", unlocked_messages)
+			if total_bosses_defeated >= 20:
+				try_unlock("tank", "void_anchor", "Void Anchor tank", unlocked_messages)
 		"map6":
 			try_unlock("map", "map7", "Neon Grid map", unlocked_messages)
 			try_unlock("modifier", "neon_overdrive", "Neon Overdrive modifier", unlocked_messages)
@@ -318,6 +323,10 @@ func get_tank_unlock_hint(tank_id: String) -> String:
 			return "Reach level 28 in any run."
 		"storm_foundry":
 			return "Win any map and defeat 18 total bosses."
+		"prism_sentinel":
+			return "Win Crystal Expanse at 30:00."
+		"void_anchor":
+			return "Win Void Crucible and defeat 20 total bosses."
 	return "Progress further to reveal this unlock."
 
 
@@ -358,7 +367,7 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Frozen Scar at 30:00 to unlock Ember Rift.")
 	elif not is_map_unlocked("map10"):
 		lines.append("- Map: Win Ember Rift at 30:00 to unlock Astral Engine.")
-	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry"]:
+	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
 	for ability_goal in get_ability_goal_catalog():
