@@ -107,6 +107,11 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Singularity Seed uses existing modifier hooks for faster spawns, faster bosses, richer EXP, better wrench salvage, lower supplies, and sharper enemy health/damage growth.
   - Unlock state now persists completed victory maps so final-map victory rewards can be granted even when there is no next map to unlock.
   - Updated next-goal text, the compendium, and backlog to communicate the new postgame reward.
+- Added replayability wave #58:
+  - Expanded the seeded mid-run event pool from 10 to 15 events with Magnet Storm, Power Market, Repair Jubilee, Critical Front, and Boss Omen.
+  - New events reuse existing supported event hooks for temporary multipliers, bounded elite waves, supply crates, and bonus upgrade/ability choices.
+  - Added event catalog validation so future event entries must use supported effect, risk, and reward keys.
+  - Updated the compendium and backlog with the new run-event count and event details.
 
 ### 2026-05-30
 

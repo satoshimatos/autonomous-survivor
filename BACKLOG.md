@@ -88,6 +88,7 @@ Completed setup:
   - #55 Add dedicated boss sprites for maps 6-10
   - #56 Add native branding icons and logo polish
   - #57 Add Singularity Garden victory modifier
+  - #58 Expand seeded run event variety
 
 Completed issues:
 
@@ -148,6 +149,7 @@ Completed issues:
 - #55 Add dedicated boss sprites for maps 6-10
 - #56 Add native branding icons and logo polish
 - #57 Add Singularity Garden victory modifier
+- #58 Expand seeded run event variety
 
 ### P1 - Replayability And Power Growth
 
@@ -160,7 +162,7 @@ Completed issues:
 - Singularity Garden extends the postgame victory chain after Astral Engine with a new background, authored root obstacles, singularity bloom hazards, 5 additional enemies, and 2 additional bosses.
 - Late-chain and postgame victories now add six more run modifiers, bringing the modifier pool from 7 to 13 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
-- Run events now have a focused catalog and 10 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
+- Run events now have a focused catalog and 15 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 - Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.
 - Late-campaign tank variety now includes Prism Sentinel and Void Anchor, adding crystal crit/ricochet and void gravity-control starts behind campaign-progress unlocks.
 

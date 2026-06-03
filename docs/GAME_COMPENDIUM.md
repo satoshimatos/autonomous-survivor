@@ -481,6 +481,11 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 | Siege Cache | Instant | 15 | Spawns a bounded 7-enemy guaranteed elite wave. | Spawns 1 green supply box and queues 1 bonus upgrade choice. |
 | Salvage Comet | 40s | 16 | Enemy damage *1.08 while active. | EXP value *1.22 while active and spawns 1 blue supply box. |
 | Blackout Rush | 32s | 14 | Spawn interval *0.64 and enemy speed *1.18 while active. | Spawns 1 green supply box and queues 1 bonus ability choice. |
+| Magnet Storm | 34s | 15 | Enemy speed *1.16 while active and spawns a bounded 4-enemy guaranteed elite wave. | Spawns 2 green supply boxes. |
+| Power Market | 38s | 13 | Enemy damage *1.1 and spawn interval *0.86 while active. | Spawns 1 blue supply box and queues 1 bonus ability choice. |
+| Repair Jubilee | 44s | 14 | Enemy damage *1.06 while active. | Spawns 4 green supply boxes. |
+| Critical Front | 46s | 12 | Spawn interval *0.78 while active and spawns a bounded 3-enemy guaranteed elite wave. | EXP value *1.16 while active and queues 1 bonus upgrade choice. |
+| Boss Omen | Instant | 11 | Spawns a bounded 6-enemy guaranteed elite wave. | Spawns 1 green supply box and 1 blue supply box. |
 
 ## Run Modifiers
 

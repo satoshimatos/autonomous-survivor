@@ -1,6 +1,7 @@
 extends SceneTree
 
 const RunModifierCatalog = preload("res://scripts/core/run_modifier_catalog.gd")
+const RunEventCatalog = preload("res://scripts/core/run_event_catalog.gd")
 const UnlockManagerScript = preload("res://scripts/core/unlock_manager.gd")
 
 
@@ -106,6 +107,8 @@ func _init() -> void:
 
 
 func validate_progression_catalogs() -> bool:
+	if not validate_run_event_catalog():
+		return false
 	var modifier_ids: Array[String] = []
 	for modifier in RunModifierCatalog.get_entries():
 		modifier_ids.append(String(modifier.id))
@@ -129,4 +132,42 @@ func validate_progression_catalogs() -> bool:
 		quit(1)
 		return false
 	unlock_manager.free()
+	return true
+
+
+func validate_run_event_catalog() -> bool:
+	var supported_effect_keys: Array[String] = ["exp_value_multiplier", "enemy_damage_multiplier", "spawn_interval_multiplier", "enemy_speed_multiplier"]
+	var supported_risk_keys: Array[String] = ["elite_wave_count"]
+	var supported_reward_keys: Array[String] = ["green_supply", "blue_supply", "upgrade_choices", "ability_choices"]
+	var seen_ids: Array[String] = []
+	for event in RunEventCatalog.get_entries():
+		var event_id := String(event.get("id", ""))
+		if event_id.is_empty() or seen_ids.has(event_id):
+			push_error("Run event catalog needs unique non-empty ids.")
+			quit(1)
+			return false
+		seen_ids.append(event_id)
+		if float(event.get("weight", 0.0)) <= 0.0:
+			push_error("Run event %s needs positive weight." % event_id)
+			quit(1)
+			return false
+		for key in (event.get("effects", {}) as Dictionary).keys():
+			if not supported_effect_keys.has(String(key)):
+				push_error("Run event %s uses unsupported effect key %s." % [event_id, String(key)])
+				quit(1)
+				return false
+		for key in (event.get("risks", {}) as Dictionary).keys():
+			if not supported_risk_keys.has(String(key)):
+				push_error("Run event %s uses unsupported risk key %s." % [event_id, String(key)])
+				quit(1)
+				return false
+		for key in (event.get("rewards", {}) as Dictionary).keys():
+			if not supported_reward_keys.has(String(key)):
+				push_error("Run event %s uses unsupported reward key %s." % [event_id, String(key)])
+				quit(1)
+				return false
+	if seen_ids.size() < 15:
+		push_error("Run event catalog should keep at least 15 events for replay variety.")
+		quit(1)
+		return false
 	return true
