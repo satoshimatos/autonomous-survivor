@@ -13,6 +13,7 @@ const GamepadInputSetup = preload("res://scripts/core/gamepad_input_setup.gd")
 @onready var play_button: Button = $CenterContainer/VBoxContainer/PlayButton
 @onready var compendium_button: Button = $CenterContainer/VBoxContainer/CompendiumButton
 @onready var quit_button: Button = $CenterContainer/VBoxContainer/QuitButton
+@onready var logo: TextureRect = $CenterContainer/VBoxContainer/Logo
 
 
 func _ready() -> void:
@@ -25,6 +26,7 @@ func _ready() -> void:
 
 func apply_visual_skin() -> void:
 	CartoonUiSkin.apply_label_pop(title_label, Color(1.0, 0.84, 0.16, 1.0))
+	logo.pivot_offset = logo.custom_minimum_size * 0.5
 	CartoonUiSkin.apply_label_pop(tank_label, Color(0.76, 0.95, 1.0, 1.0))
 	CartoonUiSkin.apply_label_pop(tank_summary_label, Color(0.94, 0.98, 1.0, 1.0))
 	CartoonUiSkin.apply_label_pop(map_label, Color(0.78, 1.0, 0.84, 1.0))

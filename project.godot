@@ -10,10 +10,11 @@ config_version=5
 
 [application]
 
-config/name="Survivor"
+config/name="Autonomous Survivor"
 run/main_scene="res://scenes/core/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
-config/icon="res://icon.svg"
+boot_splash/image="res://assets/ui/branding/logo_autonomous_survivor.png"
+config/icon="res://assets/ui/branding/app_icon_1024.png"
 
 [autoload]
 

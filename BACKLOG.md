@@ -79,6 +79,7 @@ Completed setup:
   - #46 Expand and extract run event catalog
   - #47 Expand and extract enemy affix catalog
   - #48 Expand permanent challenge goals
+  - #49 Add Autonomous Survivor branding assets and extract ability catalog
 
 Completed issues:
 
@@ -130,6 +131,7 @@ Completed issues:
 - #46 Expand and extract run event catalog
 - #47 Expand and extract enemy affix catalog
 - #48 Expand permanent challenge goals
+- #49 Add Autonomous Survivor branding assets and extract ability catalog
 
 ### P1 - Replayability And Power Growth
 
@@ -157,11 +159,13 @@ Completed issues:
 - Challenge goal data now lives in a focused catalog helper while `unlock_manager.gd` keeps ownership of save state, completion checks, and reward application.
 - Run event data now lives in a focused catalog helper while `main.gd` keeps ownership of event scheduling, active multipliers, risk spawning, and rewards.
 - Enemy affix data now lives in a focused catalog helper while `main.gd` keeps ownership of spawn rolling, pressure checks, stat application, and death payload execution.
+- Ability selection data now lives in a focused catalog helper while `ability_menu.gd` keeps ownership of rolling, prerequisites, icons, and card presentation.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
 
 - Visual identity pass is complete enough for the current scope: generated arena/menu art, cartoon sprites, chunky UI, cloud shadows, player lighting, projectile trails, hit pops, and richer bursts are in-game.
+- Project branding now includes a proper Autonomous Survivor app icon, boot splash logo, wordmark, and main-menu logo asset.
 - Global juice pass added animated button press/hover feedback, brighter upgrade and ability celebration backgrounds, selection confetti bursts, projectile hit sparks, healing particles, splash reinforcement, and capped micro-shake on strong impacts.
 - Continue improving individual power-specific animations after hands-on playtest feedback identifies weak effects.
 - First in-game compendium and permanent unlock communication pass is complete; future work should refine content presentation and add more visual thumbnails where useful.

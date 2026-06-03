@@ -1,8 +1,9 @@
-[gd_scene load_steps=4 format=3]
+[gd_scene load_steps=5 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/main_menu.gd" id="1_menu"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/menu_backdrop_generated.png" id="2_menu_bg"]
 [ext_resource type="Texture2D" path="res://assets/visual/ui/chunky_panel.png" id="3_panel"]
+[ext_resource type="Texture2D" path="res://assets/ui/branding/logo_autonomous_survivor.png" id="4_logo"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -41,9 +42,9 @@ anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
 offset_left = -300.0
-offset_top = -330.0
+offset_top = -390.0
 offset_right = 300.0
-offset_bottom = 330.0
+offset_bottom = 390.0
 grow_horizontal = 2
 grow_vertical = 2
 texture = ExtResource("3_panel")
@@ -64,12 +65,19 @@ grow_vertical = 2
 
 [node name="VBoxContainer" type="VBoxContainer" parent="CenterContainer"]
 layout_mode = 2
-theme_override_constants/separation = 16
+theme_override_constants/separation = 10
+
+[node name="Logo" type="TextureRect" parent="CenterContainer/VBoxContainer"]
+custom_minimum_size = Vector2(520, 174)
+layout_mode = 2
+texture = ExtResource("4_logo")
+expand_mode = 1
+stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 48
-text = "Survivor"
+theme_override_font_sizes/font_size = 30
+text = "Autonomous Survivor"
 horizontal_alignment = 1
 
 [node name="TankLabel" type="Label" parent="CenterContainer/VBoxContainer"]

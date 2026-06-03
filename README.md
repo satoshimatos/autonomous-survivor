@@ -69,6 +69,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Expanded challenge goals from 12 to 20 with longer-run, elite-hunting, boss-hunting, salvage, repair, siege, precision, and mobility/phase build goals.
   - New goals use existing permanent reward hooks for starting armor, damage, magnet, EXP, health, wrench drops, and dynamite drops.
   - Updated the compendium so permanent unlock requirements remain visible from the main menu reference.
+- Added branding and organization wave #49:
+  - Renamed the Godot project from `Survivor` to `Autonomous Survivor`.
+  - Added generated app icons, a full logo, and a wordmark under `assets/ui/branding/`.
+  - Updated the project icon and boot splash to use the new Autonomous Survivor branding.
+  - Added the logo to the main menu and kept the title text aligned with the game name.
+  - Extracted ability menu data into `scripts/core/ability_catalog.gd` so ability definitions are not owned by UI presentation code.
 
 ### 2026-05-30
 
