@@ -22,6 +22,7 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 | Player | `assets/visual/player/tank_base_cartoon.png`, `assets/visual/player/tank_cannon_cartoon.png`, `assets/visual/effects/radial_player_light.png` |
 | Enemies | `assets/visual/enemies/enemy_scout_cartoon.png`, `enemy_bruiser_cartoon.png`, `enemy_shield_cartoon.png` |
 | Bosses | `assets/visual/enemies/boss_core_cartoon.png` |
+| Clockwork Spiral | `assets/backgrounds/map12_clockwork_spiral.png`, `assets/visual/enemies/map12/*.png` |
 | Pickups | EXP crystals, dynamite, magnet, supply boxes, wrench |
 | Projectiles | Tank shell and soldier projectile sprites |
 | Ability Items | Landmine, circular saw, footsoldier sprites |
@@ -44,6 +45,8 @@ The game name is `Autonomous Survivor`. The project icon, native Windows icon, b
 
 The current semi-real cartoon asset generator is `tools/generate_semireal_assets.ps1`. It rebuilds the project-local PNG assets in place while preserving existing filenames and dimensions.
 
-The branding generator is `tools/generate_branding_assets.ps1`. It creates the PNG app icons, compact brand mark, full logo, wordmark, and multi-size Windows `.ico` with deterministic vector-like drawing through `System.Drawing`.
+The branding generator is `tools/generate_branding_assets.ps1`. It creates the PNG app icons, compact brand mark, full logo, wordmark, menu action icons, and multi-size Windows `.ico` with deterministic vector-like drawing through `System.Drawing`.
+
+The Clockwork Spiral generator is `tools/generate_map12_assets.ps1`. It creates the map 12 machine background and dedicated clockwork enemy/boss sprites under `assets/visual/enemies/map12/`.
 
 The older cartoon pass generator, if present, should be treated as historical reference only; new visual refreshes should extend the semi-real generator unless a future art direction replaces it.

@@ -65,7 +65,7 @@ func _init() -> void:
 				quit(1)
 				return
 			map_layout.obstacle_root = map_layout
-			for map_id in ["map1", "map2", "map3", "map4", "map5", "map6", "map7", "map8", "map9", "map10", "map11"]:
+			for map_id in ["map1", "map2", "map3", "map4", "map5", "map6", "map7", "map8", "map9", "map10", "map11", "map12"]:
 				map_layout.apply_map(map_id)
 				if not map_layout.is_walkable(map_layout.arena_center, 0.0) and map_id != "map5":
 					push_error("Map center should be walkable for %s." % map_id)
@@ -134,6 +134,11 @@ func validate_progression_catalogs() -> bool:
 	if not unlock_manager.completed_victory_maps.has("map11"):
 		unlock_manager.free()
 		push_error("Map 11 victory should be persisted as a completed victory map.")
+		quit(1)
+		return false
+	if not unlock_manager.unlocked_maps.has("map12"):
+		unlock_manager.free()
+		push_error("Map 11 victory should unlock Clockwork Spiral.")
 		quit(1)
 		return false
 	if not unlock_manager.unlocked_modifiers.has("singularity_seed"):

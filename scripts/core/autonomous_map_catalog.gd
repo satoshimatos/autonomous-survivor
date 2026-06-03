@@ -103,5 +103,22 @@ static func get_entries() -> Array[Dictionary]:
 			"gimmick_interval": 7.5,
 			"mood_color": Color(0.72, 0.9, 0.82, 1.0),
 			"background_texture": "res://assets/backgrounds/map11_singularity_garden.png",
+		},
+		{
+			"id": "map12",
+			"name": "Clockwork Spiral",
+			"summary": "Postgame machine arena with rotating gear lanes, narrow spiral blockers, brutal elite odds, and clockwork bloom waves.",
+			"spawn_interval_multiplier": 0.26,
+			"boss_spawn_interval_multiplier": 0.24,
+			"enemy_speed_growth_multiplier": 1.94,
+			"enemy_health_growth_multiplier": 2.48,
+			"enemy_damage_growth_multiplier": 2.18,
+			"active_enemy_cap_bonus": 285,
+			"active_enemy_cap_limit": 520,
+			"elite_chance_multiplier": 3.65,
+			"map_gimmick": "clockwork_spiral",
+			"gimmick_interval": 7.0,
+			"mood_color": Color(0.94, 0.86, 0.72, 1.0),
+			"background_texture": "res://assets/backgrounds/map12_clockwork_spiral.png",
 		}
 	]

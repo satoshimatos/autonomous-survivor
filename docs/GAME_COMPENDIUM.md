@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 24 tanks, 71 enemies, 31 bosses, and 11 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 24 tanks, 76 enemies, 33 bosses, and 12 maps.
 
 ## Menu
 
@@ -119,6 +119,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Ember Rift | Win Frozen Scar at 30:00 | Compact lava arena with side gates and a central ember core. | Brutal damage growth, extreme boss cadence, and funnel pressure. | Ember Eruption: random walkable eruptions detonate across the arena with camera shake. | Magma Tyrant, Cinder Prophet |
 | Astral Engine | Win Ember Rift at 30:00 | Massive final arena with engine-wall blockers on all sides. | Highest pressure cap, extreme elite odds, and fastest boss cadence. | Astral Collapse: hazards and Astral Echo spawns converge near the player. | Astral Archon, Engine Heart |
 | Singularity Garden | Win Astral Engine at 30:00 | Huge bioluminescent postgame arena with root walls, seed pods, and off-center root spires. | New highest pressure cap, extreme health/damage growth, and near-constant boss cadence. | Singularity Bloom: spiraling hazards bloom around the player and can spawn Bloom Echo enemies. | Bloom Crowned, Garden Singularity |
+| Clockwork Spiral | Win Singularity Garden at 30:00 | Large machine arena with horizontal gear lanes, outer spiral ribs, off-center gear hubs, and inner clock gates. | Harshest postgame pressure cap, fastest boss cadence, extreme elite odds, and the strongest health/damage growth yet. | Clockwork Spiral: hazards wind outward from the player in a spiral and can spawn Gear Echo enemies. | Gear Judge, Time Foundry |
 
 ### Autonomous Content Wave Enemy Rosters
 
@@ -130,6 +131,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Ember Rift | Ember Imp, Lava Skimmer, Cinder Knight, Magma Brute, Ash Reaper | High-contact-damage roster with aggressive sprinters, armored knights, magma heavies, and late ash pursuit. |
 | Astral Engine | Astral Mote, Engine Sentinel, Star Lancer, Gravity Bastion, Cosmic Apex | Final-map roster with high baseline speed, heavier rewards, orbiting bastions, and late apex elites. |
 | Singularity Garden | Bloom Mote, Root Guardian, Spore Lancer, Garden Bastion, Singularity Apex | Postgame roster with fast orbiters, heavy root blockers, sprinting spores, and late singularity hunters. |
+| Clockwork Spiral | Gear Mite, Pendulum Lancer, Brass Guardian, Spring Horror, Clockwork Titan | Machine roster with fast zigzag gears, brutal sprinting lancers, armored brass blockers, spring stalkers, and slow reward-heavy titans. |
 
 ## Player Baseline
 
@@ -392,6 +394,11 @@ These enemies only enter the spawn table on their listed map. The selected map's
 | Spore Lancer | Singularity Garden | 400s | sprinter | 128 | 188 | 15 | 7 tier 4+ | 44 base, +3.8/min, max 96 |
 | Garden Bastion | Singularity Garden | 760s | drifter | 520 | 30 | 25 | 15 tier 4+ | 34 base, +3/min, max 78 |
 | Singularity Apex | Singularity Garden | 1120s | stalker | 440 | 104 | 24 | 14 tier 4+ | 28 base, +3.6/min, max 82 |
+| Gear Mite | Clockwork Spiral | 0s | zigzag | 132 | 168 | 10 | 5 tier 4+ | 144 base, -0.6/min, min 58 |
+| Pendulum Lancer | Clockwork Spiral | 180s | sprinter | 150 | 196 | 16 | 7 tier 4+ | 48 base, +4/min, max 102 |
+| Brass Guardian | Clockwork Spiral | 420s | chase | 380 | 42 | 22 | 11 tier 4+ | 42 base, +3.2/min, max 90 |
+| Spring Horror | Clockwork Spiral | 760s | stalker | 480 | 120 | 26 | 14 tier 4+ | 36 base, +3.2/min, max 84 |
+| Clockwork Titan | Clockwork Spiral | 1120s | drifter | 660 | 28 | 32 | 18 tier 4+ | 30 base, +3/min, max 82 |
 
 ### Enemy Movement Styles
 
@@ -464,6 +471,8 @@ Only one boss can be alive at a time. Bosses normally spawn every 180s, modified
 | Engine Heart | Astral Engine | 660s | bastion | 14800 | 20 | 34 | 180 tier 4+ | 96 base, +2.8/min, max 144 | Six phases; massive rings and large support waves. |
 | Bloom Crowned | Singularity Garden | 0s | tempest | 13200 | 44 | 32 | 164 tier 4+ | 130 base, -0.1/min, min 88 | Four phases; fast target hazards, bloom rings, and support waves. |
 | Garden Singularity | Singularity Garden | 620s | singularity | 17600 | 24 | 38 | 196 tier 4+ | 98 base, +3/min, max 152 | Six phases; heavy rings, target hazards, and large bloom calls. |
+| Gear Judge | Clockwork Spiral | 0s | overlord | 18800 | 34 | 40 | 210 tier 4+ | 132 base, -0.1/min, min 90 | Five phases; fast target hazards, gear rings, and support waves. |
+| Time Foundry | Clockwork Spiral | 640s | bastion | 22400 | 22 | 44 | 244 tier 4+ | 104 base, +3.2/min, max 158 | Seven phases; massive gear rings, target hazards, and heavy minion pressure. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
@@ -556,6 +565,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Frozen Scar at 30:00 | Ember Rift |
 | Win Ember Rift at 30:00 | Astral Engine |
 | Win Astral Engine at 30:00 | Singularity Garden |
+| Win Singularity Garden at 30:00 | Clockwork Spiral |
 | Win Singularity Garden at 30:00 | Singularity Seed modifier |
 
 ### Challenge Goals

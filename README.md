@@ -116,6 +116,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Neon Courier, a Neon Grid victory tank focused on speed, overdrive tempo, pickup reach, and supply routing.
   - Added Bloom Artillerist, a Singularity Garden victory tank focused on artillery, missiles, splash upgrades, and ordnance passives.
   - Updated unlock hints, next-goal reporting, catalog validation, backlog counts, and compendium tank references.
+- Added postgame map wave #60:
+  - Added Clockwork Spiral as map 12, unlocked by a 30:00 Singularity Garden victory.
+  - Added a generated Clockwork Spiral background, authored gear-lane obstacles, a spiral hazard gimmick, five machine enemies, and two clockwork bosses.
+  - Extended map unlocks, scene validation, map layout bounds, spawn weighting, the compendium, and content counts for the new postgame arena.
 - Added branding polish wave #61:
   - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
   - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
@@ -359,7 +363,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 24 tanks, 71 enemies, 31 bosses, and 11 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 24 tanks, 76 enemies, 33 bosses, and 12 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

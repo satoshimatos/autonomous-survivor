@@ -1096,6 +1096,8 @@ func process_map_gimmick(delta: float) -> void:
 			trigger_astral_collapse()
 		"singularity_bloom":
 			trigger_singularity_bloom()
+		"clockwork_spiral":
+			trigger_clockwork_spiral()
 
 
 func trigger_crystal_storm() -> void:
@@ -1268,6 +1270,38 @@ func trigger_singularity_bloom() -> void:
 			spawn_enemy(ENEMY, _on_enemy_defeated, seed_config)
 	spawn_particle_burst(self, player.global_position, 42, Color(0.28, 1.0, 0.72, 1.0), 390.0, 0.46, Vector2(6.0, 13.0), true)
 	shake_camera(0.2, 5.8)
+
+
+func trigger_clockwork_spiral() -> void:
+	if player == null:
+		return
+	var spiral_count := clampi(9 + int(run_time / 300.0), 9, 18)
+	var base_angle := randf() * TAU
+	for i in range(spiral_count):
+		var t: float = float(i) / max(float(spiral_count - 1), 1.0)
+		var distance: float = lerpf(120.0, 620.0, t)
+		var angle: float = base_angle + t * TAU * 1.75
+		spawn_boss_hazard(player.global_position + Vector2.RIGHT.rotated(angle) * distance, 44.0 + float(i % 5) * 7.0, 8 + int(run_time / 520.0))
+	if has_enemy_pressure_room(7):
+		var gear_config := {
+			"id": "gear_echo",
+			"scene": ENEMY,
+			"health": 98 + int(run_time / 20.0),
+			"speed": 166.0,
+			"contact_damage": 9,
+			"exp_drop_count": 4,
+			"exp_drop_min_tier": VIOLET_ORB_TIER,
+			"color": Color(1.0, 0.72, 0.24, 1.0),
+			"scale": 0.66,
+			"movement_style": "zigzag",
+			"texture": "res://assets/visual/enemies/map12/gear_mite.png",
+		}
+		for i in range(7):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, gear_config)
+	spawn_particle_burst(self, player.global_position, 46, Color(1.0, 0.76, 0.26, 1.0), 420.0, 0.42, Vector2(5.0, 12.0), true)
+	shake_camera(0.2, 5.5)
 
 
 func get_random_arena_position(inset: float = 0.0) -> Vector2:
@@ -1568,6 +1602,8 @@ func get_map_entry_weight_multiplier(config: Dictionary) -> float:
 			return 0.1
 		"map11":
 			return 0.08
+		"map12":
+			return 0.06
 	return 1.0
 
 
