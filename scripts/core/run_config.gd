@@ -2,6 +2,7 @@ extends Node
 
 const AutonomousTankCatalog = preload("res://scripts/core/autonomous_tank_catalog.gd")
 const AutonomousMapCatalog = preload("res://scripts/core/autonomous_map_catalog.gd")
+const RunModifierCatalog = preload("res://scripts/core/run_modifier_catalog.gd")
 
 var selected_tank_id: String = "vanguard"
 var selected_map_id: String = "map1"
@@ -192,101 +193,7 @@ var map_catalog: Array[Dictionary] = [
 	},
 ]
 
-var run_modifier_catalog: Array[Dictionary] = [
-	{
-		"id": "swarm_opening",
-		"name": "Swarm Opening",
-		"summary": "More early pressure, but weaker small enemies.",
-		"spawn_interval_multiplier": 0.72,
-		"enemy_health_growth_multiplier": 0.92,
-	},
-	{
-		"id": "rich_crystals",
-		"name": "Rich Crystals",
-		"summary": "More EXP value, but enemy damage ramps harder.",
-		"exp_value_multiplier": 1.28,
-		"enemy_damage_growth_multiplier": 1.2,
-	},
-	{
-		"id": "supply_rain",
-		"name": "Supply Rain",
-		"summary": "Supply boxes are more common during the run.",
-		"supply_box_interval_multiplier": 0.72,
-		"supply_box_chance_multiplier": 2.4,
-	},
-	{
-		"id": "boss_contract",
-		"name": "Boss Contract",
-		"summary": "Bosses arrive far more often and drop richer rewards.",
-		"boss_spawn_interval_multiplier": 0.55,
-		"boss_exp_multiplier": 1.45,
-	},
-	{
-		"id": "unstable_engine",
-		"name": "Unstable Engine",
-		"summary": "Faster weapon tempo, faster enemy speed scaling.",
-		"player_fire_interval_multiplier": 0.88,
-		"enemy_speed_growth_multiplier": 1.25,
-	},
-	{
-		"id": "salvage_field",
-		"name": "Salvage Field",
-		"summary": "More wrench and dynamite drops, but less supply support.",
-		"wrench_drop_multiplier": 1.75,
-		"dynamite_drop_multiplier": 2.0,
-		"supply_box_chance_multiplier": 0.65,
-	},
-	{
-		"id": "overclock_cache",
-		"name": "Overclock Cache",
-		"summary": "A challenge reward modifier with faster weapons and lower pickup support.",
-		"player_fire_interval_multiplier": 0.9,
-		"supply_box_chance_multiplier": 0.8,
-	},
-	{
-		"id": "grave_moon",
-		"name": "Grave Moon",
-		"summary": "Richer crystals and faster bosses under heavier spectral health scaling.",
-		"exp_value_multiplier": 1.18,
-		"boss_spawn_interval_multiplier": 0.86,
-		"enemy_health_growth_multiplier": 1.16,
-	},
-	{
-		"id": "neon_overdrive",
-		"name": "Neon Overdrive",
-		"summary": "Weapons and spawns accelerate while enemy speed growth spikes.",
-		"player_fire_interval_multiplier": 0.84,
-		"spawn_interval_multiplier": 0.82,
-		"enemy_speed_growth_multiplier": 1.28,
-	},
-	{
-		"id": "frost_cache",
-		"name": "Frost Cache",
-		"summary": "Slower enemy speed growth, sturdier enemies, and more supply support.",
-		"enemy_speed_growth_multiplier": 0.92,
-		"enemy_health_growth_multiplier": 1.26,
-		"supply_box_chance_multiplier": 1.55,
-	},
-	{
-		"id": "ember_bounty",
-		"name": "Ember Bounty",
-		"summary": "Bosses and explosives pay out harder while enemy damage grows hotter.",
-		"boss_exp_multiplier": 1.58,
-		"dynamite_drop_multiplier": 1.65,
-		"enemy_damage_growth_multiplier": 1.26,
-	},
-	{
-		"id": "astral_lottery",
-		"name": "Astral Lottery",
-		"summary": "Extreme rewards, fewer supplies, and sharper all-around enemy scaling.",
-		"exp_value_multiplier": 1.36,
-		"boss_exp_multiplier": 1.32,
-		"supply_box_chance_multiplier": 0.72,
-		"enemy_speed_growth_multiplier": 1.16,
-		"enemy_health_growth_multiplier": 1.18,
-		"enemy_damage_growth_multiplier": 1.18,
-	},
-]
+var run_modifier_catalog: Array[Dictionary] = RunModifierCatalog.get_entries()
 
 
 func _ready() -> void:

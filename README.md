@@ -49,6 +49,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted the autonomous tank starts into `scripts/core/autonomous_tank_catalog.gd`.
   - Extracted the autonomous late-map configs into `scripts/core/autonomous_map_catalog.gd`.
   - Kept `run_config.gd` responsible for registering content and selecting runs, while the new catalog helpers own the large data batches.
+- Added organization pass #44:
+  - Extracted the full run modifier pool into `scripts/core/run_modifier_catalog.gd`.
+  - Kept run seeding, unlock filtering, modifier rolling, and multiplier lookup in `run_config.gd`.
+  - Revalidated scene catalog and direct gameplay/menu startup after the extraction.
 
 ### 2026-05-30
 
