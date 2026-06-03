@@ -91,6 +91,9 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Singularity Garden as map 11, unlocked by a 30:00 Astral Engine victory.
   - Added a generated Singularity Garden background, authored root/seed-pod obstacles, a Singularity Bloom map gimmick, five map-specific enemies, and two map-specific bosses.
   - Extended map validation, unlock hints, the compendium, and content counts for the new postgame arena.
+- Added visual identity wave #54:
+  - Added dedicated Singularity Garden enemy and boss sprites under `assets/visual/enemies/map11/`.
+  - Updated the map 11 enemy and boss catalogs to use the new sprites instead of generic variant art.
 
 ### 2026-05-30
 
