@@ -97,6 +97,11 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Added visual identity wave #55:
   - Added dedicated boss sprites for Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine.
   - Updated late-map boss catalog texture paths so maps 6-10 no longer use generic variant art for bosses.
+- Added branding polish wave #56:
+  - Added a reusable compact Autonomous Survivor brand mark and a native multi-size Windows `.ico` under `assets/ui/branding/`.
+  - Updated Godot project settings so packaged Windows builds use the native Autonomous Survivor icon.
+  - Extended `tools/generate_branding_assets.ps1` so the logo, wordmark, PNG icons, compact mark, and `.ico` all regenerate from one source.
+  - Tightened the main menu identity pass so the logo carries the game name while the small label becomes a descriptor.
 
 ### 2026-05-30
 

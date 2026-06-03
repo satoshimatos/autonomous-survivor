@@ -114,6 +114,63 @@ function Save-Png($Bitmap, $Graphics, [string]$Path) {
 	$Bitmap.Dispose()
 }
 
+function New-ScaledBitmap([string]$SourcePath, [int]$Size) {
+	$source = [System.Drawing.Image]::FromFile($SourcePath)
+	$bitmap = New-Object System.Drawing.Bitmap($Size, $Size, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
+	$graphics = [System.Drawing.Graphics]::FromImage($bitmap)
+	$graphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
+	$graphics.InterpolationMode = [System.Drawing.Drawing2D.InterpolationMode]::HighQualityBicubic
+	$graphics.PixelOffsetMode = [System.Drawing.Drawing2D.PixelOffsetMode]::HighQuality
+	$graphics.Clear([System.Drawing.Color]::Transparent)
+	$graphics.DrawImage($source, 0, 0, $Size, $Size)
+	$graphics.Dispose()
+	$source.Dispose()
+	return $bitmap
+}
+
+function Save-Ico([string]$SourcePath, [string]$Path, [int[]]$Sizes) {
+	$file = [System.IO.File]::Open($Path, [System.IO.FileMode]::Create)
+	$writer = New-Object System.IO.BinaryWriter($file)
+	try {
+		$pngPayloads = @()
+		foreach ($size in $Sizes) {
+			$bitmap = New-ScaledBitmap $SourcePath $size
+			$stream = New-Object System.IO.MemoryStream
+			$bitmap.Save($stream, [System.Drawing.Imaging.ImageFormat]::Png)
+			$pngPayloads += ,@{
+				Size = $size
+				Bytes = $stream.ToArray()
+			}
+			$stream.Dispose()
+			$bitmap.Dispose()
+		}
+
+		$writer.Write([UInt16]0)
+		$writer.Write([UInt16]1)
+		$writer.Write([UInt16]$pngPayloads.Count)
+		$imageOffset = 6 + (16 * $pngPayloads.Count)
+		foreach ($payload in $pngPayloads) {
+			$sizeByte = if ($payload.Size -ge 256) { 0 } else { $payload.Size }
+			$writer.Write([byte]$sizeByte)
+			$writer.Write([byte]$sizeByte)
+			$writer.Write([byte]0)
+			$writer.Write([byte]0)
+			$writer.Write([UInt16]1)
+			$writer.Write([UInt16]32)
+			$writer.Write([UInt32]$payload.Bytes.Length)
+			$writer.Write([UInt32]$imageOffset)
+			$imageOffset += $payload.Bytes.Length
+		}
+		foreach ($payload in $pngPayloads) {
+			$writer.Write($payload.Bytes)
+		}
+	}
+	finally {
+		$writer.Dispose()
+		$file.Dispose()
+	}
+}
+
 $icon = New-Canvas 1024 1024
 $iconBitmap = $icon[0]
 $iconGraphics = $icon[1]
@@ -124,10 +181,18 @@ Draw-BrandMark $iconGraphics 172 118 680
 Draw-CenteredText $iconGraphics "AS" "Arial" 184 ([System.Drawing.RectangleF]::new(0, 755, 1024, 180)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 18, 20, 28))) 8
 Save-Png $iconBitmap $iconGraphics (Join-Path $OutDir "app_icon_1024.png")
 
+$mark = New-Canvas 512 512
+$markBitmap = $mark[0]
+$markGraphics = $mark[1]
+Draw-BrandMark $markGraphics 38 30 436
+Save-Png $markBitmap $markGraphics (Join-Path $OutDir "brand_mark_autonomous_survivor.png")
+
 $smallIcon = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
 $smallGraphics = [System.Drawing.Graphics]::FromImage($smallIcon)
 $smallGraphics.SmoothingMode = [System.Drawing.Drawing2D.SmoothingMode]::HighQuality
-$smallGraphics.DrawImage([System.Drawing.Image]::FromFile((Join-Path $OutDir "app_icon_1024.png")), 0, 0, 256, 256)
+$sourceIcon = [System.Drawing.Image]::FromFile((Join-Path $OutDir "app_icon_1024.png"))
+$smallGraphics.DrawImage($sourceIcon, 0, 0, 256, 256)
+$sourceIcon.Dispose()
 Save-Png $smallIcon $smallGraphics (Join-Path $OutDir "app_icon_256.png")
 
 $logo = New-Canvas 1536 512
@@ -145,5 +210,7 @@ $wordmarkGraphics = $wordmark[1]
 Draw-CenteredText $wordmarkGraphics "AUTONOMOUS" "Arial" 82 ([System.Drawing.RectangleF]::new(0, 24, 1280, 106)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 116, 230, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 6
 Draw-CenteredText $wordmarkGraphics "SURVIVOR" "Arial" 128 ([System.Drawing.RectangleF]::new(0, 116, 1280, 160)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 8
 Save-Png $wordmarkBitmap $wordmarkGraphics (Join-Path $OutDir "wordmark_autonomous_survivor.png")
+
+Save-Ico (Join-Path $OutDir "app_icon_1024.png") (Join-Path $OutDir "app_icon.ico") @(16, 24, 32, 48, 64, 128, 256)
 
 Write-Host "Generated branding assets in $OutDir"

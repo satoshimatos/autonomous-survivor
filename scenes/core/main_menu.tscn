@@ -68,7 +68,7 @@ layout_mode = 2
 theme_override_constants/separation = 10
 
 [node name="Logo" type="TextureRect" parent="CenterContainer/VBoxContainer"]
-custom_minimum_size = Vector2(520, 174)
+custom_minimum_size = Vector2(560, 187)
 layout_mode = 2
 texture = ExtResource("4_logo")
 expand_mode = 1
@@ -76,8 +76,8 @@ stretch_mode = 5
 
 [node name="TitleLabel" type="Label" parent="CenterContainer/VBoxContainer"]
 layout_mode = 2
-theme_override_font_sizes/font_size = 30
-text = "Autonomous Survivor"
+theme_override_font_sizes/font_size = 18
+text = "Build. Survive. Break the run."
 horizontal_alignment = 1
 
 [node name="TankLabel" type="Label" parent="CenterContainer/VBoxContainer"]

@@ -15,6 +15,7 @@ run/main_scene="res://scenes/core/main_menu.tscn"
 config/features=PackedStringArray("4.6", "GL Compatibility")
 boot_splash/image="res://assets/ui/branding/logo_autonomous_survivor.png"
 config/icon="res://assets/ui/branding/app_icon_1024.png"
+config/windows_native_icon="res://assets/ui/branding/app_icon.ico"
 
 [autoload]
 
