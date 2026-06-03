@@ -234,6 +234,14 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added six Scrapborn regular enemies that enter the map 2 spawn pool over time and down-weight the original Dust Bowl roster.
   - Added three Scrap Maze bosses with heavier hazard/minion patterns and distinct reward profiles.
   - Generated distinct Scrap Maze enemy and boss sprites under `assets/visual/enemies/map2`.
+- Expanded the campaign to five maps:
+  - Map unlocks now form a victory chain: Dust Bowl -> Scrap Maze -> Crystal Expanse -> Toxic Foundry -> Void Crucible, with each new map unlocked by a 30:00 victory on the previous map.
+  - Added Crystal Expanse, a wide shard-lane arena with faster flanking enemies, a higher pressure cap, and periodic crystal storm hazards.
+  - Added Toxic Foundry, a huge corrosive basin with furnace blockers, toxic vent hazard pulses, heavier elites, and tankier enemy pressure.
+  - Added Void Crucible, a compact endgame arena with central/rib blockers, void collapse pulses, extra unstable swarm spawns, and the fastest boss cadence.
+  - Added 15 new map-specific regular enemies and 6 new map-specific bosses across maps 3-5.
+  - Generated and imported distinct enemy and boss sprites under `assets/visual/enemies/map3`, `assets/visual/enemies/map4`, and `assets/visual/enemies/map5`.
+  - Extended scene validation so every map layout is switched and checked for obstacle cache coverage.
 
 ## Backlog
 
@@ -243,9 +251,9 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 enemies, and 10 bosses.
-- Surviving 30:00 is now a victory condition and unlocks map 2, Scrap Maze.
-- Scrap Maze has its own enemy/boss roster and pressure modifiers so future map work should continue using map-specific catalog data instead of duplicating the main scene.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 41 enemies, and 19 bosses.
+- Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
+- Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 
 ### Systems
 

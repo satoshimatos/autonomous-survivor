@@ -51,6 +51,24 @@ func _init() -> void:
 			quit(1)
 			return
 
+		if scene_path == "res://scenes/core/main.tscn":
+			var map_layout = instance.get_node_or_null("MapLayout")
+			if map_layout == null:
+				push_error("Main scene needs a MapLayout node.")
+				quit(1)
+				return
+			map_layout.obstacle_root = map_layout
+			for map_id in ["map1", "map2", "map3", "map4", "map5"]:
+				map_layout.apply_map(map_id)
+				if not map_layout.is_walkable(map_layout.arena_center, 0.0) and map_id != "map5":
+					push_error("Map center should be walkable for %s." % map_id)
+					quit(1)
+					return
+				if map_id != "map1" and map_layout.active_obstacle_rects.is_empty():
+					push_error("%s needs authored obstacle collision cached by MapLayout." % map_id)
+					quit(1)
+					return
+
 		if scene_path == "res://scenes/ui/upgrade.tscn":
 			if instance.get_node_or_null("CanvasLayer/ColorRect/MarginContainer/VBoxContainer/OptionsRow/OptionButton1/Icon") == null:
 				push_error("Upgrade menu cards need owned icon nodes, not stretched button icons.")

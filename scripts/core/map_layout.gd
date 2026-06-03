@@ -6,36 +6,65 @@ const MAP1_ARENA_SIZE: Vector2 = Vector2(1620, 930)
 const MAP1_BOUNDS_SIZE: Vector2 = Vector2(1940, 1250)
 const MAP2_ARENA_SIZE: Vector2 = Vector2(2300, 1400)
 const MAP2_BOUNDS_SIZE: Vector2 = Vector2(2620, 1720)
+const MAP3_ARENA_SIZE: Vector2 = Vector2(2800, 1650)
+const MAP3_BOUNDS_SIZE: Vector2 = Vector2(3120, 1970)
+const MAP4_ARENA_SIZE: Vector2 = Vector2(3150, 1900)
+const MAP4_BOUNDS_SIZE: Vector2 = Vector2(3470, 2220)
+const MAP5_ARENA_SIZE: Vector2 = Vector2(2050, 1220)
+const MAP5_BOUNDS_SIZE: Vector2 = Vector2(2370, 1540)
 const SEARCH_STEP: float = 28.0
 const SEARCH_DIRECTIONS: int = 18
 
 @export var arena_center: Vector2 = Vector2(576, 324)
-@export var map2_obstacles_path: NodePath = ^"Map2Obstacles"
+@export var obstacle_root_path: NodePath = ^"."
 
 var selected_map_id: String = MAP1_ID
 var active_obstacle_rects: Array[Rect2] = []
-var map2_obstacles: Node
+var obstacle_root: Node
 
 
 func _ready() -> void:
-	map2_obstacles = get_node_or_null(map2_obstacles_path)
+	obstacle_root = get_node_or_null(obstacle_root_path)
 	apply_map(MAP1_ID)
 
 
 func apply_map(map_id: String) -> void:
 	selected_map_id = map_id
-	if map2_obstacles:
-		map2_obstacles.visible = map_id == MAP2_ID
-		set_collision_enabled_recursive(map2_obstacles, map_id == MAP2_ID)
+	if obstacle_root:
+		for child in obstacle_root.get_children():
+			var child_name := String(child.name)
+			if not child_name.begins_with("Map") or not child_name.ends_with("Obstacles"):
+				continue
+			var active := child_name == get_obstacle_group_name(map_id)
+			child.visible = active
+			set_collision_enabled_recursive(child, active)
 	rebuild_obstacle_cache()
 
 
 func get_arena_size() -> Vector2:
-	return MAP2_ARENA_SIZE if selected_map_id == MAP2_ID else MAP1_ARENA_SIZE
+	match selected_map_id:
+		MAP2_ID:
+			return MAP2_ARENA_SIZE
+		"map3":
+			return MAP3_ARENA_SIZE
+		"map4":
+			return MAP4_ARENA_SIZE
+		"map5":
+			return MAP5_ARENA_SIZE
+	return MAP1_ARENA_SIZE
 
 
 func get_bounds_size() -> Vector2:
-	return MAP2_BOUNDS_SIZE if selected_map_id == MAP2_ID else MAP1_BOUNDS_SIZE
+	match selected_map_id:
+		MAP2_ID:
+			return MAP2_BOUNDS_SIZE
+		"map3":
+			return MAP3_BOUNDS_SIZE
+		"map4":
+			return MAP4_BOUNDS_SIZE
+		"map5":
+			return MAP5_BOUNDS_SIZE
+	return MAP1_BOUNDS_SIZE
 
 
 func get_arena_rect() -> Rect2:
@@ -89,15 +118,38 @@ func resolve_actor_step(current_position: Vector2, target_position: Vector2, cle
 
 func rebuild_obstacle_cache() -> void:
 	active_obstacle_rects.clear()
-	if selected_map_id != MAP2_ID or map2_obstacles == null:
+	var active_group := get_active_obstacle_group()
+	if active_group == null:
 		return
-	for collision_shape in find_collision_shapes(map2_obstacles):
+	for collision_shape in find_collision_shapes(active_group):
 		if not collision_shape is CollisionShape2D:
 			continue
 		var shape := (collision_shape as CollisionShape2D).shape
 		if shape is RectangleShape2D:
 			var rect_size: Vector2 = (shape as RectangleShape2D).size * collision_shape.global_scale.abs()
 			active_obstacle_rects.append(Rect2(collision_shape.global_position - rect_size / 2.0, rect_size))
+
+
+func get_active_obstacle_group() -> Node:
+	if obstacle_root == null:
+		return null
+	var group_name := get_obstacle_group_name(selected_map_id)
+	if group_name == "":
+		return null
+	return obstacle_root.get_node_or_null(group_name)
+
+
+func get_obstacle_group_name(map_id: String) -> String:
+	match map_id:
+		"map2":
+			return "Map2Obstacles"
+		"map3":
+			return "Map3Obstacles"
+		"map4":
+			return "Map4Obstacles"
+		"map5":
+			return "Map5Obstacles"
+	return ""
 
 
 func find_collision_shapes(root: Node) -> Array[Node]:

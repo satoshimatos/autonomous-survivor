@@ -66,6 +66,7 @@ Completed setup:
   - #33 Performance and organization pass for high enemy counts
   - #34 Add 30-minute victory and unlockable obstacle map 2
   - #35 Make map 2 a harder distinct experience
+  - #36 Add maps 3-5 with unlock chain, distinct pressure, gimmicks, and performance pass
 
 Completed issues:
 
@@ -104,13 +105,15 @@ Completed issues:
 - #33 Performance and organization pass for high enemy counts
 - #34 Add 30-minute victory and unlockable obstacle map 2
 - #35 Make map 2 a harder distinct experience
+- #36 Add maps 3-5 with unlock chain, distinct pressure, gimmicks, and performance pass
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 26 enemies, 13 bosses.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 41 enemies, 19 bosses.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
-- 30-minute survival now completes the run as a victory and unlocks Scrap Maze, the second map.
+- 30-minute survival now completes the run as a victory and unlocks the next map in the chain.
 - Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
+- Crystal Expanse, Toxic Foundry, and Void Crucible now add larger/different arenas, map gimmicks, 15 additional map-specific enemies, and 6 additional bosses.
 
 ### P1 - Enemies And Bosses
 

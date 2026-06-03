@@ -153,7 +153,15 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String]) -> void:
 	if not bool(result.get("victory", false)):
 		return
-	try_unlock("map", "map2", "Scrap Maze map", unlocked_messages)
+	match String(result.get("map_id", "")):
+		"map1":
+			try_unlock("map", "map2", "Scrap Maze map", unlocked_messages)
+		"map2":
+			try_unlock("map", "map3", "Crystal Expanse map", unlocked_messages)
+		"map3":
+			try_unlock("map", "map4", "Toxic Foundry map", unlocked_messages)
+		"map4":
+			try_unlock("map", "map5", "Void Crucible map", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -261,7 +269,13 @@ func get_progress_report(recent_unlocks: Array[String] = []) -> String:
 func get_next_unlock_goal_lines() -> Array[String]:
 	var lines: Array[String] = []
 	if not is_map_unlocked("map2"):
-		lines.append("- Map: Survive 30:00 to unlock Scrap Maze.")
+		lines.append("- Map: Win Dust Bowl at 30:00 to unlock Scrap Maze.")
+	elif not is_map_unlocked("map3"):
+		lines.append("- Map: Win Scrap Maze at 30:00 to unlock Crystal Expanse.")
+	elif not is_map_unlocked("map4"):
+		lines.append("- Map: Win Crystal Expanse at 30:00 to unlock Toxic Foundry.")
+	elif not is_map_unlocked("map5"):
+		lines.append("- Map: Win Toxic Foundry at 30:00 to unlock Void Crucible.")
 	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
@@ -344,7 +358,13 @@ func get_map_unlock_hint(map_id: String) -> String:
 		return "Unlocked"
 	match map_id:
 		"map2":
-			return "Survive 30:00 on any map."
+			return "Win Dust Bowl at 30:00."
+		"map3":
+			return "Win Scrap Maze at 30:00."
+		"map4":
+			return "Win Crystal Expanse at 30:00."
+		"map5":
+			return "Win Toxic Foundry at 30:00."
 	return "Progress further to reveal this map."
 
 

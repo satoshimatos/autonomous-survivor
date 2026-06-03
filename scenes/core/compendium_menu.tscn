@@ -87,7 +87,7 @@ theme_override_colors/font_color = Color(0.94, 0.98, 1, 1)
 theme_override_colors/font_outline_color = Color(0.02, 0.025, 0.035, 1)
 theme_override_constants/outline_size = 4
 theme_override_font_sizes/font_size = 16
-text = "Browse tanks, upgrades, powers, enemies, bosses, modifiers, and unlock goals."
+text = "Browse maps, tanks, upgrades, powers, enemies, bosses, modifiers, and unlock goals."
 vertical_alignment = 1
 autowrap_mode = 3
 

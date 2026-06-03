@@ -7,6 +7,7 @@ const UPGRADE_MENU = preload("res://scenes/ui/upgrade.tscn")
 const ABILITY_MENU = preload("res://scenes/ui/ability_menu.tscn")
 
 const CATEGORIES: Array[String] = [
+	"Maps",
 	"Tanks",
 	"Upgrades",
 	"Abilities",
@@ -75,6 +76,8 @@ func add_entry_card(entry: Dictionary, index: int) -> void:
 
 func build_entries_for_category(category: String) -> Array[Dictionary]:
 	match category:
+		"Maps":
+			return get_map_entries()
 		"Tanks":
 			return get_tank_entries()
 		"Upgrades":
@@ -90,6 +93,61 @@ func build_entries_for_category(category: String) -> Array[Dictionary]:
 		"Unlock Goals":
 			return get_unlock_goal_entries()
 	return []
+
+
+func get_map_entries() -> Array[Dictionary]:
+	var entries: Array[Dictionary] = []
+	var run_config = get_run_config()
+	var unlock_manager = get_unlock_manager()
+	for map_config in run_config.map_catalog:
+		var map_id := String(map_config.id)
+		var status := "Unlocked" if unlock_manager.is_map_unlocked(map_id) else "Locked"
+		entries.append({
+			"name": "%s [%s]" % [String(map_config.name), status],
+			"texture": load("res://assets/backgrounds/wasteland_arena_generated.png"),
+			"accent": get_map_accent(map_id),
+			"detail": format_map_detail(map_config, status, unlock_manager.get_map_unlock_hint(map_id)),
+		})
+	return entries
+
+
+func format_map_detail(map_config: Dictionary, status: String, unlock_hint: String) -> String:
+	var lines: Array[String] = [
+		"[b]%s[/b]" % String(map_config.name),
+		String(map_config.summary),
+		"",
+		"Status: %s" % status,
+		"Unlock: %s" % unlock_hint,
+		"Spawn interval x%.2f, boss interval x%.2f" % [
+			float(map_config.get("spawn_interval_multiplier", 1.0)),
+			float(map_config.get("boss_spawn_interval_multiplier", 1.0)),
+		],
+		"Enemy growth: speed x%.2f, health x%.2f, damage x%.2f" % [
+			float(map_config.get("enemy_speed_growth_multiplier", 1.0)),
+			float(map_config.get("enemy_health_growth_multiplier", 1.0)),
+			float(map_config.get("enemy_damage_growth_multiplier", 1.0)),
+		],
+		"Active cap bonus: %+d, cap limit: %d, elite odds x%.2f" % [
+			int(map_config.get("active_enemy_cap_bonus", 0)),
+			int(map_config.get("active_enemy_cap_limit", 225)),
+			float(map_config.get("elite_chance_multiplier", 1.0)),
+		],
+		"Gimmick: %s" % String(map_config.get("map_gimmick", "none")).capitalize(),
+	]
+	return "\n".join(lines)
+
+
+func get_map_accent(map_id: String) -> Color:
+	match map_id:
+		"map2":
+			return Color(0.55, 0.34, 0.2, 1.0)
+		"map3":
+			return Color(0.18, 0.52, 0.72, 1.0)
+		"map4":
+			return Color(0.38, 0.56, 0.18, 1.0)
+		"map5":
+			return Color(0.28, 0.14, 0.52, 1.0)
+	return Color(0.36, 0.32, 0.26, 1.0)
 
 
 func get_tank_entries() -> Array[Dictionary]:

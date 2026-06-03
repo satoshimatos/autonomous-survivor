@@ -72,7 +72,11 @@ var last_boss_variant_id: String = ""
 var selected_map_name: String = "Dust Bowl"
 var selected_map_id: String = "map1"
 var active_enemy_cap_bonus: int = 0
+var active_enemy_cap_limit: int = MAX_ACTIVE_ENEMY_CAP
 var elite_chance_multiplier: float = 1.0
+var map_gimmick: String = ""
+var map_gimmick_interval: float = 0.0
+var map_gimmick_timer: float = 0.0
 var run_completed: bool = false
 var run_was_victory: bool = false
 
@@ -133,6 +137,21 @@ var enemy_variant_catalog: Array[Dictionary] = [
 	{"id": "magnet_wraith", "maps": ["map2"], "scene": ENEMY, "unlock_seconds": 360.0, "base_weight": 28.0, "growth_per_minute": 2.8, "min_weight": 0.0, "max_weight": 54.0, "health": 32, "speed": 88.0, "contact_damage": 3, "exp_drop_count": 2, "exp_drop_min_tier": 2, "color": Color(0.65, 0.4, 1.0, 1.0), "scale": 0.78, "movement_style": "orbiter", "texture": "res://assets/visual/enemies/map2/magnet_wraith.png"},
 	{"id": "crusher_drone", "maps": ["map2"], "scene": SHIELDED_ENEMY, "unlock_seconds": 540.0, "base_weight": 18.0, "growth_per_minute": 1.7, "min_weight": 0.0, "max_weight": 36.0, "health": 76, "speed": 36.0, "contact_damage": 5, "exp_drop_count": 4, "exp_drop_min_tier": 3, "color": Color(0.56, 0.62, 0.65, 1.0), "scale": 1.18, "movement_style": "drifter", "texture": "res://assets/visual/enemies/map2/crusher_drone.png"},
 	{"id": "furnace_reaper", "maps": ["map2"], "scene": ENEMY, "unlock_seconds": 840.0, "base_weight": 16.0, "growth_per_minute": 2.1, "min_weight": 0.0, "max_weight": 38.0, "health": 108, "speed": 72.0, "contact_damage": 8, "exp_drop_count": 7, "exp_drop_min_tier": 4, "color": Color(1.0, 0.18, 0.05, 1.0), "scale": 1.05, "movement_style": "stalker", "texture": "res://assets/visual/enemies/map2/furnace_reaper.png"},
+	{"id": "shardling", "maps": ["map3"], "scene": ENEMY, "unlock_seconds": 0.0, "base_weight": 92.0, "growth_per_minute": -3.0, "min_weight": 20.0, "max_weight": 92.0, "health": 24, "speed": 92.0, "contact_damage": 2, "exp_drop_count": 1, "exp_drop_min_tier": 1, "color": Color(0.38, 0.92, 1.0, 1.0), "scale": 0.68, "movement_style": "zigzag", "texture": "res://assets/visual/enemies/map3/shardling.png"},
+	{"id": "prism_runner", "maps": ["map3"], "scene": ENEMY, "unlock_seconds": 120.0, "base_weight": 34.0, "growth_per_minute": 2.6, "min_weight": 0.0, "max_weight": 60.0, "health": 20, "speed": 132.0, "contact_damage": 3, "exp_drop_count": 2, "exp_drop_min_tier": 1, "color": Color(1.0, 0.48, 0.92, 1.0), "scale": 0.6, "movement_style": "sprinter", "texture": "res://assets/visual/enemies/map3/prism_runner.png"},
+	{"id": "quartz_bulwark", "maps": ["map3"], "scene": SHIELDED_ENEMY, "unlock_seconds": 300.0, "base_weight": 22.0, "growth_per_minute": 1.8, "min_weight": 0.0, "max_weight": 42.0, "health": 92, "speed": 32.0, "contact_damage": 6, "exp_drop_count": 5, "exp_drop_min_tier": 3, "color": Color(0.72, 0.96, 1.0, 1.0), "scale": 1.18, "movement_style": "chase", "texture": "res://assets/visual/enemies/map3/quartz_bulwark.png"},
+	{"id": "lens_wraith", "maps": ["map3"], "scene": ENEMY, "unlock_seconds": 540.0, "base_weight": 28.0, "growth_per_minute": 2.5, "min_weight": 0.0, "max_weight": 56.0, "health": 54, "speed": 98.0, "contact_damage": 5, "exp_drop_count": 4, "exp_drop_min_tier": 3, "color": Color(0.62, 0.62, 1.0, 1.0), "scale": 0.78, "movement_style": "orbiter", "texture": "res://assets/visual/enemies/map3/lens_wraith.png"},
+	{"id": "crystal_juggernaut", "maps": ["map3"], "scene": SHIELDED_ENEMY, "unlock_seconds": 900.0, "base_weight": 16.0, "growth_per_minute": 1.6, "min_weight": 0.0, "max_weight": 34.0, "health": 180, "speed": 30.0, "contact_damage": 10, "exp_drop_count": 8, "exp_drop_min_tier": 4, "color": Color(0.3, 0.95, 1.0, 1.0), "scale": 1.42, "movement_style": "drifter", "texture": "res://assets/visual/enemies/map3/crystal_juggernaut.png"},
+	{"id": "spore_tick", "maps": ["map4"], "scene": ENEMY, "unlock_seconds": 0.0, "base_weight": 96.0, "growth_per_minute": -2.2, "min_weight": 22.0, "max_weight": 96.0, "health": 34, "speed": 82.0, "contact_damage": 3, "exp_drop_count": 2, "exp_drop_min_tier": 1, "color": Color(0.55, 1.0, 0.16, 1.0), "scale": 0.72, "movement_style": "weaver", "texture": "res://assets/visual/enemies/map4/spore_tick.png"},
+	{"id": "acid_sprinter", "maps": ["map4"], "scene": ENEMY, "unlock_seconds": 150.0, "base_weight": 36.0, "growth_per_minute": 2.3, "min_weight": 0.0, "max_weight": 62.0, "health": 32, "speed": 126.0, "contact_damage": 4, "exp_drop_count": 2, "exp_drop_min_tier": 2, "color": Color(0.82, 1.0, 0.18, 1.0), "scale": 0.66, "movement_style": "sprinter", "texture": "res://assets/visual/enemies/map4/acid_sprinter.png"},
+	{"id": "caustic_bloater", "maps": ["map4"], "scene": BROWN_ENEMY, "unlock_seconds": 360.0, "base_weight": 28.0, "growth_per_minute": 2.1, "min_weight": 0.0, "max_weight": 50.0, "health": 140, "speed": 38.0, "contact_damage": 8, "exp_drop_count": 6, "exp_drop_min_tier": 3, "color": Color(0.5, 0.85, 0.18, 1.0), "scale": 1.26, "movement_style": "chase", "texture": "res://assets/visual/enemies/map4/caustic_bloater.png"},
+	{"id": "fume_stalker", "maps": ["map4"], "scene": ENEMY, "unlock_seconds": 600.0, "base_weight": 30.0, "growth_per_minute": 2.8, "min_weight": 0.0, "max_weight": 58.0, "health": 72, "speed": 88.0, "contact_damage": 7, "exp_drop_count": 5, "exp_drop_min_tier": 3, "color": Color(0.38, 0.72, 0.22, 1.0), "scale": 0.9, "movement_style": "stalker", "texture": "res://assets/visual/enemies/map4/fume_stalker.png"},
+	{"id": "slag_titan", "maps": ["map4"], "scene": SHIELDED_ENEMY, "unlock_seconds": 960.0, "base_weight": 18.0, "growth_per_minute": 1.8, "min_weight": 0.0, "max_weight": 38.0, "health": 260, "speed": 26.0, "contact_damage": 13, "exp_drop_count": 10, "exp_drop_min_tier": 4, "color": Color(0.72, 0.9, 0.2, 1.0), "scale": 1.58, "movement_style": "chase", "texture": "res://assets/visual/enemies/map4/slag_titan.png"},
+	{"id": "null_mite", "maps": ["map5"], "scene": ENEMY, "unlock_seconds": 0.0, "base_weight": 110.0, "growth_per_minute": -1.8, "min_weight": 32.0, "max_weight": 110.0, "health": 44, "speed": 118.0, "contact_damage": 4, "exp_drop_count": 2, "exp_drop_min_tier": 2, "color": Color(0.78, 0.35, 1.0, 1.0), "scale": 0.58, "movement_style": "weaver", "texture": "res://assets/visual/enemies/map5/null_mite.png"},
+	{"id": "rift_lancer", "maps": ["map5"], "scene": ENEMY, "unlock_seconds": 100.0, "base_weight": 40.0, "growth_per_minute": 3.0, "min_weight": 0.0, "max_weight": 72.0, "health": 48, "speed": 152.0, "contact_damage": 6, "exp_drop_count": 3, "exp_drop_min_tier": 2, "color": Color(1.0, 0.32, 0.86, 1.0), "scale": 0.62, "movement_style": "sprinter", "texture": "res://assets/visual/enemies/map5/rift_lancer.png"},
+	{"id": "gravity_knight", "maps": ["map5"], "scene": SHIELDED_ENEMY, "unlock_seconds": 300.0, "base_weight": 28.0, "growth_per_minute": 2.3, "min_weight": 0.0, "max_weight": 54.0, "health": 150, "speed": 46.0, "contact_damage": 10, "exp_drop_count": 7, "exp_drop_min_tier": 3, "color": Color(0.42, 0.22, 0.86, 1.0), "scale": 1.14, "movement_style": "orbiter", "texture": "res://assets/visual/enemies/map5/gravity_knight.png"},
+	{"id": "event_horizon", "maps": ["map5"], "scene": BROWN_ENEMY, "unlock_seconds": 620.0, "base_weight": 26.0, "growth_per_minute": 2.7, "min_weight": 0.0, "max_weight": 58.0, "health": 120, "speed": 78.0, "contact_damage": 9, "exp_drop_count": 6, "exp_drop_min_tier": 4, "color": Color(0.2, 0.08, 0.36, 1.0), "scale": 1.0, "movement_style": "stalker", "texture": "res://assets/visual/enemies/map5/event_horizon.png"},
+	{"id": "cosmic_devourer", "maps": ["map5"], "scene": SHIELDED_ENEMY, "unlock_seconds": 980.0, "base_weight": 20.0, "growth_per_minute": 2.2, "min_weight": 0.0, "max_weight": 46.0, "health": 320, "speed": 34.0, "contact_damage": 16, "exp_drop_count": 12, "exp_drop_min_tier": 4, "color": Color(0.5, 0.16, 1.0, 1.0), "scale": 1.42, "movement_style": "drifter", "texture": "res://assets/visual/enemies/map5/cosmic_devourer.png"},
 ]
 
 var boss_variant_catalog: Array[Dictionary] = [
@@ -149,6 +168,12 @@ var boss_variant_catalog: Array[Dictionary] = [
 	{"id": "scrapyard_warden", "maps": ["map2"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 120.0, "growth_per_minute": -2.0, "min_weight": 64.0, "max_weight": 120.0, "health": 1850, "speed": 24.0, "contact_damage": 9, "exp_drop_count": 48, "exp_drop_min_tier": 3, "color": Color(0.95, 0.45, 0.12, 1.0), "scale": 1.14, "behavior": "crusher", "texture": "res://assets/visual/enemies/map2/boss_scrapyard_warden.png", "phase_thresholds": [0.68, 0.36], "ability_modules": [{"type": "hazard_ring", "cooldown": 6.0, "initial_delay": 2.0, "count": 6, "phase_count_bonus": 2, "radius": 62.0, "ring_distance": 155.0, "damage": 4}, {"type": "minion_call", "cooldown": 8.0, "initial_delay": 4.0, "count": 3, "phase_count_bonus": 2}]},
 	{"id": "magnetar_colossus", "maps": ["map2"], "scene": BOSS_ENEMY, "unlock_seconds": 420.0, "weight": 82.0, "growth_per_minute": 1.8, "min_weight": 0.0, "max_weight": 108.0, "health": 2700, "speed": 28.0, "contact_damage": 12, "exp_drop_count": 72, "exp_drop_min_tier": 4, "color": Color(0.5, 0.22, 1.0, 1.0), "scale": 1.24, "behavior": "singularity", "texture": "res://assets/visual/enemies/map2/boss_magnetar_colossus.png", "phase_thresholds": [0.72, 0.48, 0.24], "ability_modules": [{"type": "target_hazard", "cooldown": 4.6, "initial_delay": 1.7, "radius": 68.0, "damage": 5}, {"type": "hazard_ring", "cooldown": 6.0, "initial_delay": 3.6, "count": 8, "phase_count_bonus": 1, "radius": 58.0, "ring_distance": 170.0, "damage": 4}]},
 	{"id": "foundry_overlord", "maps": ["map2"], "scene": BOSS_ENEMY, "unlock_seconds": 900.0, "weight": 72.0, "growth_per_minute": 2.0, "min_weight": 0.0, "max_weight": 112.0, "health": 3800, "speed": 19.0, "contact_damage": 16, "exp_drop_count": 96, "exp_drop_min_tier": 4, "color": Color(1.0, 0.16, 0.08, 1.0), "scale": 1.42, "behavior": "overlord", "texture": "res://assets/visual/enemies/map2/boss_foundry_overlord.png", "phase_thresholds": [0.8, 0.6, 0.38, 0.18], "ability_modules": [{"type": "minion_call", "cooldown": 5.8, "initial_delay": 1.8, "count": 5, "phase_count_bonus": 2}, {"type": "hazard_ring", "cooldown": 6.8, "initial_delay": 3.2, "count": 9, "phase_count_bonus": 1, "radius": 74.0, "ring_distance": 215.0, "damage": 5}, {"type": "target_hazard", "cooldown": 5.4, "initial_delay": 5.5, "radius": 70.0, "damage": 5}]},
+	{"id": "prism_regent", "maps": ["map3"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 112.0, "growth_per_minute": -1.2, "min_weight": 58.0, "max_weight": 112.0, "health": 2450, "speed": 34.0, "contact_damage": 11, "exp_drop_count": 62, "exp_drop_min_tier": 3, "color": Color(0.4, 0.9, 1.0, 1.0), "scale": 1.06, "behavior": "tempest", "texture": "res://assets/visual/enemies/map3/boss_prism_regent.png", "phase_thresholds": [0.7, 0.42, 0.2], "ability_modules": [{"type": "target_hazard", "cooldown": 4.8, "initial_delay": 1.8, "radius": 54.0, "damage": 4}, {"type": "hazard_ring", "cooldown": 6.2, "initial_delay": 3.8, "count": 7, "phase_count_bonus": 1, "radius": 52.0, "ring_distance": 180.0, "damage": 4}]},
+	{"id": "crystal_hydra", "maps": ["map3"], "scene": BOSS_ENEMY, "unlock_seconds": 540.0, "weight": 84.0, "growth_per_minute": 1.9, "min_weight": 0.0, "max_weight": 112.0, "health": 3500, "speed": 25.0, "contact_damage": 14, "exp_drop_count": 86, "exp_drop_min_tier": 4, "color": Color(0.78, 0.44, 1.0, 1.0), "scale": 1.28, "behavior": "monarch", "texture": "res://assets/visual/enemies/map3/boss_crystal_hydra.png", "phase_thresholds": [0.78, 0.56, 0.34, 0.16], "ability_modules": [{"type": "minion_call", "cooldown": 6.0, "initial_delay": 2.2, "count": 4, "phase_count_bonus": 2}, {"type": "target_hazard", "cooldown": 5.0, "initial_delay": 4.0, "radius": 60.0, "damage": 5}]},
+	{"id": "toxlord", "maps": ["map4"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 118.0, "growth_per_minute": -0.8, "min_weight": 68.0, "max_weight": 118.0, "health": 4200, "speed": 21.0, "contact_damage": 16, "exp_drop_count": 78, "exp_drop_min_tier": 4, "color": Color(0.65, 1.0, 0.12, 1.0), "scale": 1.34, "behavior": "bastion", "texture": "res://assets/visual/enemies/map4/boss_toxlord.png", "phase_thresholds": [0.75, 0.5, 0.25], "ability_modules": [{"type": "hazard_ring", "cooldown": 5.8, "initial_delay": 2.0, "count": 8, "phase_count_bonus": 2, "radius": 66.0, "ring_distance": 175.0, "damage": 5}, {"type": "minion_call", "cooldown": 7.0, "initial_delay": 4.0, "count": 4, "phase_count_bonus": 2}]},
+	{"id": "furnace_queen", "maps": ["map4"], "scene": BOSS_ENEMY, "unlock_seconds": 600.0, "weight": 88.0, "growth_per_minute": 2.0, "min_weight": 0.0, "max_weight": 118.0, "health": 5200, "speed": 18.0, "contact_damage": 20, "exp_drop_count": 104, "exp_drop_min_tier": 4, "color": Color(0.95, 0.8, 0.16, 1.0), "scale": 1.5, "behavior": "overlord", "texture": "res://assets/visual/enemies/map4/boss_furnace_queen.png", "phase_thresholds": [0.82, 0.62, 0.42, 0.2], "ability_modules": [{"type": "hazard_ring", "cooldown": 5.6, "initial_delay": 1.7, "count": 9, "phase_count_bonus": 2, "radius": 76.0, "ring_distance": 210.0, "damage": 6}, {"type": "target_hazard", "cooldown": 4.8, "initial_delay": 3.3, "radius": 68.0, "damage": 6}, {"type": "minion_call", "cooldown": 7.2, "initial_delay": 5.0, "count": 5, "phase_count_bonus": 2}]},
+	{"id": "rift_seraph", "maps": ["map5"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 120.0, "growth_per_minute": -0.4, "min_weight": 72.0, "max_weight": 120.0, "health": 5600, "speed": 36.0, "contact_damage": 18, "exp_drop_count": 90, "exp_drop_min_tier": 4, "color": Color(0.72, 0.3, 1.0, 1.0), "scale": 1.16, "behavior": "wraith", "texture": "res://assets/visual/enemies/map5/boss_rift_seraph.png", "phase_thresholds": [0.72, 0.48, 0.24], "ability_modules": [{"type": "target_hazard", "cooldown": 3.8, "initial_delay": 1.3, "radius": 62.0, "damage": 6}, {"type": "minion_call", "cooldown": 6.2, "initial_delay": 3.8, "count": 5, "phase_count_bonus": 2}]},
+	{"id": "void_emperor", "maps": ["map5"], "scene": BOSS_ENEMY, "unlock_seconds": 480.0, "weight": 96.0, "growth_per_minute": 2.4, "min_weight": 0.0, "max_weight": 128.0, "health": 7200, "speed": 28.0, "contact_damage": 24, "exp_drop_count": 128, "exp_drop_min_tier": 4, "color": Color(0.34, 0.08, 0.66, 1.0), "scale": 1.58, "behavior": "singularity", "texture": "res://assets/visual/enemies/map5/boss_void_emperor.png", "phase_thresholds": [0.84, 0.66, 0.48, 0.3, 0.14], "ability_modules": [{"type": "hazard_ring", "cooldown": 4.8, "initial_delay": 1.5, "count": 10, "phase_count_bonus": 2, "radius": 72.0, "ring_distance": 195.0, "damage": 7}, {"type": "target_hazard", "cooldown": 3.9, "initial_delay": 3.0, "radius": 74.0, "damage": 7}, {"type": "minion_call", "cooldown": 5.8, "initial_delay": 4.8, "count": 6, "phase_count_bonus": 2}]},
 ]
 
 var enemy_affix_catalog: Array[Dictionary] = [
@@ -241,6 +266,7 @@ const ENEMY_OBSTACLE_CLEARANCE: float = 18.0
 @onready var arena_mesh: MeshInstance2D = $ArenaMesh
 @onready var bounds_mesh: MeshInstance2D = $BoundsMesh
 @onready var wasteland_background: Sprite2D = $WastelandBackground
+@onready var world_mood: CanvasModulate = $WorldMood
 @onready var boundary_body: StaticBody2D = $StaticBody2D
 @onready var map_layout: Node2D = $MapLayout
 @onready var hp_bar: Control = $CanvasLayer/HPBar
@@ -317,6 +343,7 @@ func complete_run(victory: bool) -> void:
 		"enemies_defeated": enemies_defeated,
 		"bosses_defeated": bosses_defeated,
 		"elites_defeated": elites_defeated,
+		"map_id": selected_map_id,
 		"build_levels": get_build_level_snapshot(),
 	}
 	var unlocked_messages: Array[String] = get_unlock_manager().record_run_result(result)
@@ -356,7 +383,13 @@ func configure_selected_map() -> void:
 	enemy_health_growth_multiplier *= float(map_config.get("enemy_health_growth_multiplier", 1.0))
 	enemy_damage_growth_multiplier *= float(map_config.get("enemy_damage_growth_multiplier", 1.0))
 	active_enemy_cap_bonus = int(map_config.get("active_enemy_cap_bonus", 0))
+	active_enemy_cap_limit = int(map_config.get("active_enemy_cap_limit", MAX_ACTIVE_ENEMY_CAP))
 	elite_chance_multiplier = float(map_config.get("elite_chance_multiplier", 1.0))
+	map_gimmick = String(map_config.get("map_gimmick", ""))
+	map_gimmick_interval = float(map_config.get("gimmick_interval", 0.0))
+	map_gimmick_timer = map_gimmick_interval * 0.5
+	if world_mood:
+		world_mood.color = map_config.get("mood_color", Color(0.9, 0.93, 1.0, 1.0)) as Color
 	if map_layout and map_layout.has_method("apply_map"):
 		map_layout.apply_map(selected_map_id)
 		apply_map_scene_dimensions()
@@ -443,6 +476,7 @@ func _process(delta: float) -> void:
 	update_player_dps()
 	update_low_health_upgrade_timer(delta)
 	process_run_events(delta)
+	process_map_gimmick(delta)
 	update_run_timer_label()
 	update_upgrade_inventory_label()
 	spawn_timer += delta
@@ -915,7 +949,7 @@ func get_active_enemy_cap() -> int:
 	return clampi(
 		BASE_ACTIVE_ENEMY_CAP + active_enemy_cap_bonus + int(floor(minutes * ACTIVE_ENEMY_CAP_GROWTH_PER_MINUTE)),
 		BASE_ACTIVE_ENEMY_CAP,
-		MAX_ACTIVE_ENEMY_CAP
+		active_enemy_cap_limit
 	)
 
 
@@ -1008,6 +1042,80 @@ func spawn_targeted_boss_hazard(module: Dictionary, phase_index: int) -> void:
 		return
 	var offset := Vector2.RIGHT.rotated(randf() * TAU) * randf_range(0.0, 42.0)
 	spawn_boss_hazard(player.global_position + offset, float(module.get("radius", 64.0)) + float(phase_index) * 10.0, int(module.get("damage", 3)) + phase_index)
+
+
+func process_map_gimmick(delta: float) -> void:
+	if map_gimmick == "" or map_gimmick_interval <= 0.0:
+		return
+	map_gimmick_timer -= delta
+	if map_gimmick_timer > 0.0:
+		return
+	map_gimmick_timer = map_gimmick_interval
+	match map_gimmick:
+		"crystal_storm":
+			trigger_crystal_storm()
+		"toxic_vents":
+			trigger_toxic_vents()
+		"void_collapse":
+			trigger_void_collapse()
+
+
+func trigger_crystal_storm() -> void:
+	if player == null:
+		return
+	var storm_count := 3 + int(run_time / 420.0)
+	storm_count = clampi(storm_count, 3, 7)
+	var base_angle := randf() * TAU
+	for i in range(storm_count):
+		var offset := Vector2.RIGHT.rotated(base_angle + TAU * float(i) / float(storm_count)) * randf_range(180.0, 360.0)
+		spawn_boss_hazard(player.global_position + offset, 48.0, 2 + int(run_time / 900.0))
+	spawn_particle_burst(self, player.global_position, 22, Color(0.45, 0.95, 1.0, 1.0), 210.0, 0.32, Vector2(4.0, 9.0), true)
+
+
+func trigger_toxic_vents() -> void:
+	var vent_count := 4 + int(run_time / 360.0)
+	vent_count = clampi(vent_count, 4, 9)
+	for i in range(vent_count):
+		var hazard_position := get_walkable_drop_position(get_random_arena_position(96.0), ENEMY_OBSTACLE_CLEARANCE)
+		spawn_boss_hazard(hazard_position, 58.0, 3 + int(run_time / 720.0))
+	spawn_particle_burst(self, get_arena_rect().get_center(), 28, Color(0.64, 1.0, 0.2, 1.0), 300.0, 0.4, Vector2(5.0, 11.0), true)
+
+
+func trigger_void_collapse() -> void:
+	if player == null:
+		return
+	var pulse_count := 5 + int(run_time / 360.0)
+	pulse_count = clampi(pulse_count, 5, 11)
+	for i in range(pulse_count):
+		var angle := randf() * TAU
+		var distance := randf_range(110.0, 430.0)
+		spawn_boss_hazard(player.global_position + Vector2.RIGHT.rotated(angle) * distance, 54.0, 4 + int(run_time / 600.0))
+	if has_enemy_pressure_room(4):
+		var void_config := {
+			"id": "void_echo",
+			"scene": ENEMY,
+			"health": 34 + int(run_time / 30.0),
+			"speed": 118.0,
+			"contact_damage": 4,
+			"exp_drop_count": 2,
+			"exp_drop_min_tier": PURPLE_ORB_TIER,
+			"color": Color(0.7, 0.34, 1.0, 1.0),
+			"scale": 0.62,
+			"movement_style": "weaver",
+			"texture": "res://assets/visual/enemies/map5/null_mite.png",
+		}
+		for i in range(4):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, void_config)
+	shake_camera(0.18, 4.5)
+
+
+func get_random_arena_position(inset: float = 0.0) -> Vector2:
+	var arena_rect := get_arena_rect().grow(-inset)
+	if arena_rect.size.x <= 0.0 or arena_rect.size.y <= 0.0:
+		return get_arena_rect().get_center()
+	return Vector2(randf_range(arena_rect.position.x, arena_rect.end.x), randf_range(arena_rect.position.y, arena_rect.end.y))
 
 
 func spawn_boss_hazard(hazard_position: Vector2, radius: float, damage: int) -> void:
@@ -1277,12 +1385,19 @@ func is_catalog_entry_available_for_selected_map(config: Dictionary) -> bool:
 
 
 func get_map_entry_weight_multiplier(config: Dictionary) -> float:
-	if selected_map_id != "map2":
-		return 1.0
 	var maps: Array = config.get("maps", []) as Array
-	if maps.has("map2"):
+	if maps.has(selected_map_id):
 		return 1.0
-	return 0.42
+	match selected_map_id:
+		"map2":
+			return 0.42
+		"map3":
+			return 0.32
+		"map4":
+			return 0.25
+		"map5":
+			return 0.18
+	return 1.0
 
 
 func pick_weighted_entry(weighted_entries: Array[Dictionary]) -> Dictionary:

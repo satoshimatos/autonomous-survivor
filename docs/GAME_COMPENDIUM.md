@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 26 enemies, and 13 bosses.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 41 enemies, and 19 bosses.
 
 ## Menu
 
@@ -70,7 +70,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 
 ### Scrap Maze
 
-- Unlock: survive to 30:00 and complete a victorious run.
+- Unlock: win Dust Bowl by surviving to 30:00.
 - Larger arena than Dust Bowl.
 - Contains authored wreckage obstacles that block player movement and enemy movement.
 - EXP crystals, wrench drops, dynamite drops, supply boxes, and enemy spawns resolve to nearby walkable space if their first position overlaps an obstacle.
@@ -78,6 +78,36 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 - Map-specific enemy roster: Scrap Scout, Gear Runner, Slag Brute, Magnet Wraith, Crusher Drone, and Furnace Reaper enter the spawn table over time.
 - Map-specific boss roster: Scrapyard Warden, Magnetar Colossus, and Foundry Overlord add heavier hazard rings, targeted hazards, and minion calls.
 - Original Dust Bowl enemies and bosses can still appear, but their weights are reduced so Scrapborn enemies dominate this map.
+
+### Crystal Expanse
+
+- Unlock: win Scrap Maze by surviving to 30:00.
+- Very wide crystalline arena with shard-lane obstacle groups and a higher active enemy cap than Scrap Maze.
+- Gimmick: Crystal Storm. Roughly every 18 seconds, several small crystal hazards land around the player with a burst effect. The storm count increases over time.
+- Pressure profile: faster regular spawns, faster bosses, stronger speed/health/damage growth, and higher elite odds than Scrap Maze.
+- Map-specific enemy roster: Shardling, Prism Runner, Quartz Bulwark, Lens Wraith, and Crystal Juggernaut.
+- Map-specific boss roster: Prism Regent and Crystal Hydra focus on fast targeted hazards, hazard rings, and minion pressure.
+- Global Dust Bowl enemies can still appear at reduced weight, but Crystal enemies dominate the spawn table.
+
+### Toxic Foundry
+
+- Unlock: win Crystal Expanse by surviving to 30:00.
+- Largest current arena, with furnace-wall and vent-stack obstacles that create long lanes.
+- Gimmick: Toxic Vents. Roughly every 15 seconds, corrosive hazard pools erupt across random walkable positions.
+- Pressure profile: very fast regular spawns, tankier enemies, high damage growth, a larger active enemy cap, and much higher elite odds.
+- Map-specific enemy roster: Spore Tick, Acid Sprinter, Caustic Bloater, Fume Stalker, and Slag Titan.
+- Map-specific boss roster: Toxlord and Furnace Queen emphasize large hazard rings, minion calls, and targeted corrosive strikes.
+- Global enemies are heavily down-weighted, leaving foundry enemies as the main pressure identity.
+
+### Void Crucible
+
+- Unlock: win Toxic Foundry by surviving to 30:00.
+- Compact endgame arena with central void-core and side-rib blockers, making positioning more dangerous despite the smaller size.
+- Gimmick: Void Collapse. Roughly every 13 seconds, multiple void hazards appear near the player and can spawn extra Null Mites if enemy pressure has room.
+- Pressure profile: fastest regular spawns, fastest boss cadence, strongest growth multipliers, highest active enemy cap, and highest elite odds.
+- Map-specific enemy roster: Null Mite, Rift Lancer, Gravity Knight, Event Horizon, and Cosmic Devourer.
+- Map-specific boss roster: Rift Seraph and Void Emperor create rapid target hazards, dense hazard rings, and large minion waves.
+- Global enemy/boss weights are reduced the most on this map so the endgame roster dominates.
 
 ## Player Baseline
 
@@ -265,6 +295,34 @@ clamp(base_weight + minutes_since_unlock * growth_per_minute, min_weight, max_we
 | Sapper | 2220s | stalker | 76 | 74 | 8 | 6 tier 4+ | 14 base, +1.8/min, max 34 |
 | Voidling | 2340s | weaver | 88 | 84 | 8 | 7 tier 4+ | 20 base, +2.4/min, max 44 |
 
+### Map-Specific Enemies
+
+These enemies only enter the spawn table on their listed map. The selected map's own enemies are weighted normally, while global enemies are down-weighted on maps 2-5 so each arena keeps its identity.
+
+| Enemy | Map | Unlock | Movement | Health | Speed | Damage | EXP Drops | Weight Profile |
+|---|---|---:|---|---:|---:|---:|---|---|
+| Scrap Scout | Scrap Maze | 0s | zigzag | 16 | 74 | 1 | 1 tier 1+ | 88 base, -3.5/min, min 18 |
+| Gear Runner | Scrap Maze | 90s | sprinter | 14 | 116 | 2 | 1 tier 1+ | 36 base, +2.4/min, max 58 |
+| Slag Brute | Scrap Maze | 210s | chase | 42 | 48 | 4 | 3 tier 2+ | 24 base, +2/min, max 46 |
+| Magnet Wraith | Scrap Maze | 360s | orbiter | 32 | 88 | 3 | 2 tier 2+ | 28 base, +2.8/min, max 54 |
+| Crusher Drone | Scrap Maze | 540s | drifter | 76 | 36 | 5 | 4 tier 3+ | 18 base, +1.7/min, max 36 |
+| Furnace Reaper | Scrap Maze | 840s | stalker | 108 | 72 | 8 | 7 tier 4+ | 16 base, +2.1/min, max 38 |
+| Shardling | Crystal Expanse | 0s | zigzag | 24 | 92 | 2 | 1 tier 1+ | 92 base, -3/min, min 20 |
+| Prism Runner | Crystal Expanse | 120s | sprinter | 20 | 132 | 3 | 2 tier 1+ | 34 base, +2.6/min, max 60 |
+| Quartz Bulwark | Crystal Expanse | 300s | chase | 92 | 32 | 6 | 5 tier 3+ | 22 base, +1.8/min, max 42 |
+| Lens Wraith | Crystal Expanse | 540s | orbiter | 54 | 98 | 5 | 4 tier 3+ | 28 base, +2.5/min, max 56 |
+| Crystal Juggernaut | Crystal Expanse | 900s | drifter | 180 | 30 | 10 | 8 tier 4+ | 16 base, +1.6/min, max 34 |
+| Spore Tick | Toxic Foundry | 0s | weaver | 34 | 82 | 3 | 2 tier 1+ | 96 base, -2.2/min, min 22 |
+| Acid Sprinter | Toxic Foundry | 150s | sprinter | 32 | 126 | 4 | 2 tier 2+ | 36 base, +2.3/min, max 62 |
+| Caustic Bloater | Toxic Foundry | 360s | chase | 140 | 38 | 8 | 6 tier 3+ | 28 base, +2.1/min, max 50 |
+| Fume Stalker | Toxic Foundry | 600s | stalker | 72 | 88 | 7 | 5 tier 3+ | 30 base, +2.8/min, max 58 |
+| Slag Titan | Toxic Foundry | 960s | chase | 260 | 26 | 13 | 10 tier 4+ | 18 base, +1.8/min, max 38 |
+| Null Mite | Void Crucible | 0s | weaver | 44 | 118 | 4 | 2 tier 2+ | 110 base, -1.8/min, min 32 |
+| Rift Lancer | Void Crucible | 100s | sprinter | 48 | 152 | 6 | 3 tier 2+ | 40 base, +3/min, max 72 |
+| Gravity Knight | Void Crucible | 300s | orbiter | 150 | 46 | 10 | 7 tier 3+ | 28 base, +2.3/min, max 54 |
+| Event Horizon | Void Crucible | 620s | stalker | 120 | 78 | 9 | 6 tier 4+ | 26 base, +2.7/min, max 58 |
+| Cosmic Devourer | Void Crucible | 980s | drifter | 320 | 34 | 16 | 12 tier 4+ | 20 base, +2.2/min, max 46 |
+
 ### Enemy Movement Styles
 
 | Style | Behavior |
@@ -291,7 +349,7 @@ Elites begin appearing after 90s and ramp to an 18% spawn chance by 900s. Split 
 
 ## Bosses
 
-Only one boss can be alive at a time. Bosses normally spawn every 420s, modified by run modifiers. Boss spawns reserve 16 enemy-pressure slots.
+Only one boss can be alive at a time. Bosses normally spawn every 180s, modified by run modifiers and map pressure. Boss spawns reserve 16 enemy-pressure slots.
 
 | Boss | Unlock | Behavior | Health | Speed | Damage | EXP Drops | Weight Profile | Special Mechanics |
 |---|---:|---|---:|---:|---:|---|---|---|
@@ -305,6 +363,20 @@ Only one boss can be alive at a time. Bosses normally spawn every 420s, modified
 | Bastion | 2400s | bastion | 3200 | 13 | 14 | 84 tier 4+ | 72 base, +1.2/min, max 92 | Phases at 75%, 50%, and 25%, uses large hazard rings and bounded support waves. |
 | Overlord | 2700s | overlord | 3600 | 20 | 15 | 92 tier 4+ | 76 base, +1.2/min, max 94 | Phases at 78%, 55%, 32%, and 16%, combining minion calls, hazard rings, and targeted hazards. |
 | Singularity | 3000s | singularity | 2950 | 32 | 13 | 100 tier 4+ | 80 base, +1.1/min, max 96 | Phases at 70%, 45%, and 22%, fades and pulses while layering rapid targeted hazards with dense rings. |
+
+### Map-Specific Bosses
+
+| Boss | Map | Unlock | Behavior | Health | Speed | Damage | EXP Drops | Weight Profile | Special Mechanics |
+|---|---|---:|---|---:|---:|---:|---|---|---|
+| Scrapyard Warden | Scrap Maze | 0s | crusher | 1850 | 24 | 9 | 48 tier 3+ | 120 base, -2/min, min 64 | Phases at 68% and 36%; hazard rings plus minion calls. |
+| Magnetar Colossus | Scrap Maze | 420s | singularity | 2700 | 28 | 12 | 72 tier 4+ | 82 base, +1.8/min, max 108 | Three phases; targeted hazards plus dense rings. |
+| Foundry Overlord | Scrap Maze | 900s | overlord | 3800 | 19 | 16 | 96 tier 4+ | 72 base, +2/min, max 112 | Four phases; minion waves, large rings, and targeted hazards. |
+| Prism Regent | Crystal Expanse | 0s | tempest | 2450 | 34 | 11 | 62 tier 3+ | 112 base, -1.2/min, min 58 | Fast boss with targeted crystal strikes and hazard rings. |
+| Crystal Hydra | Crystal Expanse | 540s | monarch | 3500 | 25 | 14 | 86 tier 4+ | 84 base, +1.9/min, max 112 | Four phases; minion calls and repeated player-targeted hazards. |
+| Toxlord | Toxic Foundry | 0s | bastion | 4200 | 21 | 16 | 78 tier 4+ | 118 base, -0.8/min, min 68 | Large corrosive hazard rings and minion pressure. |
+| Furnace Queen | Toxic Foundry | 600s | overlord | 5200 | 18 | 20 | 104 tier 4+ | 88 base, +2/min, max 118 | Four phases; heavy hazard rings, targeted strikes, and minion calls. |
+| Rift Seraph | Void Crucible | 0s | wraith | 5600 | 36 | 18 | 90 tier 4+ | 120 base, -0.4/min, min 72 | Fast fading boss with rapid targeted hazards and minion waves. |
+| Void Emperor | Void Crucible | 480s | singularity | 7200 | 28 | 24 | 128 tier 4+ | 96 base, +2.4/min, max 128 | Five phases; dense rings, targeted hazards, and large minion waves. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
@@ -362,6 +434,15 @@ Progress is saved in `user://unlock_state.cfg`.
 | Best level >= 16 | Nanite Cloud ability |
 | Best survival time >= 1080s | Ricochet Rounds ability |
 | Best survival time >= 1320s | Chrono Burst ability |
+
+### Map Unlocks
+
+| Requirement | Unlock |
+|---|---|
+| Win Dust Bowl at 30:00 | Scrap Maze |
+| Win Scrap Maze at 30:00 | Crystal Expanse |
+| Win Crystal Expanse at 30:00 | Toxic Foundry |
+| Win Toxic Foundry at 30:00 | Void Crucible |
 
 ### Challenge Goals
 
