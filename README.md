@@ -94,6 +94,9 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 - Added visual identity wave #54:
   - Added dedicated Singularity Garden enemy and boss sprites under `assets/visual/enemies/map11/`.
   - Updated the map 11 enemy and boss catalogs to use the new sprites instead of generic variant art.
+- Added visual identity wave #55:
+  - Added dedicated boss sprites for Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine.
+  - Updated late-map boss catalog texture paths so maps 6-10 no longer use generic variant art for bosses.
 
 ### 2026-05-30
 
