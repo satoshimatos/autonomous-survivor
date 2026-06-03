@@ -90,6 +90,8 @@ Completed setup:
   - #57 Add Singularity Garden victory modifier
   - #58 Expand seeded run event variety
   - #59 Add late-game tank archetypes
+  - #60 Add Clockwork Spiral map 12
+  - #61 Add proper Autonomous Survivor icons and logos
 
 Completed issues:
 
@@ -152,6 +154,7 @@ Completed issues:
 - #57 Add Singularity Garden victory modifier
 - #58 Expand seeded run event variety
 - #59 Add late-game tank archetypes
+- #61 Add proper Autonomous Survivor icons and logos
 
 ### P1 - Replayability And Power Growth
 
@@ -189,7 +192,7 @@ Completed issues:
 ### P2 - UI And Feedback
 
 - Visual identity pass is complete enough for the current scope: generated arena/menu art, cartoon sprites, chunky UI, cloud shadows, player lighting, projectile trails, hit pops, and richer bursts are in-game.
-- Project branding now includes a proper Autonomous Survivor PNG app icon, native Windows `.ico`, boot splash logo, compact brand mark, wordmark, and main-menu logo asset.
+- Project branding now includes a stronger Autonomous Survivor PNG app icon, native Windows `.ico`, boot splash logo, compact brand mark, wordmark, main-menu logo asset, and generated menu action icons.
 - Singularity Garden now has dedicated map-specific enemy and boss sprites instead of falling back to generic variant art.
 - Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine now have dedicated boss sprites instead of generic variant art.
 - Global juice pass added animated button press/hover feedback, brighter upgrade and ability celebration backgrounds, selection confetti bursts, projectile hit sparks, healing particles, splash reinforcement, and capped micro-shake on strong impacts.

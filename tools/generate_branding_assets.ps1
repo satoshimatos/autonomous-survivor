@@ -108,6 +108,100 @@ function Draw-CenteredText($Graphics, [string]$Text, [string]$FontName, [float]$
 	$format.Dispose()
 }
 
+function Draw-HighlightStripe($Graphics, [System.Drawing.RectangleF]$Rect, [System.Drawing.Color]$Color) {
+	$path = New-Object System.Drawing.Drawing2D.GraphicsPath
+	$path.AddEllipse($Rect)
+	$brush = New-SolidBrush ([System.Drawing.Color]::FromArgb(70, $Color.R, $Color.G, $Color.B))
+	$Graphics.FillPath($brush, $path)
+	$brush.Dispose()
+	$path.Dispose()
+}
+
+function Draw-TankGlyph($Graphics, [float]$X, [float]$Y, [float]$Size) {
+	$black = [System.Drawing.Color]::FromArgb(255, 14, 16, 22)
+	$steel = [System.Drawing.Color]::FromArgb(255, 87, 119, 139)
+	$steelLight = [System.Drawing.Color]::FromArgb(255, 160, 202, 215)
+	$cyan = [System.Drawing.Color]::FromArgb(255, 80, 218, 244)
+	$amber = [System.Drawing.Color]::FromArgb(255, 255, 194, 70)
+	$green = [System.Drawing.Color]::FromArgb(255, 75, 210, 130)
+	$outline = New-Pen $black ($Size * 0.06)
+	$thin = New-Pen ([System.Drawing.Color]::FromArgb(255, 35, 50, 62)) ($Size * 0.022)
+
+	$leftTrack = [System.Drawing.RectangleF]::new($X + $Size * 0.10, $Y + $Size * 0.50, $Size * 0.80, $Size * 0.18)
+	$rightTrack = [System.Drawing.RectangleF]::new($X + $Size * 0.14, $Y + $Size * 0.66, $Size * 0.72, $Size * 0.15)
+	Draw-RoundedRectangle $Graphics $leftTrack ($Size * 0.07) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 42, 58, 72))) $outline
+	Draw-RoundedRectangle $Graphics $rightTrack ($Size * 0.06) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 28, 38, 48))) $outline
+	for ($i = 0; $i -lt 5; $i++) {
+		$wheelX = $X + $Size * (0.18 + 0.14 * $i)
+		$Graphics.FillEllipse((New-SolidBrush $steelLight), $wheelX, $Y + $Size * 0.55, $Size * 0.075, $Size * 0.075)
+		$Graphics.DrawEllipse($thin, $wheelX, $Y + $Size * 0.55, $Size * 0.075, $Size * 0.075)
+	}
+	$body = [System.Drawing.RectangleF]::new($X + $Size * 0.18, $Y + $Size * 0.36, $Size * 0.64, $Size * 0.22)
+	Draw-RoundedRectangle $Graphics $body ($Size * 0.07) (New-SolidBrush $green) $outline
+	$turret = [System.Drawing.RectangleF]::new($X + $Size * 0.34, $Y + $Size * 0.22, $Size * 0.32, $Size * 0.23)
+	Draw-RoundedRectangle $Graphics $turret ($Size * 0.08) (New-SolidBrush $cyan) $outline
+	$barrel = New-Pen $amber ($Size * 0.105)
+	$Graphics.DrawLine($outline, $X + $Size * 0.50, $Y + $Size * 0.27, $X + $Size * 0.50, $Y + $Size * 0.05)
+	$Graphics.DrawLine($barrel, $X + $Size * 0.50, $Y + $Size * 0.27, $X + $Size * 0.50, $Y + $Size * 0.05)
+	$Graphics.DrawLine((New-Pen ([System.Drawing.Color]::FromArgb(255, 255, 236, 142)) ($Size * 0.028)), $X + $Size * 0.47, $Y + $Size * 0.22, $X + $Size * 0.47, $Y + $Size * 0.06)
+	$Graphics.FillEllipse((New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 125, 46))), $X + $Size * 0.405, $Y + $Size * -0.02, $Size * 0.19, $Size * 0.19)
+	$Graphics.DrawEllipse($outline, $X + $Size * 0.405, $Y + $Size * -0.02, $Size * 0.19, $Size * 0.19)
+	Draw-HighlightStripe $Graphics ([System.Drawing.RectangleF]::new($X + $Size * 0.22, $Y + $Size * 0.30, $Size * 0.58, $Size * 0.20)) $steel
+	$barrel.Dispose()
+	$outline.Dispose()
+	$thin.Dispose()
+}
+
+function Draw-LogoPlate($Graphics, [System.Drawing.RectangleF]$Rect) {
+	$black = [System.Drawing.Color]::FromArgb(255, 12, 14, 20)
+	$dark = [System.Drawing.Color]::FromArgb(235, 17, 25, 41)
+	$edge = [System.Drawing.Color]::FromArgb(255, 77, 218, 245)
+	Draw-RoundedRectangle $Graphics $Rect 44 (New-SolidBrush $dark) (New-Pen $black 14)
+	$inner = [System.Drawing.RectangleF]::new($Rect.X + 14, $Rect.Y + 14, $Rect.Width - 28, $Rect.Height - 28)
+	Draw-RoundedRectangle $Graphics $inner 32 $null (New-Pen ([System.Drawing.Color]::FromArgb(210, $edge.R, $edge.G, $edge.B)) 5)
+	Draw-HighlightStripe $Graphics ([System.Drawing.RectangleF]::new($Rect.X + $Rect.Width * 0.06, $Rect.Y + $Rect.Height * 0.02, $Rect.Width * 0.56, $Rect.Height * 0.28)) $edge
+}
+
+function Draw-MenuIcon($Graphics, [string]$Kind, [int]$Size, [System.Drawing.Color]$Accent) {
+	$black = [System.Drawing.Color]::FromArgb(255, 12, 14, 20)
+	$dark = [System.Drawing.Color]::FromArgb(255, 22, 30, 48)
+	$light = [System.Drawing.Color]::FromArgb(255, 238, 248, 255)
+	$outline = New-Pen $black ($Size * 0.055)
+	Draw-RoundedRectangle $Graphics ([System.Drawing.RectangleF]::new($Size * 0.08, $Size * 0.08, $Size * 0.84, $Size * 0.84)) ($Size * 0.17) (New-SolidBrush $dark) $outline
+	Draw-HighlightStripe $Graphics ([System.Drawing.RectangleF]::new($Size * 0.18, $Size * 0.13, $Size * 0.54, $Size * 0.24)) $Accent
+	if ($Kind -eq "play") {
+		$path = New-Object System.Drawing.Drawing2D.GraphicsPath
+		$path.AddPolygon(@(
+			[System.Drawing.PointF]::new($Size * 0.40, $Size * 0.28),
+			[System.Drawing.PointF]::new($Size * 0.40, $Size * 0.72),
+			[System.Drawing.PointF]::new($Size * 0.74, $Size * 0.50)
+		))
+		$Graphics.FillPath((New-SolidBrush $Accent), $path)
+		$Graphics.DrawPath($outline, $path)
+		$path.Dispose()
+	} elseif ($Kind -eq "compendium") {
+		for ($i = 0; $i -lt 3; $i++) {
+			$x = $Size * (0.27 + 0.16 * $i)
+			Draw-RoundedRectangle $Graphics ([System.Drawing.RectangleF]::new($x, $Size * 0.30, $Size * 0.13, $Size * 0.44)) ($Size * 0.035) (New-SolidBrush $Accent) $outline
+			$Graphics.DrawLine((New-Pen $light ($Size * 0.018)), $x + $Size * 0.03, $Size * 0.38, $x + $Size * 0.10, $Size * 0.38)
+		}
+	} elseif ($Kind -eq "quit") {
+		$bolt = New-Object System.Drawing.Drawing2D.GraphicsPath
+		$bolt.AddPolygon(@(
+			[System.Drawing.PointF]::new($Size * 0.58, $Size * 0.22),
+			[System.Drawing.PointF]::new($Size * 0.35, $Size * 0.52),
+			[System.Drawing.PointF]::new($Size * 0.49, $Size * 0.52),
+			[System.Drawing.PointF]::new($Size * 0.40, $Size * 0.78),
+			[System.Drawing.PointF]::new($Size * 0.68, $Size * 0.43),
+			[System.Drawing.PointF]::new($Size * 0.53, $Size * 0.43)
+		))
+		$Graphics.FillPath((New-SolidBrush $Accent), $bolt)
+		$Graphics.DrawPath($outline, $bolt)
+		$bolt.Dispose()
+	}
+	$outline.Dispose()
+}
+
 function Save-Png($Bitmap, $Graphics, [string]$Path) {
 	$Graphics.Dispose()
 	$Bitmap.Save($Path, [System.Drawing.Imaging.ImageFormat]::Png)
@@ -174,17 +268,20 @@ function Save-Ico([string]$SourcePath, [string]$Path, [int[]]$Sizes) {
 $icon = New-Canvas 1024 1024
 $iconBitmap = $icon[0]
 $iconGraphics = $icon[1]
-$iconGraphics.FillEllipse((New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 11, 17, 31))), 48, 48, 928, 928)
-$iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 12, 12, 18)) 34), 48, 48, 928, 928)
+$iconGraphics.FillEllipse((New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 9, 13, 24))), 44, 44, 936, 936)
+$iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 10, 10, 16)) 38), 44, 44, 936, 936)
 $iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 72, 212, 240)) 18), 90, 90, 844, 844)
-Draw-BrandMark $iconGraphics 172 118 680
-Draw-CenteredText $iconGraphics "AS" "Arial" 184 ([System.Drawing.RectangleF]::new(0, 755, 1024, 180)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 18, 20, 28))) 8
+$iconGraphics.DrawEllipse((New-Pen ([System.Drawing.Color]::FromArgb(255, 255, 194, 70)) 10), 130, 130, 764, 764)
+Draw-BrandMark $iconGraphics 150 98 724
+Draw-TankGlyph $iconGraphics 284 222 456
+Draw-CenteredText $iconGraphics "AS" "Arial" 176 ([System.Drawing.RectangleF]::new(0, 764, 1024, 168)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 18, 20, 28))) 8
 Save-Png $iconBitmap $iconGraphics (Join-Path $OutDir "app_icon_1024.png")
 
 $mark = New-Canvas 512 512
 $markBitmap = $mark[0]
 $markGraphics = $mark[1]
-Draw-BrandMark $markGraphics 38 30 436
+Draw-BrandMark $markGraphics 34 26 444
+Draw-TankGlyph $markGraphics 132 104 252
 Save-Png $markBitmap $markGraphics (Join-Path $OutDir "brand_mark_autonomous_survivor.png")
 
 $smallIcon = New-Object System.Drawing.Bitmap(256, 256, [System.Drawing.Imaging.PixelFormat]::Format32bppArgb)
@@ -198,18 +295,31 @@ Save-Png $smallIcon $smallGraphics (Join-Path $OutDir "app_icon_256.png")
 $logo = New-Canvas 1536 512
 $logoBitmap = $logo[0]
 $logoGraphics = $logo[1]
-Draw-BrandMark $logoGraphics 44 56 400
-Draw-CenteredText $logoGraphics "AUTONOMOUS" "Arial" 118 ([System.Drawing.RectangleF]::new(430, 56, 1040, 160)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 116, 230, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 7
-Draw-CenteredText $logoGraphics "SURVIVOR" "Arial" 150 ([System.Drawing.RectangleF]::new(430, 194, 1040, 196)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 9
-Draw-CenteredText $logoGraphics "TANK BULLET HEAVEN" "Arial" 44 ([System.Drawing.RectangleF]::new(432, 380, 1038, 70)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 226, 244, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 3
+Draw-LogoPlate $logoGraphics ([System.Drawing.RectangleF]::new(28, 30, 1480, 442))
+Draw-BrandMark $logoGraphics 58 62 388
+Draw-TankGlyph $logoGraphics 148 150 210
+Draw-CenteredText $logoGraphics "AUTONOMOUS" "Arial Black" 116 ([System.Drawing.RectangleF]::new(438, 62, 1016, 144)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 116, 230, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 7
+Draw-CenteredText $logoGraphics "SURVIVOR" "Arial Black" 150 ([System.Drawing.RectangleF]::new(438, 188, 1016, 176)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 9
+Draw-CenteredText $logoGraphics "AUTONOMOUS TANK BULLET HEAVEN" "Arial" 40 ([System.Drawing.RectangleF]::new(442, 374, 1012, 58)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 226, 244, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 3
 Save-Png $logoBitmap $logoGraphics (Join-Path $OutDir "logo_autonomous_survivor.png")
 
 $wordmark = New-Canvas 1280 320
 $wordmarkBitmap = $wordmark[0]
 $wordmarkGraphics = $wordmark[1]
-Draw-CenteredText $wordmarkGraphics "AUTONOMOUS" "Arial" 82 ([System.Drawing.RectangleF]::new(0, 24, 1280, 106)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 116, 230, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 6
-Draw-CenteredText $wordmarkGraphics "SURVIVOR" "Arial" 128 ([System.Drawing.RectangleF]::new(0, 116, 1280, 160)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 8
+Draw-LogoPlate $wordmarkGraphics ([System.Drawing.RectangleF]::new(20, 26, 1240, 268))
+Draw-CenteredText $wordmarkGraphics "AUTONOMOUS" "Arial Black" 76 ([System.Drawing.RectangleF]::new(44, 42, 1192, 100)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 116, 230, 255))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 6
+Draw-CenteredText $wordmarkGraphics "SURVIVOR" "Arial Black" 120 ([System.Drawing.RectangleF]::new(44, 126, 1192, 142)) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 255, 217, 84))) (New-SolidBrush ([System.Drawing.Color]::FromArgb(255, 16, 18, 28))) 8
 Save-Png $wordmarkBitmap $wordmarkGraphics (Join-Path $OutDir "wordmark_autonomous_survivor.png")
+
+foreach ($button in @(
+	@{ Name = "icon_menu_play.png"; Kind = "play"; Accent = [System.Drawing.Color]::FromArgb(255, 88, 226, 132) },
+	@{ Name = "icon_menu_compendium.png"; Kind = "compendium"; Accent = [System.Drawing.Color]::FromArgb(255, 112, 190, 255) },
+	@{ Name = "icon_menu_quit.png"; Kind = "quit"; Accent = [System.Drawing.Color]::FromArgb(255, 255, 104, 104) }
+)) {
+	$buttonCanvas = New-Canvas 128 128
+	Draw-MenuIcon $buttonCanvas[1] $button.Kind 128 $button.Accent
+	Save-Png $buttonCanvas[0] $buttonCanvas[1] (Join-Path $OutDir $button.Name)
+}
 
 Save-Ico (Join-Path $OutDir "app_icon_1024.png") (Join-Path $OutDir "app_icon.ico") @(16, 24, 32, 48, 64, 128, 256)
 

@@ -16,7 +16,7 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 
 | Area | Assets |
 |---|---|
-| Branding | `assets/ui/branding/app_icon_1024.png`, `app_icon_256.png`, `app_icon.ico`, `brand_mark_autonomous_survivor.png`, `logo_autonomous_survivor.png`, `wordmark_autonomous_survivor.png` |
+| Branding | `assets/ui/branding/app_icon_1024.png`, `app_icon_256.png`, `app_icon.ico`, `brand_mark_autonomous_survivor.png`, `logo_autonomous_survivor.png`, `wordmark_autonomous_survivor.png`, `icon_menu_play.png`, `icon_menu_compendium.png`, `icon_menu_quit.png` |
 | World | `assets/backgrounds/wasteland_arena_generated.png`, cloud shadow textures |
 | Menu | `assets/backgrounds/menu_backdrop_generated.png`, `assets/visual/ui/chunky_panel.png` |
 | Player | `assets/visual/player/tank_base_cartoon.png`, `assets/visual/player/tank_cannon_cartoon.png`, `assets/visual/effects/radial_player_light.png` |
@@ -38,7 +38,7 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 
 ## Branding
 
-The game name is `Autonomous Survivor`. The project icon, native Windows icon, boot splash, and main menu use the generated branding set in `assets/ui/branding/`. The visual mark combines a shield, tank silhouette, cyan/yellow energy accents, and the `AS` monogram so the icon remains readable at launcher size. `brand_mark_autonomous_survivor.png` is the compact reusable mark for smaller UI placements.
+The game name is `Autonomous Survivor`. The project icon, native Windows icon, boot splash, main menu logo, and main menu action icons use the generated branding set in `assets/ui/branding/`. The visual mark combines a shield, tank silhouette, cyan/yellow energy accents, and the `AS` monogram so the icon remains readable at launcher size. `brand_mark_autonomous_survivor.png` is the compact reusable mark for smaller UI placements, while `icon_menu_play.png`, `icon_menu_compendium.png`, and `icon_menu_quit.png` keep primary menu actions visually branded.
 
 ## Regeneration
 

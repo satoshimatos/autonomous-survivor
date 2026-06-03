@@ -1,9 +1,12 @@
-[gd_scene load_steps=5 format=3]
+[gd_scene load_steps=8 format=3]
 
 [ext_resource type="Script" path="res://scripts/core/main_menu.gd" id="1_menu"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/menu_backdrop_generated.png" id="2_menu_bg"]
 [ext_resource type="Texture2D" path="res://assets/visual/ui/chunky_panel.png" id="3_panel"]
 [ext_resource type="Texture2D" path="res://assets/ui/branding/logo_autonomous_survivor.png" id="4_logo"]
+[ext_resource type="Texture2D" path="res://assets/ui/branding/icon_menu_play.png" id="5_play_icon"]
+[ext_resource type="Texture2D" path="res://assets/ui/branding/icon_menu_compendium.png" id="6_compendium_icon"]
+[ext_resource type="Texture2D" path="res://assets/ui/branding/icon_menu_quit.png" id="7_quit_icon"]
 
 [node name="MainMenu" type="Control"]
 layout_mode = 3
@@ -122,19 +125,28 @@ vertical_alignment = 1
 custom_minimum_size = Vector2(220, 52)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("5_play_icon")
 text = "Play"
+icon_alignment = 0
 
 [node name="CompendiumButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(220, 48)
 layout_mode = 2
 theme_override_font_sizes/font_size = 22
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("6_compendium_icon")
 text = "Compendium"
+icon_alignment = 0
 
 [node name="QuitButton" type="Button" parent="CenterContainer/VBoxContainer"]
 custom_minimum_size = Vector2(220, 52)
 layout_mode = 2
 theme_override_font_sizes/font_size = 24
+theme_override_constants/icon_max_width = 32
+icon = ExtResource("7_quit_icon")
 text = "Quit"
+icon_alignment = 0
 
 [connection signal="item_selected" from="CenterContainer/VBoxContainer/TankSelector" to="." method="_on_tank_selector_item_selected"]
 [connection signal="item_selected" from="CenterContainer/VBoxContainer/MapSelector" to="." method="_on_map_selector_item_selected"]

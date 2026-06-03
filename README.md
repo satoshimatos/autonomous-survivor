@@ -116,6 +116,11 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Neon Courier, a Neon Grid victory tank focused on speed, overdrive tempo, pickup reach, and supply routing.
   - Added Bloom Artillerist, a Singularity Garden victory tank focused on artillery, missiles, splash upgrades, and ordnance passives.
   - Updated unlock hints, next-goal reporting, catalog validation, backlog counts, and compendium tank references.
+- Added branding polish wave #61:
+  - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
+  - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
+  - Wired the main menu buttons to the new action icons through scene-owned texture resources.
+  - Kept the full branding set reproducible through `tools/generate_branding_assets.ps1`.
 
 ### 2026-05-30
 
