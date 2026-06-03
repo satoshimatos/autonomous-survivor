@@ -45,6 +45,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added 5 late-chain run modifiers: Grave Moon, Neon Overdrive, Frost Cache, Ember Bounty, and Astral Lottery.
   - Late map victories now unlock these modifiers alongside the next map, and existing saves backfill them from already unlocked maps.
   - The new modifiers use existing run-scaling systems for EXP, boss rewards, spawn tempo, supplies, explosives, and enemy growth.
+- Added organization pass #43:
+  - Extracted the autonomous tank starts into `scripts/core/autonomous_tank_catalog.gd`.
+  - Extracted the autonomous late-map configs into `scripts/core/autonomous_map_catalog.gd`.
+  - Kept `run_config.gd` responsible for registering content and selecting runs, while the new catalog helpers own the large data batches.
 
 ### 2026-05-30
 

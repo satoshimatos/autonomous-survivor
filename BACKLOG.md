@@ -73,6 +73,7 @@ Completed setup:
   - #40 Extract late-map enemy catalog from main controller
   - #41 Extract late-map boss catalog from main controller
   - #42 Add late-chain victory run modifiers
+  - #43 Extract autonomous tank and map catalogs
 
 Completed issues:
 
@@ -118,6 +119,7 @@ Completed issues:
 - #40 Extract late-map enemy catalog from main controller
 - #41 Extract late-map boss catalog from main controller
 - #42 Add late-chain victory run modifiers
+- #43 Extract autonomous tank and map catalogs
 
 ### P1 - Replayability And Power Growth
 
@@ -137,6 +139,7 @@ Completed issues:
 
 - Active runtime registries now cover enemies, bosses, EXP orbs, projectiles, splash areas, boss hazards, and particle bursts so hot combat loops can avoid repeated whole-tree scans.
 - Late-map enemy and boss data now live in focused catalog helpers instead of expanding the core gameplay controller, preserving behavior while improving editor readability.
+- Autonomous tank and late-map config data now live in focused run-config catalog helpers, keeping `run_config.gd` smaller and easier to maintain.
 - Continue profiling dense late-game runs after challenge goals start pushing longer survival times.
 
 ### P2 - UI And Feedback
