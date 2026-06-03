@@ -8,6 +8,7 @@ var unlocked_maps: Array[String] = ["map1"]
 var unlocked_abilities: Array[String] = ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm", "phase_magnet"]
 var unlocked_modifiers: Array[String] = ["swarm_opening", "rich_crystals"]
 var completed_challenge_goals: Array[String] = []
+var completed_victory_maps: Array[String] = []
 var best_survival_seconds: int = 0
 var best_level: int = 1
 var best_enemies_defeated: int = 0
@@ -31,6 +32,7 @@ func load_unlocks() -> void:
 	unlocked_abilities = array_to_string_array(config.get_value("unlocks", "abilities", unlocked_abilities))
 	unlocked_modifiers = array_to_string_array(config.get_value("unlocks", "modifiers", unlocked_modifiers))
 	completed_challenge_goals = array_to_string_array(config.get_value("unlocks", "completed_challenge_goals", completed_challenge_goals))
+	completed_victory_maps = array_to_string_array(config.get_value("unlocks", "completed_victory_maps", completed_victory_maps))
 	best_survival_seconds = int(config.get_value("stats", "best_survival_seconds", best_survival_seconds))
 	best_level = int(config.get_value("stats", "best_level", best_level))
 	best_enemies_defeated = int(config.get_value("stats", "best_enemies_defeated", best_enemies_defeated))
@@ -45,6 +47,7 @@ func save_unlocks() -> void:
 	config.set_value("unlocks", "abilities", unlocked_abilities)
 	config.set_value("unlocks", "modifiers", unlocked_modifiers)
 	config.set_value("unlocks", "completed_challenge_goals", completed_challenge_goals)
+	config.set_value("unlocks", "completed_victory_maps", completed_victory_maps)
 	config.set_value("stats", "best_survival_seconds", best_survival_seconds)
 	config.set_value("stats", "best_level", best_level)
 	config.set_value("stats", "best_enemies_defeated", best_enemies_defeated)
@@ -74,6 +77,8 @@ func ensure_map_modifier_unlocks() -> void:
 	for map_id in map_modifier_unlocks:
 		if unlocked_maps.has(map_id):
 			unlock_id(unlocked_modifiers, String(map_modifier_unlocks[map_id]))
+	if completed_victory_maps.has("map11"):
+		unlock_id(unlocked_modifiers, "singularity_seed")
 
 
 func record_run_result(result: Dictionary) -> Array[String]:
@@ -84,10 +89,19 @@ func record_run_result(result: Dictionary) -> Array[String]:
 	
 	var unlocked_messages: Array[String] = []
 	add_unlocks_for_progress(unlocked_messages)
+	record_completed_victory_map(result)
 	add_unlocks_for_victory(result, unlocked_messages)
 	add_challenge_rewards_for_result(result, unlocked_messages)
 	save_unlocks()
 	return unlocked_messages
+
+
+func record_completed_victory_map(result: Dictionary) -> void:
+	if not bool(result.get("victory", false)):
+		return
+	var map_id := String(result.get("map_id", ""))
+	if not map_id.is_empty():
+		unlock_id(completed_victory_maps, map_id)
 
 
 func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
@@ -211,6 +225,8 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("modifier", "astral_lottery", "Astral Lottery modifier", unlocked_messages)
 		"map10":
 			try_unlock("map", "map11", "Singularity Garden map", unlocked_messages)
+		"map11":
+			try_unlock("modifier", "singularity_seed", "Singularity Seed modifier", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -265,6 +281,8 @@ func get_modifier_reward_name(modifier_id: String) -> String:
 			return "Ember Bounty"
 		"astral_lottery":
 			return "Astral Lottery"
+		"singularity_seed":
+			return "Singularity Seed"
 	return modifier_id.capitalize()
 
 
@@ -371,6 +389,8 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Ember Rift at 30:00 to unlock Astral Engine.")
 	elif not is_map_unlocked("map11"):
 		lines.append("- Map: Win Astral Engine at 30:00 to unlock Singularity Garden.")
+	elif not is_modifier_unlocked("singularity_seed"):
+		lines.append("- Modifier: Win Singularity Garden at 30:00 to unlock Singularity Seed.")
 	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))

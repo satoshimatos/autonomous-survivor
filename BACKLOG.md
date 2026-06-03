@@ -87,6 +87,7 @@ Completed setup:
   - #54 Add Singularity Garden enemy and boss sprites
   - #55 Add dedicated boss sprites for maps 6-10
   - #56 Add native branding icons and logo polish
+  - #57 Add Singularity Garden victory modifier
 
 Completed issues:
 
@@ -146,6 +147,7 @@ Completed issues:
 - #54 Add Singularity Garden enemy and boss sprites
 - #55 Add dedicated boss sprites for maps 6-10
 - #56 Add native branding icons and logo polish
+- #57 Add Singularity Garden victory modifier
 
 ### P1 - Replayability And Power Growth
 
@@ -156,7 +158,7 @@ Completed issues:
 - Crystal Expanse, Toxic Foundry, and Void Crucible now add larger/different arenas, map gimmicks, 15 additional map-specific enemies, and 6 additional bosses.
 - Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine extend the victory chain with new backgrounds, obstacle groups, pressure profiles, gimmicks, 25 map-specific regular enemies, and 10 additional map-specific bosses.
 - Singularity Garden extends the postgame victory chain after Astral Engine with a new background, authored root obstacles, singularity bloom hazards, 5 additional enemies, and 2 additional bosses.
-- Late-chain victories now add five more run modifiers, bringing the modifier pool from 7 to 12 and making high-progression runs more varied.
+- Late-chain and postgame victories now add six more run modifiers, bringing the modifier pool from 7 to 13 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
 - Run events now have a focused catalog and 10 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 - Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.

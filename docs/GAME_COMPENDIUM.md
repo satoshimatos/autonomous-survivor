@@ -498,6 +498,7 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 | Frost Cache | Win Neon Grid at 30:00 | Enemy speed growth *0.92, enemy health growth *1.26, supply chance *1.55. |
 | Ember Bounty | Win Frozen Scar at 30:00 | Boss EXP *1.58, dynamite drops *1.65, enemy damage growth *1.26. |
 | Astral Lottery | Win Ember Rift at 30:00 | EXP value *1.36, boss EXP *1.32, supply chance *0.72, all enemy growth is sharper. |
+| Singularity Seed | Win Singularity Garden at 30:00 | Spawn interval *0.76, boss spawn interval *0.78, EXP value *1.22, boss EXP *1.42, wrench drops *1.25, supply chance *0.62, enemy health growth *1.24, enemy damage growth *1.18. |
 
 ## Unlocks And Meta Progression
 
@@ -546,6 +547,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Frozen Scar at 30:00 | Ember Rift |
 | Win Ember Rift at 30:00 | Astral Engine |
 | Win Astral Engine at 30:00 | Singularity Garden |
+| Win Singularity Garden at 30:00 | Singularity Seed modifier |
 
 ### Challenge Goals
 

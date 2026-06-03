@@ -1,7 +1,12 @@
 extends SceneTree
 
+const RunModifierCatalog = preload("res://scripts/core/run_modifier_catalog.gd")
+const UnlockManagerScript = preload("res://scripts/core/unlock_manager.gd")
+
 
 func _init() -> void:
+	if not validate_progression_catalogs():
+		return
 	var scene_paths: Array[String] = [
 		"res://scenes/core/main_menu.tscn",
 		"res://scenes/core/main.tscn",
@@ -98,3 +103,30 @@ func _init() -> void:
 	
 	print("Scene check passed.")
 	quit()
+
+
+func validate_progression_catalogs() -> bool:
+	var modifier_ids: Array[String] = []
+	for modifier in RunModifierCatalog.get_entries():
+		modifier_ids.append(String(modifier.id))
+	if not modifier_ids.has("singularity_seed"):
+		push_error("Run modifier catalog should include Singularity Seed.")
+		quit(1)
+		return false
+
+	var unlock_manager = UnlockManagerScript.new()
+	var unlocked_messages: Array[String] = []
+	unlock_manager.record_completed_victory_map({"victory": true, "map_id": "map11"})
+	unlock_manager.add_unlocks_for_victory({"victory": true, "map_id": "map11"}, unlocked_messages)
+	if not unlock_manager.completed_victory_maps.has("map11"):
+		unlock_manager.free()
+		push_error("Map 11 victory should be persisted as a completed victory map.")
+		quit(1)
+		return false
+	if not unlock_manager.unlocked_modifiers.has("singularity_seed"):
+		unlock_manager.free()
+		push_error("Map 11 victory should unlock Singularity Seed.")
+		quit(1)
+		return false
+	unlock_manager.free()
+	return true

@@ -96,4 +96,17 @@ static func get_entries() -> Array[Dictionary]:
 			"enemy_health_growth_multiplier": 1.18,
 			"enemy_damage_growth_multiplier": 1.18,
 		},
+		{
+			"id": "singularity_seed",
+			"name": "Singularity Seed",
+			"summary": "Postgame pressure with richer crystals, faster bosses, and scarce supplies.",
+			"spawn_interval_multiplier": 0.76,
+			"boss_spawn_interval_multiplier": 0.78,
+			"exp_value_multiplier": 1.22,
+			"boss_exp_multiplier": 1.42,
+			"wrench_drop_multiplier": 1.25,
+			"supply_box_chance_multiplier": 0.62,
+			"enemy_health_growth_multiplier": 1.24,
+			"enemy_damage_growth_multiplier": 1.18,
+		},
 	]

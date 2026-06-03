@@ -102,6 +102,11 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Updated Godot project settings so packaged Windows builds use the native Autonomous Survivor icon.
   - Extended `tools/generate_branding_assets.ps1` so the logo, wordmark, PNG icons, compact mark, and `.ico` all regenerate from one source.
   - Tightened the main menu identity pass so the logo carries the game name while the small label becomes a descriptor.
+- Added replayability wave #57:
+  - Added Singularity Seed, a postgame run modifier unlocked by winning Singularity Garden at 30:00.
+  - Singularity Seed uses existing modifier hooks for faster spawns, faster bosses, richer EXP, better wrench salvage, lower supplies, and sharper enemy health/damage growth.
+  - Unlock state now persists completed victory maps so final-map victory rewards can be granted even when there is no next map to unlock.
+  - Updated next-goal text, the compendium, and backlog to communicate the new postgame reward.
 
 ### 2026-05-30
 
