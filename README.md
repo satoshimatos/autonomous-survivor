@@ -65,6 +65,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted elite affixes into `scripts/core/enemy_affix_catalog.gd`.
   - Expanded the affix pool from 5 to 10 with Glass, Bulwark, Overcharged, Brood, and Champion elites.
   - New affixes reuse existing stat, reward, volatile-death, and split-death hooks so every map gains more random enemy pressure without adding scene churn.
+- Added meta-progression wave #48:
+  - Expanded challenge goals from 12 to 20 with longer-run, elite-hunting, boss-hunting, salvage, repair, siege, precision, and mobility/phase build goals.
+  - New goals use existing permanent reward hooks for starting armor, damage, magnet, EXP, health, wrench drops, and dynamite drops.
+  - Updated the compendium so permanent unlock requirements remain visible from the main menu reference.
 
 ### 2026-05-30
 

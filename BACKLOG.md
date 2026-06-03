@@ -78,6 +78,7 @@ Completed setup:
   - #45 Expand and extract challenge goal catalog
   - #46 Expand and extract run event catalog
   - #47 Expand and extract enemy affix catalog
+  - #48 Expand permanent challenge goals
 
 Completed issues:
 
@@ -128,6 +129,7 @@ Completed issues:
 - #45 Expand and extract challenge goal catalog
 - #46 Expand and extract run event catalog
 - #47 Expand and extract enemy affix catalog
+- #48 Expand permanent challenge goals
 
 ### P1 - Replayability And Power Growth
 
@@ -138,7 +140,7 @@ Completed issues:
 - Crystal Expanse, Toxic Foundry, and Void Crucible now add larger/different arenas, map gimmicks, 15 additional map-specific enemies, and 6 additional bosses.
 - Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine extend the victory chain with new backgrounds, obstacle groups, pressure profiles, gimmicks, 25 map-specific regular enemies, and 10 additional map-specific bosses.
 - Late-chain victories now add five more run modifiers, bringing the modifier pool from 7 to 12 and making high-progression runs more varied.
-- Challenge goals now have a focused catalog and 12 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, and economy builds.
+- Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
 - Run events now have a focused catalog and 10 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 - Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.
 

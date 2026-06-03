@@ -552,6 +552,14 @@ Completed challenge IDs persist separately and can grant meta rewards.
 | Elite Recycler | Defeat 20 elites in a run | Wrench drop multiplier *1.2 |
 | Storm Mastery | Volt Coils + Field Amplifier + Capacitor Bank levels total at least 8 | +1 starting Damage level |
 | Magnet Empire | Magnet + EXP levels total at least 9 | +1 starting Magnet and +1 starting EXP |
+| Veteran Hull | Survive 15:00 in a run | +1 starting Armor level |
+| Breaker Column | Defeat 3 bosses in a run | +1 starting Damage level |
+| Elite Grinder | Defeat 35 elites in a run | Wrench drop multiplier *1.25 |
+| Salvage Crown | Recycler + Salvage Magnet + Lucky Core levels total at least 7 | +1 starting Magnet level |
+| Repair Doctrine | Nanobots + Repair Drones + Med Pump + Repair Beacon levels total at least 7 | +1 starting Health |
+| Siege Engineer | Ordnance Bay + Munition Printer + Missile Guidance + Impact Fuse levels total at least 8 | Dynamite drop multiplier *1.2 |
+| Precision Doctrine | Targeting Array + Weakpoint Scanner + Armor Piercers + Rail Stabilizer levels total at least 8 | +1 starting Damage level |
+| Phase Collector | Phase Core + Vector Thrusters + Kinetic Treads + Gyro Stabilizer levels total at least 8 | +1 starting EXP level |
 
 ## Pickups And Rewards
 
