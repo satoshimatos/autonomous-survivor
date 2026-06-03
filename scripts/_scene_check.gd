@@ -115,7 +115,7 @@ func validate_progression_catalogs() -> bool:
 	var modifier_ids: Array[String] = []
 	for modifier in RunModifierCatalog.get_entries():
 		modifier_ids.append(String(modifier.id))
-	for required_modifier_id in ["singularity_seed", "clockwork_dividend"]:
+	for required_modifier_id in ["singularity_seed", "clockwork_dividend", "quantum_current"]:
 		if modifier_ids.has(required_modifier_id):
 			continue
 		push_error("Run modifier catalog should include %s." % required_modifier_id)
@@ -170,6 +170,18 @@ func validate_progression_catalogs() -> bool:
 		push_error("Map 12 victory should unlock Gear Oracle.")
 		quit(1)
 		return false
+	unlock_manager.record_completed_victory_map({"victory": true, "map_id": "map13"})
+	unlock_manager.add_unlocks_for_victory({"victory": true, "map_id": "map13"}, unlocked_messages)
+	if not unlock_manager.unlocked_modifiers.has("quantum_current"):
+		unlock_manager.free()
+		push_error("Map 13 victory should unlock Quantum Current.")
+		quit(1)
+		return false
+	if not unlock_manager.unlocked_tanks.has("reef_savant"):
+		unlock_manager.free()
+		push_error("Map 13 victory should unlock Reef Savant.")
+		quit(1)
+		return false
 	unlock_manager.free()
 	return true
 
@@ -204,7 +216,7 @@ func validate_autonomous_tank_catalog() -> bool:
 			push_error("Autonomous tank %s references unsupported passive power %s." % [tank_id, String(power_id)])
 			quit(1)
 			return false
-	for required_tank_id in ["neon_courier", "bloom_artillerist", "gear_oracle"]:
+	for required_tank_id in ["neon_courier", "bloom_artillerist", "gear_oracle", "reef_savant"]:
 		if not seen_ids.has(required_tank_id):
 			push_error("Autonomous tank catalog should include %s." % required_tank_id)
 			quit(1)

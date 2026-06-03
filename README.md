@@ -128,6 +128,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Quantum Reef as map 13, unlocked by a 30:00 Clockwork Spiral victory.
   - Added a generated Quantum Reef background, authored coral/current obstacles, a Quantum Tide gimmick, five prism reef enemies, and two aquatic-prism bosses.
   - Extended map unlocks, map layout bounds, scene validation, spawn weighting, the compendium, and content counts for the new postgame arena.
+- Added postgame reward wave #64:
+  - Added Reef Savant, a Quantum Reef victory tank focused on fast current movement, pickup reach, prism crit economy, ricochets, freeze control, and gravity wells.
+  - Added Quantum Current, a Quantum Reef victory run modifier with faster spawns, faster bosses, richer crystals, faster player tempo, scarce supplies, and volatile enemy speed growth.
+  - Updated unlock hints, backfill rules, validation, backlog counts, and compendium references for the new final-map rewards.
 - Added branding polish wave #61:
   - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
   - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
@@ -371,7 +375,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 25 tanks, 81 enemies, 35 bosses, and 13 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 26 tanks, 81 enemies, 35 bosses, and 13 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

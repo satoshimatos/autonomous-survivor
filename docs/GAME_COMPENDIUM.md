@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 25 tanks, 81 enemies, 35 bosses, and 13 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 26 tanks, 81 enemies, 35 bosses, and 13 maps.
 
 ## Menu
 
@@ -191,6 +191,7 @@ Each level-up:
 | Neon Courier | Win Neon Grid at 30:00 | 1.32 speed, -4 health, 0.92 damage, 0.94 fire interval, starts with Overdrive Core 1, Magnet 2, Vector Thrusters, Kinetic Treads, Salvage Magnet, Phase Magnet, and Supply Beacon | Fast supply and pickup runner. |
 | Bloom Artillerist | Win Singularity Garden at 30:00 | 0.76 speed, +4 health, 1.1 damage, 1.1 fire interval, starts with Artillery 1, Missile Pod 1, Splash 1, Ordnance Bay, Munition Printer, Impact Fuse, Orbital Cannon, and Munition Swarm | Postgame siege platform. |
 | Gear Oracle | Win Clockwork Spiral at 30:00 | 0.82 speed, +2 health, 1.06 damage, 0.96 fire interval, starts with Piercing 1, Targeting Array 2, Railgun Orbiter 1, Tesla Pylon 1, Chrono Burst 1, Target Predictor, Weakpoint Scanner, Capacitor Mesh, Time Shock, Storm Catalyst, and Golden Reactor | Clockwork precision-control reward tank. |
+| Reef Savant | Win Quantum Reef at 30:00 | 1.18 speed, -1 health, 0.98 damage, 0.92 fire interval, starts with Piercing 1, Magnet 2, Ricochet Rounds 1, Freeze Pulse 1, Gravity Well 1, Crystal Lens, Prism Rounds, Salvage Magnet, Phase Magnet, Critical Storm, and Supply Beacon | Quantum current economy-control reward tank. |
 
 ## Core Upgrades
 
@@ -526,6 +527,7 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 | Astral Lottery | Win Ember Rift at 30:00 | EXP value *1.36, boss EXP *1.32, supply chance *0.72, all enemy growth is sharper. |
 | Singularity Seed | Win Singularity Garden at 30:00 | Spawn interval *0.76, boss spawn interval *0.78, EXP value *1.22, boss EXP *1.42, wrench drops *1.25, supply chance *0.62, enemy health growth *1.24, enemy damage growth *1.18. |
 | Clockwork Dividend | Win Clockwork Spiral at 30:00 | Spawn interval *0.72, boss spawn interval *0.74, boss EXP *1.7, EXP value *1.12, player fire interval *0.94, supply chance *0.7, and all enemy growth is sharper. |
+| Quantum Current | Win Quantum Reef at 30:00 | Spawn interval *0.68, boss spawn interval *0.7, EXP value *1.26, boss EXP *1.48, player fire interval *0.9, supply chance *0.58, enemy speed growth *1.32, enemy health growth *1.14, enemy damage growth *1.2. |
 
 ## Unlocks And Meta Progression
 
@@ -562,6 +564,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Neon Grid at 30:00 | Neon Courier tank |
 | Win Singularity Garden at 30:00 | Bloom Artillerist tank |
 | Win Clockwork Spiral at 30:00 | Gear Oracle tank |
+| Win Quantum Reef at 30:00 | Reef Savant tank |
 
 ### Map Unlocks
 
@@ -581,6 +584,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Clockwork Spiral at 30:00 | Quantum Reef |
 | Win Singularity Garden at 30:00 | Singularity Seed modifier |
 | Win Clockwork Spiral at 30:00 | Clockwork Dividend modifier |
+| Win Quantum Reef at 30:00 | Quantum Current modifier |
 
 ### Challenge Goals
 

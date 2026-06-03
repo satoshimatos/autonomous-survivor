@@ -123,4 +123,18 @@ static func get_entries() -> Array[Dictionary]:
 			"enemy_health_growth_multiplier": 1.18,
 			"enemy_damage_growth_multiplier": 1.22,
 		},
+		{
+			"id": "quantum_current",
+			"name": "Quantum Current",
+			"summary": "A Quantum Reef reward with racing tempo, rich crystals, scarce supplies, and volatile enemy speed growth.",
+			"spawn_interval_multiplier": 0.68,
+			"boss_spawn_interval_multiplier": 0.7,
+			"exp_value_multiplier": 1.26,
+			"boss_exp_multiplier": 1.48,
+			"player_fire_interval_multiplier": 0.9,
+			"supply_box_chance_multiplier": 0.58,
+			"enemy_speed_growth_multiplier": 1.32,
+			"enemy_health_growth_multiplier": 1.14,
+			"enemy_damage_growth_multiplier": 1.2,
+		},
 	]

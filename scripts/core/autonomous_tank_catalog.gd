@@ -205,5 +205,22 @@ static func get_entries() -> Array[Dictionary]:
 			"extra_upgrades": {"target_predictor": 1, "weakpoint_scanner": 1, "capacitor_mesh": 1},
 			"passive_powers": {"time_shock": 1, "storm_catalyst": 1, "golden_reactor": 1},
 			"color": Color(0.94, 0.72, 0.28, 1.0),
+		},
+		{
+			"id": "reef_savant",
+			"name": "Reef Savant",
+			"summary": "Quantum Reef reward tank with fast current movement, prism economy, and layered control powers.",
+			"speed_multiplier": 1.18,
+			"health_bonus": -1,
+			"damage_multiplier": 0.98,
+			"fire_interval_multiplier": 0.92,
+			"piercing_level": 1,
+			"magnet_level": 2,
+			"ricochet_rounds_level": 1,
+			"freeze_pulse_level": 1,
+			"gravity_well_level": 1,
+			"extra_upgrades": {"crystal_lens": 1, "prism_rounds": 1, "salvage_magnet": 1},
+			"passive_powers": {"phase_magnet": 1, "critical_storm": 1, "supply_beacon": 1},
+			"color": Color(0.34, 0.94, 1.0, 1.0),
 		}
 	]

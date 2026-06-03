@@ -94,6 +94,7 @@ Completed setup:
   - #61 Add proper Autonomous Survivor icons and logos
   - #62 Add Clockwork Spiral victory rewards
   - #63 Add Quantum Reef map 13
+  - #64 Add Quantum Reef victory rewards
 
 Completed issues:
 
@@ -160,10 +161,11 @@ Completed issues:
 - #61 Add proper Autonomous Survivor icons and logos
 - #62 Add Clockwork Spiral victory rewards
 - #63 Add Quantum Reef map 13
+- #64 Add Quantum Reef victory rewards
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 25 tanks, 81 enemies, 35 bosses, 13 maps.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 26 tanks, 81 enemies, 35 bosses, 13 maps.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 - 30-minute survival now completes the run as a victory and unlocks the next map in the chain.
 - Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
@@ -172,11 +174,11 @@ Completed issues:
 - Singularity Garden extends the postgame victory chain after Astral Engine with a new background, authored root obstacles, singularity bloom hazards, 5 additional enemies, and 2 additional bosses.
 - Clockwork Spiral extends the postgame victory chain after Singularity Garden with a machine background, authored gear obstacles, spiral clockwork hazards, 5 additional enemies, and 2 additional bosses.
 - Quantum Reef extends the postgame victory chain after Clockwork Spiral with a prism-current background, authored coral/current obstacles, Quantum Tide hazards, 5 additional enemies, and 2 additional bosses.
-- Late-chain and postgame victories now add seven more run modifiers, bringing the modifier pool from 7 to 14 and making high-progression runs more varied.
+- Late-chain and postgame victories now add eight more run modifiers, bringing the modifier pool from 7 to 15 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
 - Run events now have a focused catalog and 15 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.
 - Enemy affixes now have a focused catalog and 10 total variants, adding more late-run elite pressure patterns without new scenes.
-- Late-campaign tank variety now includes Prism Sentinel, Void Anchor, Neon Courier, Bloom Artillerist, and Gear Oracle, adding crystal crit/ricochet, void gravity-control, speed/supply, postgame artillery, and clockwork precision-control starts behind campaign-progress unlocks.
+- Late-campaign tank variety now includes Prism Sentinel, Void Anchor, Neon Courier, Bloom Artillerist, Gear Oracle, and Reef Savant, adding crystal crit/ricochet, void gravity-control, speed/supply, postgame artillery, clockwork precision-control, and quantum current/economy-control starts behind campaign-progress unlocks.
 
 ### P1 - Enemies And Bosses
 
