@@ -70,7 +70,7 @@ func _init() -> void:
 				quit(1)
 				return
 			map_layout.obstacle_root = map_layout
-			for map_id in ["map1", "map2", "map3", "map4", "map5", "map6", "map7", "map8", "map9", "map10", "map11", "map12", "map13", "map14"]:
+			for map_id in ["map1", "map2", "map3", "map4", "map5", "map6", "map7", "map8", "map9", "map10", "map11", "map12", "map13", "map14", "map15"]:
 				map_layout.apply_map(map_id)
 				if not map_layout.is_walkable(map_layout.arena_center, 0.0) and map_id != "map5":
 					push_error("Map center should be walkable for %s." % map_id)
@@ -208,6 +208,11 @@ func validate_progression_catalogs() -> bool:
 		push_error("Map 14 victory should unlock Helio Bastion.")
 		quit(1)
 		return false
+	if not unlock_manager.unlocked_maps.has("map15"):
+		unlock_manager.free()
+		push_error("Map 14 victory should unlock Umbral Vault.")
+		quit(1)
+		return false
 	unlock_manager.free()
 	return true
 
@@ -270,7 +275,7 @@ func validate_autonomous_map_catalog() -> bool:
 			push_error("Autonomous map %s references missing background texture %s." % [map_id, background_texture])
 			quit(1)
 			return false
-	for required_map_id in ["map13", "map14"]:
+	for required_map_id in ["map13", "map14", "map15"]:
 		if seen_ids.has(required_map_id):
 			continue
 		push_error("Autonomous map catalog should include %s." % required_map_id)
@@ -285,23 +290,37 @@ func validate_late_map_texture_catalogs() -> bool:
 	var shielded_enemy_scene := load("res://scenes/enemies/shielded_enemy.tscn") as PackedScene
 	var boss_scene := load("res://scenes/enemies/boss_enemy.tscn") as PackedScene
 	var map14_enemy_count := 0
+	var map15_enemy_count := 0
 	for enemy_config in LateMapEnemyCatalog.get_entries(enemy_scene, brown_enemy_scene, shielded_enemy_scene):
 		if not validate_optional_texture_path(enemy_config, "Late enemy"):
 			return false
 		if (enemy_config.get("maps", []) as Array).has("map14"):
 			map14_enemy_count += 1
+		if (enemy_config.get("maps", []) as Array).has("map15"):
+			map15_enemy_count += 1
 	if map14_enemy_count < 5:
 		push_error("Map 14 needs at least 5 map-specific late enemy entries.")
 		quit(1)
 		return false
+	if map15_enemy_count < 5:
+		push_error("Map 15 needs at least 5 map-specific late enemy entries.")
+		quit(1)
+		return false
 	var map14_boss_count := 0
+	var map15_boss_count := 0
 	for boss_config in LateMapBossCatalog.get_entries(boss_scene):
 		if not validate_optional_texture_path(boss_config, "Late boss"):
 			return false
 		if (boss_config.get("maps", []) as Array).has("map14"):
 			map14_boss_count += 1
+		if (boss_config.get("maps", []) as Array).has("map15"):
+			map15_boss_count += 1
 	if map14_boss_count < 2:
 		push_error("Map 14 needs at least 2 map-specific boss entries.")
+		quit(1)
+		return false
+	if map15_boss_count < 2:
+		push_error("Map 15 needs at least 2 map-specific boss entries.")
 		quit(1)
 		return false
 	return true

@@ -145,6 +145,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added generated `app_icon_512.png`, `app_icon_128.png`, `app_icon_64.png`, and `app_icon_32.png` variants alongside the existing 1024/256 PNG and Windows `.ico`.
   - Removed the unused default Godot `icon.svg` assets so project branding resolves only to the Autonomous Survivor asset set.
   - Added branding validation for the project name, app icons, boot splash, Windows icon, logo, wordmark, compact mark, and menu action icons.
+- Added postgame map wave #68:
+  - Added Umbral Vault as map 15, unlocked by a 30:00 Solar Bastion victory.
+  - Added a generated Umbral Vault background, authored vault-door/treasury obstacles, an Umbral Vault gimmick, five shadow-bank enemies, and two vault bosses.
+  - Extended map unlocks, map layout bounds, scene validation, spawn weighting, the compendium, visual identity docs, and content counts for the new postgame arena.
 - Added branding polish wave #61:
   - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
   - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
@@ -388,7 +392,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 27 tanks, 86 enemies, 37 bosses, and 14 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 27 tanks, 91 enemies, 39 bosses, and 15 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

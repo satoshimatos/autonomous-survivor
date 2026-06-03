@@ -1102,6 +1102,8 @@ func process_map_gimmick(delta: float) -> void:
 			trigger_quantum_tide()
 		"solar_flare":
 			trigger_solar_flare()
+		"umbral_vault":
+			trigger_umbral_vault()
 
 
 func trigger_crystal_storm() -> void:
@@ -1376,6 +1378,46 @@ func trigger_solar_flare() -> void:
 			spawn_enemy(ENEMY, _on_enemy_defeated, flare_config)
 	spawn_particle_burst(self, player.global_position, 54, Color(1.0, 0.66, 0.12, 1.0), 470.0, 0.44, Vector2(6.0, 13.0), true)
 	shake_camera(0.2, 5.8)
+
+
+func trigger_umbral_vault() -> void:
+	if player == null:
+		return
+	var seal_count := clampi(12 + int(run_time / 240.0), 12, 24)
+	var arena_rect := get_arena_rect().grow(-140.0)
+	var sweep_direction := -1.0 if int(run_time / max(map_gimmick_interval, 1.0)) % 2 == 0 else 1.0
+	for i in range(seal_count):
+		var t := (float(i) + randf_range(0.1, 0.9)) / float(seal_count)
+		var y := lerpf(arena_rect.position.y, arena_rect.end.y, t)
+		var x := player.global_position.x + sweep_direction * randf_range(120.0, 620.0)
+		x = clamp(x, arena_rect.position.x, arena_rect.end.x)
+		spawn_boss_hazard(Vector2(x, y), 46.0 + float(i % 5) * 9.0, 11 + int(run_time / 460.0))
+	for i in range(maxi(4, int(seal_count / 5))):
+		var offset := Vector2.RIGHT.rotated(randf() * TAU) * randf_range(150.0, 720.0)
+		var shadow_position := player.global_position + offset
+		shadow_position.x = clamp(shadow_position.x, arena_rect.position.x, arena_rect.end.x)
+		shadow_position.y = clamp(shadow_position.y, arena_rect.position.y, arena_rect.end.y)
+		spawn_boss_hazard(shadow_position, 66.0, 11 + int(run_time / 500.0))
+	if has_enemy_pressure_room(10):
+		var vault_config := {
+			"id": "vault_echo",
+			"scene": ENEMY,
+			"health": 152 + int(run_time / 15.0),
+			"speed": 204.0,
+			"contact_damage": 12,
+			"exp_drop_count": 6,
+			"exp_drop_min_tier": VIOLET_ORB_TIER,
+			"color": Color(0.62, 0.34, 0.95, 1.0),
+			"scale": 0.66,
+			"movement_style": "stalker",
+			"texture": "res://assets/visual/enemies/map15/vault_echo.png",
+		}
+		for i in range(10):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, vault_config)
+	spawn_particle_burst(self, player.global_position, 58, Color(0.66, 0.38, 1.0, 1.0), 500.0, 0.46, Vector2(6.0, 14.0), true)
+	shake_camera(0.22, 6.2)
 
 
 func get_random_arena_position(inset: float = 0.0) -> Vector2:

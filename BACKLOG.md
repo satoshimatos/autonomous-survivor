@@ -98,6 +98,7 @@ Completed setup:
   - #65 Add Solar Bastion postgame map
   - #66 Add Solar Bastion victory rewards
   - #67 Add proper Autonomous Survivor icons and logo polish
+  - #68 Add Umbral Vault postgame map
 
 Completed issues:
 
@@ -168,10 +169,11 @@ Completed issues:
 - #65 Add Solar Bastion postgame map
 - #66 Add Solar Bastion victory rewards
 - #67 Add proper Autonomous Survivor icons and logo polish
+- #68 Add Umbral Vault postgame map
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 27 tanks, 86 enemies, 37 bosses, 14 maps.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 27 tanks, 91 enemies, 39 bosses, 15 maps.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 - 30-minute survival now completes the run as a victory and unlocks the next map in the chain.
 - Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
@@ -181,6 +183,7 @@ Completed issues:
 - Clockwork Spiral extends the postgame victory chain after Singularity Garden with a machine background, authored gear obstacles, spiral clockwork hazards, 5 additional enemies, and 2 additional bosses.
 - Quantum Reef extends the postgame victory chain after Clockwork Spiral with a prism-current background, authored coral/current obstacles, Quantum Tide hazards, 5 additional enemies, and 2 additional bosses.
 - Solar Bastion extends the postgame victory chain after Quantum Reef with a sun-forged background, authored mirror/pylon obstacles, Solar Flare hazards, 5 additional enemies, and 2 additional bosses.
+- Umbral Vault extends the postgame victory chain after Solar Bastion with a dark treasury background, authored vault obstacles, Umbral Vault sweep hazards, 5 additional enemies, and 2 additional bosses.
 - Late-chain and postgame victories now add nine more run modifiers, bringing the modifier pool from 7 to 16 and making high-progression runs more varied.
 - Challenge goals now have a focused catalog and 20 total goals, adding more late-run permanent rewards for survival, boss, elite, storm, economy, salvage, repair, siege, precision, and mobility builds.
 - Run events now have a focused catalog and 15 total event variants, increasing seeded mid-run surprise variety without adding per-frame systems.

@@ -154,5 +154,22 @@ static func get_entries() -> Array[Dictionary]:
 			"gimmick_interval": 6.2,
 			"mood_color": Color(1.0, 0.88, 0.58, 1.0),
 			"background_texture": "res://assets/backgrounds/map14_solar_bastion.png",
+		},
+		{
+			"id": "map15",
+			"name": "Umbral Vault",
+			"summary": "Post-solar dark vault with black-gold lock corridors, closing treasury gates, shadow-bank hazards, and ruthless collector enemies.",
+			"spawn_interval_multiplier": 0.205,
+			"boss_spawn_interval_multiplier": 0.19,
+			"enemy_speed_growth_multiplier": 2.28,
+			"enemy_health_growth_multiplier": 2.96,
+			"enemy_damage_growth_multiplier": 2.66,
+			"active_enemy_cap_bonus": 385,
+			"active_enemy_cap_limit": 600,
+			"elite_chance_multiplier": 4.55,
+			"map_gimmick": "umbral_vault",
+			"gimmick_interval": 5.8,
+			"mood_color": Color(0.68, 0.62, 0.82, 1.0),
+			"background_texture": "res://assets/backgrounds/map15_umbral_vault.png",
 		}
 	]

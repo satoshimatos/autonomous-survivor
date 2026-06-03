@@ -25,6 +25,7 @@ Current target: clean semi-real cartoon tank-survivor visuals with readable silh
 | Clockwork Spiral | `assets/backgrounds/map12_clockwork_spiral.png`, `assets/visual/enemies/map12/*.png` |
 | Quantum Reef | `assets/backgrounds/map13_quantum_reef.png`, `assets/visual/enemies/map13/*.png` |
 | Solar Bastion | `assets/backgrounds/map14_solar_bastion.png`, `assets/visual/enemies/map14/*.png` |
+| Umbral Vault | `assets/backgrounds/map15_umbral_vault.png`, `assets/visual/enemies/map15/*.png` |
 | Pickups | EXP crystals, dynamite, magnet, supply boxes, wrench |
 | Projectiles | Tank shell and soldier projectile sprites |
 | Ability Items | Landmine, circular saw, footsoldier sprites |
@@ -54,5 +55,7 @@ The Clockwork Spiral generator is `tools/generate_map12_assets.ps1`. It creates 
 The Quantum Reef generator is `tools/generate_map13_assets.ps1`. It creates the map 13 prism-current background and dedicated reef enemy/boss sprites under `assets/visual/enemies/map13/`.
 
 The Solar Bastion generator is `tools/generate_map14_assets.ps1`. It creates the map 14 sun-forged background and dedicated solar enemy/boss sprites under `assets/visual/enemies/map14/`.
+
+The Umbral Vault generator is `tools/generate_map15_assets.ps1`. It creates the map 15 dark treasury background and dedicated vault enemy/boss sprites under `assets/visual/enemies/map15/`.
 
 The older cartoon pass generator, if present, should be treated as historical reference only; new visual refreshes should extend the semi-real generator unless a future art direction replaces it.

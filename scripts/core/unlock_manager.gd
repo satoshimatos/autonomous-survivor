@@ -109,6 +109,8 @@ func ensure_map_tank_unlocks() -> void:
 func ensure_map_victory_unlocks() -> void:
 	if completed_victory_maps.has("map13"):
 		unlock_id(unlocked_maps, "map14")
+	if completed_victory_maps.has("map14"):
+		unlock_id(unlocked_maps, "map15")
 
 
 func record_run_result(result: Dictionary) -> Array[String]:
@@ -279,6 +281,7 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("modifier", "quantum_current", "Quantum Current modifier", unlocked_messages)
 			try_unlock("tank", "reef_savant", "Reef Savant tank", unlocked_messages)
 		"map14":
+			try_unlock("map", "map15", "Umbral Vault map", unlocked_messages)
 			try_unlock("modifier", "solar_furnace", "Solar Furnace modifier", unlocked_messages)
 			try_unlock("tank", "helio_bastion", "Helio Bastion tank", unlocked_messages)
 
@@ -465,6 +468,8 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Clockwork Spiral at 30:00 to unlock Quantum Reef.")
 	elif not is_map_unlocked("map14"):
 		lines.append("- Map: Win Quantum Reef at 30:00 to unlock Solar Bastion.")
+	elif not is_map_unlocked("map15"):
+		lines.append("- Map: Win Solar Bastion at 30:00 to unlock Umbral Vault.")
 	elif not is_modifier_unlocked("singularity_seed"):
 		lines.append("- Modifier: Win Singularity Garden at 30:00 to unlock Singularity Seed.")
 	elif not is_modifier_unlocked("clockwork_dividend"):
@@ -580,6 +585,8 @@ func get_map_unlock_hint(map_id: String) -> String:
 			return "Win Clockwork Spiral at 30:00."
 		"map14":
 			return "Win Quantum Reef at 30:00."
+		"map15":
+			return "Win Solar Bastion at 30:00."
 	return "Progress further to reveal this map."
 
 
