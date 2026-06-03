@@ -695,6 +695,11 @@ func apply_selected_tank_archetype() -> void:
 	magnet_level += int(tank.get("magnet_level", 0))
 	cannon_level += int(tank.get("cannon_level", 0))
 	exp_bonus_level += int(tank.get("exp_bonus_level", 0))
+	splash_level += int(tank.get("splash_level", 0))
+	piercing_level += int(tank.get("piercing_level", 0))
+	barbed_wire_level += int(tank.get("barbed_wire_level", 0))
+	targeting_array_level += int(tank.get("targeting_array_level", 0))
+	accelerator_level += int(tank.get("accelerator_level", 0))
 	capacitor_bank_level += int(tank.get("capacitor_bank_level", 0))
 	
 	var tint: Color = tank.get("color", Color.WHITE) as Color
@@ -702,6 +707,7 @@ func apply_selected_tank_archetype() -> void:
 	tank_cannon.modulate = tint
 	
 	apply_starting_ability_levels(tank)
+	apply_starting_passive_levels(tank)
 	apply_meta_progression_rewards(run_config)
 	update_evolutions()
 
@@ -762,6 +768,20 @@ func apply_starting_ability_levels(tank: Dictionary) -> void:
 		upgrade_ricochet_rounds()
 	for i in range(int(tank.get("chrono_burst_level", 0))):
 		upgrade_chrono_burst()
+
+
+func apply_starting_passive_levels(tank: Dictionary) -> void:
+	var passive_powers: Dictionary = tank.get("passive_powers", {}) as Dictionary
+	for power_id in passive_powers:
+		for i in range(int(passive_powers[power_id])):
+			upgrade_passive_power(String(power_id))
+	var extra_upgrades: Dictionary = tank.get("extra_upgrades", {}) as Dictionary
+	for upgrade_id in extra_upgrades:
+		extra_upgrade_levels[String(upgrade_id)] = int(extra_upgrade_levels.get(String(upgrade_id), 0)) + int(extra_upgrades[upgrade_id])
+	if not passive_powers.is_empty():
+		passive_power_effect_cache_dirty = true
+	if not extra_upgrades.is_empty():
+		extra_upgrade_effect_cache_dirty = true
 
 
 func upgrade_drone_swarm() -> void:

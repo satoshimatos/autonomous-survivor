@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 41 enemies, and 19 bosses.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 20 tanks, 41 enemies, 29 bosses, and 10 maps.
 
 ## Menu
 
@@ -109,6 +109,16 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 - Map-specific boss roster: Rift Seraph and Void Emperor create rapid target hazards, dense hazard rings, and large minion waves.
 - Global enemy/boss weights are reduced the most on this map so the endgame roster dominates.
 
+### Autonomous Content Wave Maps
+
+| Map | Unlock | Size Identity | Pressure Identity | Gimmick | Bosses |
+|---|---|---|---|---|---|
+| Moonlit Graveyard | Win Void Crucible at 30:00 | Wide, dark arena with crypt walls and tomb rows. | Spectral pressure with high elite odds and low-visibility mood. | Ghost Surge: hazards form around the player and can spawn Grave Echo enemies if pressure has room. | Grave Bell, Crypt Marshal |
+| Neon Grid | Win Moonlit Graveyard at 30:00 | Rectangular grid with horizontal lanes and vertical pillars. | Very fast enemies and high boss cadence. | Laser Lattice: repeated hazard nodes trace grid-like lanes across the arena. | Neon Executioner, Grid Overseer |
+| Frozen Scar | Win Neon Grid at 30:00 | Long frozen battlefield with ridges and a center ice core. | Heavy health scaling and slower but tougher pressure. | Frost Lock: hazards form a loose ring around the player with icy burst feedback. | Frost Leviathan, Blizzard Matriarch |
+| Ember Rift | Win Frozen Scar at 30:00 | Compact lava arena with side gates and a central ember core. | Brutal damage growth, extreme boss cadence, and funnel pressure. | Ember Eruption: random walkable eruptions detonate across the arena with camera shake. | Magma Tyrant, Cinder Prophet |
+| Astral Engine | Win Ember Rift at 30:00 | Massive final arena with engine-wall blockers on all sides. | Highest pressure cap, extreme elite odds, and fastest boss cadence. | Astral Collapse: hazards and Astral Echo spawns converge near the player. | Astral Archon, Engine Heart |
+
 ## Player Baseline
 
 | Characteristic | Value |
@@ -146,6 +156,20 @@ Each level-up:
 | Twin Cannon | Defeat 1 total boss | 0.95 speed, 0.88 damage, starts with Cannon 1, 1.08 fire interval | Early multishot. |
 | Engineer | Best enemies defeated >= 250 | 0.94 speed, +2 health, starts with Landmine 1 and Oil Slick 1 | Device specialist. |
 | Collector | Reach level 5 | 1.05 speed, -1 health, 0.95 damage, starts with EXP 1 and Magnet 2 | Economy and pickup specialist. |
+| Storm Chaser | Reach level 18 | 1.18 speed, -1 health, 0.96 damage, starts with Shock Field 1 and Chain Lightning 1 | Electric raider. |
+| Pyroclast | Survive 15:00 | 0.94 speed, +2 health, 1.04 damage, starts with Splash 1 and Flame Wave 1 | Burn-and-blast specialist. |
+| Medic | Defeat 8 total bosses | 0.98 speed, +4 health, starts with Regeneration 1, Repair Beacon 1, and Nanite Cloud 1 | Sustain support. |
+| Singularity Rig | Survive 25:00 and reach level 22 | 0.86 speed, +5 health, 1.08 damage, starts with Gravity Well 1 and Capacitor Bank 1 | Crowd-control rig. |
+| Glass Rail | Reach level 20 | 1.12 speed, -4 health, 1.18 damage, starts with Piercing 1, Targeting Array 1, and Ion Lance | Fragile precision cannon. |
+| Bulldozer | Best enemies defeated >= 1400 | 0.78 speed, +12 health, starts with Armor 3, Barbed Wire 2, and Bulldozer Aura | Contact brawler. |
+| Swarm Broker | Reach level 24 | 0.96 speed, +1 health, 0.88 damage, starts with Footsoldier 1, Drone Swarm 1, Drone Command, and Pulse Drone | Pet commander. |
+| Sapper | Survive 20:00 | 0.9 speed, +3 health, starts with Landmine 2, Splash 1, Mine Dispenser, and Meteor Shell | Trap specialist. |
+| Chrono Tank | Survive 25:00 and defeat 10 total bosses | 1.02 speed, -3 health, starts with Chrono Burst 1, Freeze Pulse 1, Field Amplifier, and Time Shock | Time-control caster. |
+| Gold Engine | Reach level 26 | 1.0 speed, -2 health, 0.86 damage, starts with EXP 2, Magnet 1, Golden Reactor, and Supply Beacon | Greedy economy scaler. |
+| Rift Skimmer | Win any map at 30:00 | 1.36 speed, -5 health, 0.9 damage, starts with Magnet 2, Gravity Well 1, and Phase Magnet | Fast risky controller. |
+| Fortress Medic | Defeat 14 total bosses | 0.74 speed, +14 health, 0.9 damage, starts with Armor 2, Regeneration 2, Repair Beacon 1, Guardian Wall, and Repair Burst | Durable repair tank. |
+| Meteor Twins | Reach level 28 | 0.94 speed, 0.96 damage, starts with Cannon 2, Splash 1, and Orbital Cannon | Explosive multishot. |
+| Storm Foundry | Win any map and defeat 18 total bosses | 0.86 speed, +6 health, starts with Shock Field 1, Tesla Pylon 1, Capacitor Bank 1, and Storm Catalyst | Heavy electric factory. |
 
 ## Core Upgrades
 
@@ -377,6 +401,16 @@ Only one boss can be alive at a time. Bosses normally spawn every 180s, modified
 | Furnace Queen | Toxic Foundry | 600s | overlord | 5200 | 18 | 20 | 104 tier 4+ | 88 base, +2/min, max 118 | Four phases; heavy hazard rings, targeted strikes, and minion calls. |
 | Rift Seraph | Void Crucible | 0s | wraith | 5600 | 36 | 18 | 90 tier 4+ | 120 base, -0.4/min, min 72 | Fast fading boss with rapid targeted hazards and minion waves. |
 | Void Emperor | Void Crucible | 480s | singularity | 7200 | 28 | 24 | 128 tier 4+ | 96 base, +2.4/min, max 128 | Five phases; dense rings, targeted hazards, and large minion waves. |
+| Grave Bell | Moonlit Graveyard | 0s | wraith | 6200 | 24 | 18 | 92 tier 4+ | 118 base, -0.6/min, min 70 | Three phases; targeted ghost hazards and escalating minion calls. |
+| Crypt Marshal | Moonlit Graveyard | 480s | bastion | 8200 | 18 | 22 | 122 tier 4+ | 92 base, +2.2/min, max 128 | Four phases; wide rings and large support waves. |
+| Neon Executioner | Neon Grid | 0s | tempest | 6500 | 42 | 19 | 98 tier 4+ | 120 base, -0.8/min, min 72 | Fast target strikes with ring pressure. |
+| Grid Overseer | Neon Grid | 540s | overlord | 9000 | 28 | 23 | 130 tier 4+ | 90 base, +2.5/min, max 132 | Four phases; grid-like rings and targeted hazards. |
+| Frost Leviathan | Frozen Scar | 0s | crusher | 9800 | 18 | 24 | 112 tier 4+ | 118 base, -0.4/min, min 74 | Slow, huge boss with heavy hazard rings. |
+| Blizzard Matriarch | Frozen Scar | 600s | monarch | 8600 | 34 | 21 | 136 tier 4+ | 86 base, +2.4/min, max 130 | Three phases; minion calls plus player-targeted ice hazards. |
+| Magma Tyrant | Ember Rift | 0s | overlord | 10400 | 30 | 28 | 126 tier 4+ | 122 base, -0.5/min, min 76 | Four phases; eruption-style targeted hazards and rings. |
+| Cinder Prophet | Ember Rift | 520s | sprinter | 7800 | 46 | 22 | 142 tier 4+ | 92 base, +2.7/min, max 136 | Fast boss with frequent targeted hazards and minions. |
+| Astral Archon | Astral Engine | 0s | singularity | 11200 | 38 | 30 | 150 tier 4+ | 124 base, -0.2/min, min 82 | Five phases; dense rings, targeted hazards, and minion calls. |
+| Engine Heart | Astral Engine | 660s | bastion | 14800 | 20 | 34 | 180 tier 4+ | 96 base, +2.8/min, max 144 | Six phases; massive rings and large support waves. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
@@ -443,6 +477,11 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Scrap Maze at 30:00 | Crystal Expanse |
 | Win Crystal Expanse at 30:00 | Toxic Foundry |
 | Win Toxic Foundry at 30:00 | Void Crucible |
+| Win Void Crucible at 30:00 | Moonlit Graveyard |
+| Win Moonlit Graveyard at 30:00 | Neon Grid |
+| Win Neon Grid at 30:00 | Frozen Scar |
+| Win Frozen Scar at 30:00 | Ember Rift |
+| Win Ember Rift at 30:00 | Astral Engine |
 
 ### Challenge Goals
 

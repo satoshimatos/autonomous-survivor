@@ -68,6 +68,7 @@ Completed setup:
   - #35 Make map 2 a harder distinct experience
   - #36 Add maps 3-5 with unlock chain, distinct pressure, gimmicks, and performance pass
   - #37 Add global gameplay and UI juice pass
+  - #38 Add autonomous content wave: tanks, bosses, maps, backgrounds, and gimmicks
 
 Completed issues:
 
@@ -108,14 +109,16 @@ Completed issues:
 - #35 Make map 2 a harder distinct experience
 - #36 Add maps 3-5 with unlock chain, distinct pressure, gimmicks, and performance pass
 - #37 Add global gameplay and UI juice pass
+- #38 Add autonomous content wave: tanks, bosses, maps, backgrounds, and gimmicks
 
 ### P1 - Replayability And Power Growth
 
-- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 41 enemies, 19 bosses.
+- Content and progression targets are exceeded. Current counts: 100 unique upgrades, 40 powers, 20 tanks, 41 enemies, 29 bosses, 10 maps.
 - The 30-minute balance projection passes with a documented strong-build clear-rate margin in `docs/BALANCE_30_MIN.md`.
 - 30-minute survival now completes the run as a victory and unlocks the next map in the chain.
 - Scrap Maze now has map-specific pressure scaling, six Scrapborn enemy variants, and three Scrap Maze bosses.
 - Crystal Expanse, Toxic Foundry, and Void Crucible now add larger/different arenas, map gimmicks, 15 additional map-specific enemies, and 6 additional bosses.
+- Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine extend the victory chain with new backgrounds, obstacle groups, pressure profiles, gimmicks, and 10 additional map-specific bosses.
 
 ### P1 - Enemies And Bosses
 

@@ -192,6 +192,27 @@ var run_event_catalog: Array[Dictionary] = [
 	{"id": "overrun_gambit", "name": "Overrun Gambit", "summary": "Enemy pressure surges, then grants an ability choice.", "duration": 36.0, "weight": 20.0, "effects": {"spawn_interval_multiplier": 0.72, "enemy_speed_multiplier": 1.1}, "rewards": {"ability_choices": 1}},
 ]
 
+
+func add_autonomous_boss_content() -> void:
+	add_boss_variant({"id": "grave_bell", "maps": ["map6"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 118.0, "growth_per_minute": -0.6, "min_weight": 70.0, "max_weight": 118.0, "health": 6200, "speed": 24.0, "contact_damage": 18, "exp_drop_count": 92, "exp_drop_min_tier": 4, "color": Color(0.46, 0.52, 0.88, 1.0), "scale": 1.28, "behavior": "wraith", "texture": "res://assets/visual/enemies/variants/enemy_orbiter_cartoon.png", "phase_thresholds": [0.74, 0.48, 0.22], "ability_modules": [{"type": "target_hazard", "cooldown": 3.8, "initial_delay": 1.4, "radius": 64.0, "damage": 6}, {"type": "minion_call", "cooldown": 6.0, "initial_delay": 3.5, "count": 4, "phase_count_bonus": 2}]})
+	add_boss_variant({"id": "crypt_marshal", "maps": ["map6"], "scene": BOSS_ENEMY, "unlock_seconds": 480.0, "weight": 92.0, "growth_per_minute": 2.2, "min_weight": 0.0, "max_weight": 128.0, "health": 8200, "speed": 18.0, "contact_damage": 22, "exp_drop_count": 122, "exp_drop_min_tier": 4, "color": Color(0.28, 0.3, 0.56, 1.0), "scale": 1.55, "behavior": "bastion", "texture": "res://assets/visual/enemies/variants/enemy_tank_cartoon.png", "phase_thresholds": [0.82, 0.64, 0.42, 0.2], "ability_modules": [{"type": "hazard_ring", "cooldown": 5.2, "initial_delay": 2.0, "count": 9, "phase_count_bonus": 2, "radius": 72.0, "ring_distance": 190.0, "damage": 6}, {"type": "minion_call", "cooldown": 7.2, "initial_delay": 4.8, "count": 5, "phase_count_bonus": 2}]})
+	add_boss_variant({"id": "neon_executioner", "maps": ["map7"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 120.0, "growth_per_minute": -0.8, "min_weight": 72.0, "max_weight": 120.0, "health": 6500, "speed": 42.0, "contact_damage": 19, "exp_drop_count": 98, "exp_drop_min_tier": 4, "color": Color(0.06, 0.92, 1.0, 1.0), "scale": 1.02, "behavior": "tempest", "texture": "res://assets/visual/enemies/variants/enemy_zigzag_cartoon.png", "phase_thresholds": [0.7, 0.42, 0.18], "ability_modules": [{"type": "target_hazard", "cooldown": 3.2, "initial_delay": 1.1, "radius": 54.0, "damage": 6}, {"type": "hazard_ring", "cooldown": 5.0, "initial_delay": 3.0, "count": 7, "phase_count_bonus": 1, "radius": 50.0, "ring_distance": 170.0, "damage": 5}]})
+	add_boss_variant({"id": "grid_overseer", "maps": ["map7"], "scene": BOSS_ENEMY, "unlock_seconds": 540.0, "weight": 90.0, "growth_per_minute": 2.5, "min_weight": 0.0, "max_weight": 132.0, "health": 9000, "speed": 28.0, "contact_damage": 23, "exp_drop_count": 130, "exp_drop_min_tier": 4, "color": Color(0.95, 0.25, 1.0, 1.0), "scale": 1.34, "behavior": "overlord", "texture": "res://assets/visual/enemies/variants/enemy_reaper_cartoon.png", "phase_thresholds": [0.78, 0.56, 0.34, 0.14], "ability_modules": [{"type": "hazard_ring", "cooldown": 4.6, "initial_delay": 1.6, "count": 10, "phase_count_bonus": 1, "radius": 62.0, "ring_distance": 205.0, "damage": 6}, {"type": "target_hazard", "cooldown": 4.0, "initial_delay": 4.0, "radius": 66.0, "damage": 7}]})
+	add_boss_variant({"id": "frost_leviathan", "maps": ["map8"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 118.0, "growth_per_minute": -0.4, "min_weight": 74.0, "max_weight": 118.0, "health": 9800, "speed": 18.0, "contact_damage": 24, "exp_drop_count": 112, "exp_drop_min_tier": 4, "color": Color(0.64, 0.92, 1.0, 1.0), "scale": 1.62, "behavior": "crusher", "texture": "res://assets/visual/enemies/variants/enemy_tank_cartoon.png", "phase_thresholds": [0.8, 0.58, 0.36, 0.16], "ability_modules": [{"type": "hazard_ring", "cooldown": 5.4, "initial_delay": 2.0, "count": 8, "phase_count_bonus": 2, "radius": 76.0, "ring_distance": 220.0, "damage": 7}]})
+	add_boss_variant({"id": "blizzard_matriarch", "maps": ["map8"], "scene": BOSS_ENEMY, "unlock_seconds": 600.0, "weight": 86.0, "growth_per_minute": 2.4, "min_weight": 0.0, "max_weight": 130.0, "health": 8600, "speed": 34.0, "contact_damage": 21, "exp_drop_count": 136, "exp_drop_min_tier": 4, "color": Color(0.38, 0.76, 1.0, 1.0), "scale": 1.22, "behavior": "monarch", "texture": "res://assets/visual/enemies/variants/enemy_drifter_cartoon.png", "phase_thresholds": [0.76, 0.52, 0.28], "ability_modules": [{"type": "minion_call", "cooldown": 5.4, "initial_delay": 2.2, "count": 5, "phase_count_bonus": 2}, {"type": "target_hazard", "cooldown": 4.4, "initial_delay": 4.0, "radius": 68.0, "damage": 6}]})
+	add_boss_variant({"id": "magma_tyrant", "maps": ["map9"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 122.0, "growth_per_minute": -0.5, "min_weight": 76.0, "max_weight": 122.0, "health": 10400, "speed": 30.0, "contact_damage": 28, "exp_drop_count": 126, "exp_drop_min_tier": 4, "color": Color(1.0, 0.22, 0.06, 1.0), "scale": 1.46, "behavior": "overlord", "texture": "res://assets/visual/enemies/variants/enemy_reaper_cartoon.png", "phase_thresholds": [0.82, 0.62, 0.42, 0.18], "ability_modules": [{"type": "target_hazard", "cooldown": 3.6, "initial_delay": 1.2, "radius": 74.0, "damage": 8}, {"type": "hazard_ring", "cooldown": 4.8, "initial_delay": 3.0, "count": 9, "phase_count_bonus": 2, "radius": 70.0, "ring_distance": 185.0, "damage": 7}]})
+	add_boss_variant({"id": "cinder_prophet", "maps": ["map9"], "scene": BOSS_ENEMY, "unlock_seconds": 520.0, "weight": 92.0, "growth_per_minute": 2.7, "min_weight": 0.0, "max_weight": 136.0, "health": 7800, "speed": 46.0, "contact_damage": 22, "exp_drop_count": 142, "exp_drop_min_tier": 4, "color": Color(1.0, 0.62, 0.12, 1.0), "scale": 1.05, "behavior": "sprinter", "texture": "res://assets/visual/enemies/variants/enemy_runner_cartoon.png", "phase_thresholds": [0.68, 0.38, 0.16], "ability_modules": [{"type": "target_hazard", "cooldown": 3.0, "initial_delay": 1.0, "radius": 56.0, "damage": 7}, {"type": "minion_call", "cooldown": 5.6, "initial_delay": 3.5, "count": 4, "phase_count_bonus": 2}]})
+	add_boss_variant({"id": "astral_archon", "maps": ["map10"], "scene": BOSS_ENEMY, "unlock_seconds": 0.0, "weight": 124.0, "growth_per_minute": -0.2, "min_weight": 82.0, "max_weight": 124.0, "health": 11200, "speed": 38.0, "contact_damage": 30, "exp_drop_count": 150, "exp_drop_min_tier": 4, "color": Color(0.68, 0.42, 1.0, 1.0), "scale": 1.34, "behavior": "singularity", "texture": "res://assets/visual/enemies/variants/enemy_zigzag_cartoon.png", "phase_thresholds": [0.86, 0.68, 0.5, 0.32, 0.14], "ability_modules": [{"type": "hazard_ring", "cooldown": 4.2, "initial_delay": 1.3, "count": 11, "phase_count_bonus": 2, "radius": 66.0, "ring_distance": 210.0, "damage": 8}, {"type": "target_hazard", "cooldown": 3.4, "initial_delay": 2.8, "radius": 72.0, "damage": 8}, {"type": "minion_call", "cooldown": 5.2, "initial_delay": 4.6, "count": 6, "phase_count_bonus": 2}]})
+	add_boss_variant({"id": "engine_heart", "maps": ["map10"], "scene": BOSS_ENEMY, "unlock_seconds": 660.0, "weight": 96.0, "growth_per_minute": 2.8, "min_weight": 0.0, "max_weight": 144.0, "health": 14800, "speed": 20.0, "contact_damage": 34, "exp_drop_count": 180, "exp_drop_min_tier": 4, "color": Color(0.18, 0.96, 1.0, 1.0), "scale": 1.72, "behavior": "bastion", "texture": "res://assets/visual/enemies/variants/enemy_tank_cartoon.png", "phase_thresholds": [0.88, 0.72, 0.56, 0.4, 0.24, 0.1], "ability_modules": [{"type": "hazard_ring", "cooldown": 4.0, "initial_delay": 1.4, "count": 12, "phase_count_bonus": 2, "radius": 80.0, "ring_distance": 240.0, "damage": 9}, {"type": "minion_call", "cooldown": 4.8, "initial_delay": 3.8, "count": 7, "phase_count_bonus": 2}]})
+
+
+func add_boss_variant(config: Dictionary) -> void:
+	for boss_config in boss_variant_catalog:
+		if String(boss_config.id) == String(config.id):
+			return
+	boss_variant_catalog.append(config)
+
+
 const MAGNET_DURATION: float = 5.0
 const MAGNET_SPAWN_INTERVAL: float = 180.0
 const SUPPLY_BOX_SPAWN_INTERVAL: float = 15.0
@@ -295,6 +316,7 @@ const ENEMY_OBSTACLE_CLEARANCE: float = 18.0
 
 func _ready() -> void:
 	GamepadInputSetup.ensure_configured()
+	add_autonomous_boss_content()
 	setup_pause_input_router()
 	configure_run_seed_and_modifiers()
 	configure_selected_map()
@@ -390,6 +412,9 @@ func configure_selected_map() -> void:
 	map_gimmick = String(map_config.get("map_gimmick", ""))
 	map_gimmick_interval = float(map_config.get("gimmick_interval", 0.0))
 	map_gimmick_timer = map_gimmick_interval * 0.5
+	var background_texture_path := String(map_config.get("background_texture", ""))
+	if background_texture_path != "" and ResourceLoader.exists(background_texture_path):
+		wasteland_background.texture = load(background_texture_path)
 	if world_mood:
 		world_mood.color = map_config.get("mood_color", Color(0.9, 0.93, 1.0, 1.0)) as Color
 	if map_layout and map_layout.has_method("apply_map"):
@@ -1061,6 +1086,16 @@ func process_map_gimmick(delta: float) -> void:
 			trigger_toxic_vents()
 		"void_collapse":
 			trigger_void_collapse()
+		"ghost_surge":
+			trigger_ghost_surge()
+		"laser_lattice":
+			trigger_laser_lattice()
+		"frost_lock":
+			trigger_frost_lock()
+		"ember_eruption":
+			trigger_ember_eruption()
+		"astral_collapse":
+			trigger_astral_collapse()
 
 
 func trigger_crystal_storm() -> void:
@@ -1112,6 +1147,96 @@ func trigger_void_collapse() -> void:
 				break
 			spawn_enemy(ENEMY, _on_enemy_defeated, void_config)
 	shake_camera(0.18, 4.5)
+
+
+func trigger_ghost_surge() -> void:
+	if player == null:
+		return
+	var surge_count := clampi(3 + int(run_time / 420.0), 3, 9)
+	for i in range(surge_count):
+		var offset := Vector2.RIGHT.rotated(randf() * TAU) * randf_range(120.0, 380.0)
+		spawn_boss_hazard(player.global_position + offset, 50.0, 4 + int(run_time / 700.0))
+	if has_enemy_pressure_room(3):
+		var ghost_config := {
+			"id": "grave_echo",
+			"scene": ENEMY,
+			"health": 50 + int(run_time / 28.0),
+			"speed": 118.0,
+			"contact_damage": 5,
+			"exp_drop_count": 2,
+			"exp_drop_min_tier": PURPLE_ORB_TIER,
+			"color": Color(0.52, 0.62, 1.0, 1.0),
+			"scale": 0.66,
+			"movement_style": "orbiter",
+			"texture": "res://assets/visual/enemies/variants/enemy_orbiter_cartoon.png",
+		}
+		for i in range(3):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, ghost_config)
+	spawn_particle_burst(self, player.global_position, 24, Color(0.48, 0.62, 1.0, 1.0), 230.0, 0.32, Vector2(4.0, 8.0), true)
+
+
+func trigger_laser_lattice() -> void:
+	var arena_rect := get_arena_rect().grow(-120.0)
+	var lane_count := clampi(4 + int(run_time / 500.0), 4, 8)
+	for i in range(lane_count):
+		var x := lerpf(arena_rect.position.x, arena_rect.end.x, (float(i) + 0.5) / float(lane_count))
+		spawn_boss_hazard(Vector2(x, randf_range(arena_rect.position.y, arena_rect.end.y)), 42.0, 4 + int(run_time / 800.0))
+	for i in range(lane_count / 2):
+		var y := lerpf(arena_rect.position.y, arena_rect.end.y, (float(i) + 0.5) / max(float(lane_count / 2), 1.0))
+		spawn_boss_hazard(Vector2(randf_range(arena_rect.position.x, arena_rect.end.x), y), 42.0, 4 + int(run_time / 800.0))
+	spawn_particle_burst(self, get_arena_rect().get_center(), 26, Color(0.08, 0.95, 1.0, 1.0), 300.0, 0.28, Vector2(3.0, 7.0), true)
+
+
+func trigger_frost_lock() -> void:
+	if player == null:
+		return
+	var ring_count := clampi(5 + int(run_time / 520.0), 5, 10)
+	for i in range(ring_count):
+		var angle := TAU * float(i) / float(ring_count) + randf_range(-0.18, 0.18)
+		var distance := randf_range(150.0, 330.0)
+		spawn_boss_hazard(player.global_position + Vector2.RIGHT.rotated(angle) * distance, 56.0, 5 + int(run_time / 760.0))
+	spawn_particle_burst(self, player.global_position, 30, Color(0.66, 0.9, 1.0, 1.0), 220.0, 0.4, Vector2(5.0, 10.0), true)
+
+
+func trigger_ember_eruption() -> void:
+	var eruption_count := clampi(6 + int(run_time / 420.0), 6, 12)
+	for i in range(eruption_count):
+		var hazard_position := get_walkable_drop_position(get_random_arena_position(80.0), ENEMY_OBSTACLE_CLEARANCE)
+		spawn_boss_hazard(hazard_position, randf_range(50.0, 78.0), 6 + int(run_time / 650.0))
+	spawn_particle_burst(self, get_arena_rect().get_center(), 36, Color(1.0, 0.34, 0.08, 1.0), 340.0, 0.38, Vector2(6.0, 12.0), true)
+	shake_camera(0.16, 4.2)
+
+
+func trigger_astral_collapse() -> void:
+	if player == null:
+		return
+	var pulse_count := clampi(7 + int(run_time / 360.0), 7, 14)
+	for i in range(pulse_count):
+		var angle := randf() * TAU
+		var distance := randf_range(90.0, 520.0)
+		spawn_boss_hazard(player.global_position + Vector2.RIGHT.rotated(angle) * distance, 48.0 + float(i % 3) * 10.0, 6 + int(run_time / 620.0))
+	if has_enemy_pressure_room(5):
+		var echo_config := {
+			"id": "astral_echo",
+			"scene": ENEMY,
+			"health": 72 + int(run_time / 24.0),
+			"speed": 134.0,
+			"contact_damage": 7,
+			"exp_drop_count": 3,
+			"exp_drop_min_tier": VIOLET_ORB_TIER,
+			"color": Color(0.72, 0.48, 1.0, 1.0),
+			"scale": 0.72,
+			"movement_style": "weaver",
+			"texture": "res://assets/visual/enemies/variants/enemy_zigzag_cartoon.png",
+		}
+		for i in range(5):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, echo_config)
+	spawn_particle_burst(self, player.global_position, 38, Color(0.62, 0.35, 1.0, 1.0), 360.0, 0.42, Vector2(6.0, 12.0), true)
+	shake_camera(0.18, 5.0)
 
 
 func get_random_arena_position(inset: float = 0.0) -> Vector2:
@@ -1400,6 +1525,16 @@ func get_map_entry_weight_multiplier(config: Dictionary) -> float:
 			return 0.25
 		"map5":
 			return 0.18
+		"map6":
+			return 0.16
+		"map7":
+			return 0.14
+		"map8":
+			return 0.13
+		"map9":
+			return 0.12
+		"map10":
+			return 0.1
 	return 1.0
 
 

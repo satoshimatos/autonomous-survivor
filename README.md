@@ -23,6 +23,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Repairs now spawn green healing particles in addition to the heal popup.
   - Large splash detonations add an extra burst and mass-splash camera shake while still respecting the existing particle and splash budgets.
 - Added GitHub issue #37 for this polish slice and updated the backlog with the completed global juice pass.
+- Added autonomous content wave #38:
+  - Added 10 new tank starts: Glass Rail, Bulldozer, Swarm Broker, Sapper, Chrono Tank, Gold Engine, Rift Skimmer, Fortress Medic, Meteor Twins, and Storm Foundry.
+  - Added 5 more unlock-chain maps: Moonlit Graveyard, Neon Grid, Frozen Scar, Ember Rift, and Astral Engine.
+  - Added 5 new generated map background textures and scene-authored obstacle groups for the new maps.
+  - Added 5 map gimmicks: ghost surges, laser lattice strikes, frost locks, ember eruptions, and astral collapse waves.
+  - Added 10 map-specific bosses with phase thresholds and combinations of minion calls, hazard rings, targeted hazards, and high-pressure stat profiles.
 
 ### 2026-05-30
 
@@ -261,7 +267,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 41 enemies, and 19 bosses.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 tanks, 41 enemies, 29 bosses, and 10 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 
