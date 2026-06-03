@@ -281,6 +281,8 @@ func clamp_to_arena() -> bool:
 		clamp(global_position.x, arena_rect.position.x, arena_rect.end.x),
 		clamp(global_position.y, arena_rect.position.y, arena_rect.end.y)
 	)
+	if main.has_method("get_walkable_drop_position"):
+		clamped_position = main.get_walkable_drop_position(clamped_position, EnemyGeometry.get_collision_radius(self))
 	var was_clamped := global_position.distance_squared_to(clamped_position) > 0.01
 	global_position = clamped_position
 	return was_clamped

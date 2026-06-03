@@ -3,6 +3,7 @@ extends Node
 const SAVE_PATH: String = "user://unlock_state.cfg"
 
 var unlocked_tanks: Array[String] = ["vanguard", "scout"]
+var unlocked_maps: Array[String] = ["map1"]
 var unlocked_abilities: Array[String] = ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm", "phase_magnet"]
 var unlocked_modifiers: Array[String] = ["swarm_opening", "rich_crystals"]
 var completed_challenge_goals: Array[String] = []
@@ -33,6 +34,7 @@ func load_unlocks() -> void:
 		return
 	
 	unlocked_tanks = array_to_string_array(config.get_value("unlocks", "tanks", unlocked_tanks))
+	unlocked_maps = array_to_string_array(config.get_value("unlocks", "maps", unlocked_maps))
 	unlocked_abilities = array_to_string_array(config.get_value("unlocks", "abilities", unlocked_abilities))
 	unlocked_modifiers = array_to_string_array(config.get_value("unlocks", "modifiers", unlocked_modifiers))
 	completed_challenge_goals = array_to_string_array(config.get_value("unlocks", "completed_challenge_goals", completed_challenge_goals))
@@ -46,6 +48,7 @@ func load_unlocks() -> void:
 func save_unlocks() -> void:
 	var config := ConfigFile.new()
 	config.set_value("unlocks", "tanks", unlocked_tanks)
+	config.set_value("unlocks", "maps", unlocked_maps)
 	config.set_value("unlocks", "abilities", unlocked_abilities)
 	config.set_value("unlocks", "modifiers", unlocked_modifiers)
 	config.set_value("unlocks", "completed_challenge_goals", completed_challenge_goals)
@@ -59,6 +62,7 @@ func save_unlocks() -> void:
 func ensure_default_unlocks() -> void:
 	for tank_id in ["vanguard", "scout"]:
 		unlock_id(unlocked_tanks, tank_id)
+	unlock_id(unlocked_maps, "map1")
 	for ability_id in ["landmine", "circular_saw", "footsoldier", "shock_field", "vampire_circuit", "supply_beacon", "bulldozer_aura", "magnet_storm", "phase_magnet"]:
 		unlock_id(unlocked_abilities, ability_id)
 	for modifier_id in ["swarm_opening", "rich_crystals"]:
@@ -73,6 +77,7 @@ func record_run_result(result: Dictionary) -> Array[String]:
 	
 	var unlocked_messages: Array[String] = []
 	add_unlocks_for_progress(unlocked_messages)
+	add_unlocks_for_victory(result, unlocked_messages)
 	add_challenge_rewards_for_result(result, unlocked_messages)
 	save_unlocks()
 	return unlocked_messages
@@ -143,6 +148,12 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("ability", "chrono_burst", "Chrono Burst ability", unlocked_messages)
 		try_unlock("ability", "time_shock", "Time Shock power", unlocked_messages)
 		try_unlock("ability", "golden_reactor", "Golden Reactor power", unlocked_messages)
+
+
+func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String]) -> void:
+	if not bool(result.get("victory", false)):
+		return
+	try_unlock("map", "map2", "Scrap Maze map", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -235,7 +246,7 @@ func get_progress_report(recent_unlocks: Array[String] = []) -> String:
 		"Permanent Progress",
 		"Best time: %s  Best level: %s" % [format_seconds(best_survival_seconds), best_level],
 		"Best kills: %s  Total bosses: %s" % [best_enemies_defeated, total_bosses_defeated],
-		"Tanks: %s  Abilities: %s  Modifiers: %s" % [unlocked_tanks.size(), unlocked_abilities.size(), unlocked_modifiers.size()],
+		"Tanks: %s  Maps: %s  Abilities: %s  Modifiers: %s" % [unlocked_tanks.size(), unlocked_maps.size(), unlocked_abilities.size(), unlocked_modifiers.size()],
 	]
 	if not recent_unlocks.is_empty():
 		lines.append("New unlocks: %s" % ", ".join(recent_unlocks))
@@ -249,6 +260,8 @@ func get_progress_report(recent_unlocks: Array[String] = []) -> String:
 
 func get_next_unlock_goal_lines() -> Array[String]:
 	var lines: Array[String] = []
+	if not is_map_unlocked("map2"):
+		lines.append("- Map: Survive 30:00 to unlock Scrap Maze.")
 	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
@@ -300,6 +313,9 @@ func try_unlock(kind: String, id: String, display_name: String, unlocked_message
 		"tank":
 			if unlock_id(unlocked_tanks, id):
 				unlocked_messages.append(display_name)
+		"map":
+			if unlock_id(unlocked_maps, id):
+				unlocked_messages.append(display_name)
 		"ability":
 			if unlock_id(unlocked_abilities, id):
 				unlocked_messages.append(display_name)
@@ -317,6 +333,19 @@ func unlock_id(list: Array[String], id: String) -> bool:
 
 func is_tank_unlocked(tank_id: String) -> bool:
 	return unlocked_tanks.has(tank_id)
+
+
+func is_map_unlocked(map_id: String) -> bool:
+	return unlocked_maps.has(map_id)
+
+
+func get_map_unlock_hint(map_id: String) -> String:
+	if is_map_unlocked(map_id):
+		return "Unlocked"
+	match map_id:
+		"map2":
+			return "Survive 30:00 on any map."
+	return "Progress further to reveal this map."
 
 
 func is_ability_unlocked(ability_id: String) -> bool:

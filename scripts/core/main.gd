@@ -69,6 +69,9 @@ var next_run_event_index: int = 0
 var active_run_events: Array[Dictionary] = []
 var completed_run_event_names: Array[String] = []
 var last_boss_variant_id: String = ""
+var selected_map_name: String = "Dust Bowl"
+var run_completed: bool = false
+var run_was_victory: bool = false
 
 const ENEMY = preload("uid://kxdifr4760x4")
 const BROWN_ENEMY = preload("res://scenes/enemies/brown_enemy.tscn")
@@ -219,8 +222,15 @@ const MOVEMENT_INPUT_ACTIONS: Array[String] = [
 	"move_down",
 ]
 const DEBUG_TIME_SCALES: Array[float] = [1.0, 2.0, 4.0, 8.0]
+const VICTORY_TIME_SECONDS: float = 1800.0
+const DROP_CLEARANCE: float = 18.0
+const ENEMY_OBSTACLE_CLEARANCE: float = 18.0
 
 @onready var arena_mesh: MeshInstance2D = $ArenaMesh
+@onready var bounds_mesh: MeshInstance2D = $BoundsMesh
+@onready var wasteland_background: Sprite2D = $WastelandBackground
+@onready var boundary_body: StaticBody2D = $StaticBody2D
+@onready var map_layout: Node2D = $MapLayout
 @onready var hp_bar: Control = $CanvasLayer/HPBar
 @onready var exp_bar: Control = $CanvasLayer/ExpBar
 @onready var run_timer_label: Label = $CanvasLayer/RunTimerLabel
@@ -247,6 +257,7 @@ func _ready() -> void:
 	GamepadInputSetup.ensure_configured()
 	setup_pause_input_router()
 	configure_run_seed_and_modifiers()
+	configure_selected_map()
 	set_debug_time_scale_index(0)
 	hide_player_facing_debug_ui()
 	is_startup_loading = true
@@ -266,22 +277,7 @@ func _ready() -> void:
 	update_stats_label()
 	update_upgrade_inventory_label()
 	call_deferred("run_startup_loading")
-	player.defeated.connect(func():
-		set_all_ai_toggles_active(false)
-		low_health_vignette.set_low_health_active(false)
-		get_tree().paused = true
-		%DefeatControl.visible = true
-		%DefeatControl.get_node("RestartButton").grab_focus.call_deferred()
-		var unlocked_messages: Array[String] = get_unlock_manager().record_run_result({
-			"survival_seconds": int(floor(run_time)),
-			"level": player.level,
-			"enemies_defeated": enemies_defeated,
-			"bosses_defeated": bosses_defeated,
-			"elites_defeated": elites_defeated,
-			"build_levels": get_build_level_snapshot(),
-		})
-		%ResultLabel.text = get_run_summary_text(unlocked_messages)
-	)
+	player.defeated.connect(func(): complete_run(false))
 
 
 func hide_player_facing_debug_ui() -> void:
@@ -290,6 +286,31 @@ func hide_player_facing_debug_ui() -> void:
 	for child in $CanvasLayer.get_children():
 		if child.name.begins_with("Debug"):
 			child.visible = false
+
+
+func complete_run(victory: bool) -> void:
+	if run_completed:
+		return
+	run_completed = true
+	run_was_victory = victory
+	set_all_ai_toggles_active(false)
+	low_health_vignette.set_low_health_active(false)
+	get_tree().paused = true
+	%DefeatControl.visible = true
+	%DefeatControl.get_node("RestartButton").grab_focus.call_deferred()
+	var result := {
+		"victory": victory,
+		"survival_seconds": int(floor(max(run_time, VICTORY_TIME_SECONDS if victory else run_time))),
+		"level": player.level,
+		"enemies_defeated": enemies_defeated,
+		"bosses_defeated": bosses_defeated,
+		"elites_defeated": elites_defeated,
+		"build_levels": get_build_level_snapshot(),
+	}
+	var unlocked_messages: Array[String] = get_unlock_manager().record_run_result(result)
+	%DefeatControl.get_node("DefeatLabel").text = "VICTORY" if victory else "RUN OVER"
+	%DefeatControl.get_node("DefeatLabel").add_theme_color_override("font_color", Color(0.38, 1.0, 0.42, 1.0) if victory else Color(1.0, 0.0, 0.0, 1.0))
+	%ResultLabel.text = get_run_summary_text(unlocked_messages)
 
 
 func configure_run_seed_and_modifiers() -> void:
@@ -311,6 +332,43 @@ func configure_run_seed_and_modifiers() -> void:
 	dynamite_drop_chance = clamp(DYNAMITE_DROP_CHANCE * float(run_config.get_modifier_multiplier("dynamite_drop_multiplier")) * float(run_config.get_meta_reward_multiplier("dynamite_drop_multiplier")), 0.0, 1.0)
 	spawn_interval *= float(run_config.get_modifier_multiplier("spawn_interval_multiplier"))
 	build_run_event_schedule()
+
+
+func configure_selected_map() -> void:
+	var map_config: Dictionary = get_run_config().get_selected_map()
+	selected_map_name = String(map_config.get("name", "Dust Bowl"))
+	if map_layout and map_layout.has_method("apply_map"):
+		map_layout.apply_map(String(map_config.get("id", "map1")))
+		apply_map_scene_dimensions()
+
+
+func apply_map_scene_dimensions() -> void:
+	if map_layout == null:
+		return
+	var arena_size: Vector2 = map_layout.get_arena_size()
+	var bounds_size: Vector2 = map_layout.get_bounds_size()
+	if arena_mesh.mesh is QuadMesh:
+		(arena_mesh.mesh as QuadMesh).size = arena_size
+	if bounds_mesh.mesh is QuadMesh:
+		(bounds_mesh.mesh as QuadMesh).size = bounds_size
+	if wasteland_background.texture:
+		var texture_size: Vector2 = wasteland_background.texture.get_size()
+		var cover_scale: float = max(bounds_size.x / texture_size.x, bounds_size.y / texture_size.y)
+		wasteland_background.scale = Vector2.ONE * cover_scale
+	var vertical_wall_size := Vector2(64.0, bounds_size.y - 192.0)
+	var horizontal_wall_size := Vector2(bounds_size.x - 192.0, 64.0)
+	for collision_shape in boundary_body.get_children():
+		if not collision_shape is CollisionShape2D:
+			continue
+		var shape := (collision_shape as CollisionShape2D).shape
+		if not shape is RectangleShape2D:
+			continue
+		if abs((collision_shape as CollisionShape2D).position.x) > abs((collision_shape as CollisionShape2D).position.y):
+			(shape as RectangleShape2D).size = vertical_wall_size
+			(collision_shape as CollisionShape2D).position.x = sign((collision_shape as CollisionShape2D).position.x) * ((arena_size.x + 64.0) / 2.0)
+		else:
+			(shape as RectangleShape2D).size = horizontal_wall_size
+			(collision_shape as CollisionShape2D).position.y = sign((collision_shape as CollisionShape2D).position.y) * ((arena_size.y + 64.0) / 2.0)
 
 
 func get_run_config() -> Node:
@@ -359,6 +417,9 @@ func _process(delta: float) -> void:
 	process_queued_exp_drops()
 	update_visibility_culling()
 	run_time += delta
+	if run_time >= VICTORY_TIME_SECONDS:
+		complete_run(true)
+		return
 	update_player_dps()
 	update_low_health_upgrade_timer(delta)
 	process_run_events(delta)
@@ -661,7 +722,8 @@ func spawn_enemy(enemy_scene: PackedScene, defeated_callback: Callable, variant_
 	enemy.defeated.connect(defeated_callback)
 	add_child(enemy)
 	register_active_enemy(enemy)
-	enemy.global_position = get_boss_spawn_point() if enemy.is_in_group("Boss") else get_spawn_point()
+	var spawn_position := get_boss_spawn_point() if enemy.is_in_group("Boss") else get_spawn_point()
+	enemy.global_position = get_walkable_drop_position(spawn_position, ENEMY_OBSTACLE_CLEARANCE)
 	if enemy.has_method("set_global_speed_scale"):
 		enemy.set_global_speed_scale(enemy_speed_scale * get_active_run_event_multiplier("enemy_speed_multiplier"))
 	if enemy.has_method("apply_health_bonus"):
@@ -907,7 +969,8 @@ func spawn_boss_minions(origin: Vector2, module: Dictionary, phase_index: int) -
 		if get_active_enemy_count() >= minion_pressure_cap:
 			return
 		var minion = spawn_enemy(ENEMY, _on_enemy_defeated, minion_config)
-		minion.global_position = origin + Vector2.RIGHT.rotated((TAU / float(spawn_count)) * float(i)) * randf_range(80.0, 128.0)
+		var minion_position := origin + Vector2.RIGHT.rotated((TAU / float(spawn_count)) * float(i)) * randf_range(80.0, 128.0)
+		minion.global_position = get_walkable_drop_position(minion_position, ENEMY_OBSTACLE_CLEARANCE)
 
 
 func spawn_boss_hazard_ring(origin: Vector2, module: Dictionary, phase_index: int) -> void:
@@ -997,6 +1060,24 @@ func is_position_in_arena(pos: Vector2) -> bool:
 	var arena_size: Vector2 = arena_mesh.mesh.size
 	var arena_rect := Rect2(arena_mesh.global_position - arena_size / 2.0, arena_size)
 	return arena_rect.has_point(pos)
+
+
+func is_position_walkable(pos: Vector2, clearance: float = 0.0) -> bool:
+	if map_layout and map_layout.has_method("is_walkable"):
+		return bool(map_layout.is_walkable(pos, clearance))
+	return is_position_in_arena(pos)
+
+
+func get_walkable_drop_position(pos: Vector2, clearance: float = DROP_CLEARANCE) -> Vector2:
+	if map_layout and map_layout.has_method("get_nearest_walkable_position"):
+		return map_layout.get_nearest_walkable_position(pos, clearance)
+	return pos
+
+
+func resolve_actor_position(current_position: Vector2, target_position: Vector2, clearance: float = ENEMY_OBSTACLE_CLEARANCE) -> Vector2:
+	if map_layout and map_layout.has_method("resolve_actor_step"):
+		return map_layout.resolve_actor_step(current_position, target_position, clearance)
+	return target_position
 
 
 func get_arena_rect() -> Rect2:
@@ -1241,7 +1322,8 @@ func spawn_split_elite_children(enemy_position: Vector2, death_payload: Dictiona
 		if get_active_enemy_count() >= split_pressure_cap:
 			return
 		var child = spawn_enemy(child_scene, _on_enemy_defeated, child_config)
-		child.global_position = enemy_position + Vector2.RIGHT.rotated((TAU / float(child_count)) * float(i) + randf_range(-0.35, 0.35)) * randf_range(14.0, 28.0)
+		var child_position := enemy_position + Vector2.RIGHT.rotated((TAU / float(child_count)) * float(i) + randf_range(-0.35, 0.35)) * randf_range(14.0, 28.0)
+		child.global_position = get_walkable_drop_position(child_position, ENEMY_OBSTACLE_CLEARANCE)
 
 
 func get_active_enemy_count() -> int:
@@ -1308,7 +1390,7 @@ func _spawn_exp_orb(drop_data: Dictionary) -> void:
 	if not is_inside_tree():
 		return
 	
-	var enemy_position: Vector2 = drop_data.position
+	var enemy_position: Vector2 = get_walkable_drop_position(drop_data.position, DROP_CLEARANCE)
 	var min_tier: int = drop_data.get("min_tier", BLUE_ORB_TIER)
 	var orb_data := get_random_exp_orb_data(min_tier)
 	if active_exp_orbs.size() >= MAX_ACTIVE_EXP_ORBS:
@@ -1443,7 +1525,7 @@ func try_drop_dynamite(enemy_position: Vector2) -> void:
 	if not is_position_in_arena(enemy_position):
 		return
 	
-	dynamite_pickup_pool.activate(enemy_position)
+	dynamite_pickup_pool.activate(get_walkable_drop_position(enemy_position, DROP_CLEARANCE))
 
 
 func try_drop_wrench(enemy_position: Vector2) -> void:
@@ -1457,7 +1539,7 @@ func try_drop_wrench(enemy_position: Vector2) -> void:
 	if wrench_pickup == null:
 		return
 	
-	wrench_pickup.activate(enemy_position)
+	wrench_pickup.activate(get_walkable_drop_position(enemy_position, DROP_CLEARANCE))
 
 
 func get_available_wrench_pickup() -> Node:
@@ -1476,7 +1558,7 @@ func debug_spawn_dynamite() -> void:
 	var arena_rect := get_arena_rect()
 	spawn_position.x = clamp(spawn_position.x, arena_rect.position.x + 16.0, arena_rect.end.x - 16.0)
 	spawn_position.y = clamp(spawn_position.y, arena_rect.position.y + 16.0, arena_rect.end.y - 16.0)
-	dynamite_pickup_pool.activate(spawn_position)
+	dynamite_pickup_pool.activate(get_walkable_drop_position(spawn_position, DROP_CLEARANCE))
 
 
 func spawn_enemy_death_burst(enemy_position: Vector2) -> void:
@@ -1609,7 +1691,7 @@ func spawn_supply_box_at_position(supply_box_scene: PackedScene, spawn_position:
 		return
 	var supply_box = supply_box_scene.instantiate()
 	add_child(supply_box)
-	supply_box.global_position = spawn_position
+	supply_box.global_position = get_walkable_drop_position(spawn_position, DROP_CLEARANCE)
 
 
 func debug_spawn_supply_box(supply_box_scene: PackedScene, offset: Vector2) -> void:
@@ -1620,7 +1702,7 @@ func debug_spawn_supply_box(supply_box_scene: PackedScene, offset: Vector2) -> v
 	
 	var supply_box = supply_box_scene.instantiate()
 	add_child(supply_box)
-	supply_box.global_position = spawn_position
+	supply_box.global_position = get_walkable_drop_position(spawn_position, DROP_CLEARANCE)
 
 
 func get_offscreen_arena_spawn_point() -> Vector2:
@@ -1633,7 +1715,7 @@ func get_offscreen_arena_spawn_point() -> Vector2:
 			randf_range(arena_rect.position.y, arena_rect.end.y)
 		)
 		
-		if not camera_rect.has_point(candidate):
+		if not camera_rect.has_point(candidate) and is_position_walkable(candidate, DROP_CLEARANCE):
 			return candidate
 	
 	return Vector2.INF
@@ -1694,8 +1776,8 @@ func update_stats_label() -> void:
 
 func get_run_summary_text(unlocked_messages: Array[String]) -> String:
 	var lines: Array[String] = [
-		"RUN COMPLETE",
-		"Tank: %s  Level: %s  Time: %s" % [player.selected_tank_name, player.level, get_formatted_run_time()],
+		"VICTORY" if run_was_victory else "RUN COMPLETE",
+		"Tank: %s  Map: %s  Level: %s  Time: %s" % [player.selected_tank_name, selected_map_name, player.level, get_formatted_run_time()],
 		"Seed: %s" % run_seed_text,
 		"Run modifiers: %s" % run_modifier_summary,
 		"Run events: %s" % get_run_event_summary_text(),

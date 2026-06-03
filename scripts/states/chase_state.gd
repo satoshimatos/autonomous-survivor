@@ -22,7 +22,7 @@ func update(delta: float) -> void:
 	if player:
 		var speed: float = actor.speed if "speed" in actor else 0.0
 		var direction := actor.global_position.direction_to(player.global_position)
-		actor.position += direction * speed * delta
+		move_actor_to(actor.global_position + direction * speed * delta)
 	
 	if not use_duration:
 		return

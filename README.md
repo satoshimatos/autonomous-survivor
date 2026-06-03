@@ -223,6 +223,12 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Routed shared lookup behavior through `RuntimeQuery` so ability scripts stay focused on their own effects instead of duplicating scene traversal logic.
   - Tightened pooled particle bursts so recycled effects stop processing while inactive.
   - Cached per-frame player references for cloud shadows, wrench pickup radius checks, and pickup indicators.
+- Added a 30-minute victory target and unlockable second map:
+  - Surviving to 30:00 now ends the run as a victory instead of continuing forever.
+  - Victories are recorded in permanent progress and unlock the Scrap Maze map.
+  - The main menu now lets unlocked maps be selected and shows locked map requirements.
+  - Scrap Maze is a larger arena with authored obstacle nodes that block the player and enemies.
+  - Enemy spawns, EXP drops, wrench/dynamite drops, and supply pickups now resolve to nearby walkable positions when an obstacle would overlap them.
 
 ## Backlog
 
@@ -233,6 +239,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 ### Content
 
 - Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 20 enemies, and 10 bosses.
+- Surviving 30:00 is now a victory condition and unlocks map 2, Scrap Maze.
 
 ### Systems
 

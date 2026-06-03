@@ -9,6 +9,7 @@
 [ext_resource type="Script" uid="uid://b612al6i45ogm" path="res://scripts/ui/status_bar.gd" id="7_m8b2t"]
 [ext_resource type="Texture2D" path="res://assets/backgrounds/wasteland_arena_generated.png" id="8_arena_bg"]
 [ext_resource type="Shader" path="res://shaders/cloud_shadow_overlay.gdshader" id="9_cloud_shader"]
+[ext_resource type="Script" path="res://scripts/core/map_layout.gd" id="10_map_layout"]
 
 [sub_resource type="QuadMesh" id="QuadMesh_sgp6g"]
 size = Vector2(1940, 1250)
@@ -21,6 +22,15 @@ size = Vector2(64, 1058)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_sugp2"]
 size = Vector2(1748, 64)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_map2_wide"]
+size = Vector2(420, 84)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_map2_tall"]
+size = Vector2(86, 360)
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_map2_block"]
+size = Vector2(230, 130)
 
 [sub_resource type="ShaderMaterial" id="ShaderMaterial_cloud_overlay"]
 shader = ExtResource("9_cloud_shader")
@@ -77,6 +87,72 @@ shape = SubResource("RectangleShape2D_sugp2")
 [node name="CollisionShape2D4" type="CollisionShape2D" parent="StaticBody2D" unique_id=1943130208]
 position = Vector2(0, -497)
 shape = SubResource("RectangleShape2D_sugp2")
+
+[node name="MapLayout" type="Node2D" parent="."]
+script = ExtResource("10_map_layout")
+
+[node name="Map2Obstacles" type="Node2D" parent="MapLayout"]
+visible = false
+
+[node name="NorthWreck" type="StaticBody2D" parent="MapLayout/Map2Obstacles" groups=["MapObstacle"]]
+position = Vector2(576, 106)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map2Obstacles/NorthWreck"]
+color = Color(0.23, 0.24, 0.21, 1)
+polygon = PackedVector2Array(-210, -42, 210, -42, 210, 42, -210, 42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map2Obstacles/NorthWreck"]
+shape = SubResource("RectangleShape2D_map2_wide")
+
+[node name="SouthWreck" type="StaticBody2D" parent="MapLayout/Map2Obstacles" groups=["MapObstacle"]]
+position = Vector2(576, 542)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map2Obstacles/SouthWreck"]
+color = Color(0.24, 0.22, 0.2, 1)
+polygon = PackedVector2Array(-210, -42, 210, -42, 210, 42, -210, 42)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map2Obstacles/SouthWreck"]
+shape = SubResource("RectangleShape2D_map2_wide")
+
+[node name="WestColumn" type="StaticBody2D" parent="MapLayout/Map2Obstacles" groups=["MapObstacle"]]
+position = Vector2(292, 324)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map2Obstacles/WestColumn"]
+color = Color(0.2, 0.23, 0.24, 1)
+polygon = PackedVector2Array(-43, -180, 43, -180, 43, 180, -43, 180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map2Obstacles/WestColumn"]
+shape = SubResource("RectangleShape2D_map2_tall")
+
+[node name="EastColumn" type="StaticBody2D" parent="MapLayout/Map2Obstacles" groups=["MapObstacle"]]
+position = Vector2(860, 324)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map2Obstacles/EastColumn"]
+color = Color(0.2, 0.23, 0.24, 1)
+polygon = PackedVector2Array(-43, -180, 43, -180, 43, 180, -43, 180)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map2Obstacles/EastColumn"]
+shape = SubResource("RectangleShape2D_map2_tall")
+
+[node name="NorthEastBlock" type="StaticBody2D" parent="MapLayout/Map2Obstacles" groups=["MapObstacle"]]
+position = Vector2(1030, -86)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map2Obstacles/NorthEastBlock"]
+color = Color(0.27, 0.25, 0.2, 1)
+polygon = PackedVector2Array(-115, -65, 115, -65, 115, 65, -115, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map2Obstacles/NorthEastBlock"]
+shape = SubResource("RectangleShape2D_map2_block")
+
+[node name="SouthWestBlock" type="StaticBody2D" parent="MapLayout/Map2Obstacles" groups=["MapObstacle"]]
+position = Vector2(122, 734)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map2Obstacles/SouthWestBlock"]
+color = Color(0.27, 0.23, 0.2, 1)
+polygon = PackedVector2Array(-115, -65, 115, -65, 115, 65, -115, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map2Obstacles/SouthWestBlock"]
+shape = SubResource("RectangleShape2D_map2_block")
 
 [node name="Player" parent="." unique_id=992026406 instance=ExtResource("1_o5qli")]
 position = Vector2(576, 324)

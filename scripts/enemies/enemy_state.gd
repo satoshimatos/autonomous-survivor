@@ -24,5 +24,15 @@ func update(_delta: float) -> void:
 	pass
 
 
+func move_actor_to(target_position: Vector2) -> void:
+	if actor == null:
+		return
+	var main := actor.get_tree().current_scene
+	if main and main.has_method("resolve_actor_position"):
+		actor.global_position = main.resolve_actor_position(actor.global_position, target_position, EnemyGeometry.get_collision_radius(actor as Area2D) if actor is Area2D else 24.0)
+	else:
+		actor.global_position = target_position
+
+
 func request_transition(state_name: String) -> void:
 	transition_requested.emit(state_name)

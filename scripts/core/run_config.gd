@@ -1,6 +1,7 @@
 extends Node
 
 var selected_tank_id: String = "vanguard"
+var selected_map_id: String = "map1"
 var run_seed_text: String = ""
 var active_run_modifiers: Array[Dictionary] = []
 
@@ -112,6 +113,19 @@ var tank_archetypes: Array[Dictionary] = [
 	},
 ]
 
+var map_catalog: Array[Dictionary] = [
+	{
+		"id": "map1",
+		"name": "Dust Bowl",
+		"summary": "Open starter arena with no interior blockers.",
+	},
+	{
+		"id": "map2",
+		"name": "Scrap Maze",
+		"summary": "Larger arena with wreckage lanes that block tanks and enemies.",
+	},
+]
+
 var run_modifier_catalog: Array[Dictionary] = [
 	{
 		"id": "swarm_opening",
@@ -186,6 +200,28 @@ func set_selected_tank(tank_id: String) -> void:
 
 func can_start_selected_tank() -> bool:
 	return get_unlock_manager().is_tank_unlocked(selected_tank_id)
+
+
+func get_selected_map() -> Dictionary:
+	if not get_unlock_manager().is_map_unlocked(selected_map_id):
+		selected_map_id = "map1"
+	return get_map_by_id(selected_map_id)
+
+
+func get_map_by_id(map_id: String) -> Dictionary:
+	for map_config in map_catalog:
+		if String(map_config.id) == map_id:
+			return map_config
+	return map_catalog[0]
+
+
+func set_selected_map(map_id: String) -> void:
+	if get_unlock_manager().is_map_unlocked(map_id):
+		selected_map_id = get_map_by_id(map_id).id
+
+
+func can_start_selected_map() -> bool:
+	return get_unlock_manager().is_map_unlocked(selected_map_id)
 
 
 func start_new_run() -> void:

@@ -56,7 +56,8 @@ func _process(delta: float) -> void:
 	update_juice_pop(delta)
 	
 	if player:
-		position += get_movement_vector(delta) * speed * get_status_speed_multiplier() * delta
+		var target_position := global_position + get_movement_vector(delta) * speed * get_status_speed_multiplier() * delta
+		global_position = get_obstacle_blocked_position(target_position)
 	
 	process_contact_damage()
 
@@ -156,6 +157,12 @@ func update_status_effects(delta: float) -> void:
 
 func get_status_speed_multiplier() -> float:
 	return slow_multiplier if slow_timer > 0.0 else 1.0
+
+
+func get_obstacle_blocked_position(target_position: Vector2) -> Vector2:
+	if main and main.has_method("resolve_actor_position"):
+		return main.resolve_actor_position(global_position, target_position, EnemyGeometry.get_collision_radius(self))
+	return target_position
 
 
 func hit(damage: float = 10.0, show_number: bool = true) -> int:

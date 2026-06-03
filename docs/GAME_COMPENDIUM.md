@@ -8,6 +8,7 @@ Note: the in-game Compendium is now the primary live reference because it reads 
 
 - [Core Loop](#core-loop)
 - [Run Setup](#run-setup)
+- [Maps](#maps)
 - [Player Baseline](#player-baseline)
 - [Tank Archetypes](#tank-archetypes)
 - [Core Upgrades](#core-upgrades)
@@ -36,7 +37,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 5. Every fifth normal level-up queues an ability choice.
 6. Supply boxes and mid-run events can grant bonus upgrade or ability choices.
 7. Bosses arrive on a timer and use behavior profiles, phases, hazards, or minions.
-8. The run ends when the player dies, then the defeat report records run telemetry, build highlights, events, unlocks, and challenge rewards.
+8. The run ends when the player dies or when the player survives to 30:00. A 30:00 clear is a victory and records run telemetry, build highlights, events, unlocks, and challenge rewards.
 
 ## Run Setup
 
@@ -58,6 +59,21 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 - Up to 4 events are chosen without replacement from the event catalog.
 - First event triggers around 150 seconds, offset by about +/-18 seconds.
 - Later events are spaced about 135-175 seconds apart.
+
+## Maps
+
+### Dust Bowl
+
+- Starter map.
+- Open arena with no interior blockers.
+- Available by default.
+
+### Scrap Maze
+
+- Unlock: survive to 30:00 and complete a victorious run.
+- Larger arena than Dust Bowl.
+- Contains authored wreckage obstacles that block player movement and enemy movement.
+- EXP crystals, wrench drops, dynamite drops, supply boxes, and enemy spawns resolve to nearby walkable space if their first position overlaps an obstacle.
 
 ## Player Baseline
 

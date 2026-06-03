@@ -24,8 +24,11 @@ func update(delta: float) -> void:
 		return
 	
 	var travel_distance: float = min(dash_speed * delta, remaining_distance)
-	actor.position += direction * travel_distance
+	var previous_position := actor.global_position
+	move_actor_to(actor.global_position + direction * travel_distance)
 	remaining_distance -= travel_distance
+	if actor.global_position.distance_squared_to(previous_position + direction * travel_distance) > 0.01:
+		remaining_distance = 0.0
 	if actor.has_method("clamp_to_arena") and bool(actor.clamp_to_arena()):
 		remaining_distance = 0.0
 	
