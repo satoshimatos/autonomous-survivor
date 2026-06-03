@@ -115,8 +115,10 @@ func validate_progression_catalogs() -> bool:
 	var modifier_ids: Array[String] = []
 	for modifier in RunModifierCatalog.get_entries():
 		modifier_ids.append(String(modifier.id))
-	if not modifier_ids.has("singularity_seed"):
-		push_error("Run modifier catalog should include Singularity Seed.")
+	for required_modifier_id in ["singularity_seed", "clockwork_dividend"]:
+		if modifier_ids.has(required_modifier_id):
+			continue
+		push_error("Run modifier catalog should include %s." % required_modifier_id)
 		quit(1)
 		return false
 
@@ -151,12 +153,30 @@ func validate_progression_catalogs() -> bool:
 		push_error("Map 11 victory should unlock Bloom Artillerist.")
 		quit(1)
 		return false
+	unlock_manager.record_completed_victory_map({"victory": true, "map_id": "map12"})
+	unlock_manager.add_unlocks_for_victory({"victory": true, "map_id": "map12"}, unlocked_messages)
+	if not unlock_manager.unlocked_modifiers.has("clockwork_dividend"):
+		unlock_manager.free()
+		push_error("Map 12 victory should unlock Clockwork Dividend.")
+		quit(1)
+		return false
+	if not unlock_manager.unlocked_tanks.has("gear_oracle"):
+		unlock_manager.free()
+		push_error("Map 12 victory should unlock Gear Oracle.")
+		quit(1)
+		return false
 	unlock_manager.free()
 	return true
 
 
 func validate_autonomous_tank_catalog() -> bool:
 	var seen_ids: Array[String] = []
+	var supported_passive_power_ids: Array[String] = [
+		"vampire_circuit", "ion_lance", "meteor_shell", "bulldozer_aura", "supply_beacon",
+		"black_hole_mines", "pulse_drone", "acid_pool", "guardian_wall", "critical_storm",
+		"repair_burst", "magnet_storm", "orbital_cannon", "ember_turret", "time_shock",
+		"phase_magnet", "munition_swarm", "fortress_protocol", "storm_catalyst", "golden_reactor",
+	]
 	for tank in AutonomousTankCatalog.get_entries():
 		var tank_id := String(tank.get("id", ""))
 		if tank_id.is_empty() or seen_ids.has(tank_id):
@@ -172,7 +192,14 @@ func validate_autonomous_tank_catalog() -> bool:
 			push_error("Autonomous tank %s needs a summary for the tank selector." % tank_id)
 			quit(1)
 			return false
-	for required_tank_id in ["neon_courier", "bloom_artillerist"]:
+		var passive_powers: Dictionary = tank.get("passive_powers", {}) as Dictionary
+		for power_id in passive_powers:
+			if supported_passive_power_ids.has(String(power_id)):
+				continue
+			push_error("Autonomous tank %s references unsupported passive power %s." % [tank_id, String(power_id)])
+			quit(1)
+			return false
+	for required_tank_id in ["neon_courier", "bloom_artillerist", "gear_oracle"]:
 		if not seen_ids.has(required_tank_id):
 			push_error("Autonomous tank catalog should include %s." % required_tank_id)
 			quit(1)

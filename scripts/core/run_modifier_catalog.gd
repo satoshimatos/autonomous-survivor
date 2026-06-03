@@ -109,4 +109,18 @@ static func get_entries() -> Array[Dictionary]:
 			"enemy_health_growth_multiplier": 1.24,
 			"enemy_damage_growth_multiplier": 1.18,
 		},
+		{
+			"id": "clockwork_dividend",
+			"name": "Clockwork Dividend",
+			"summary": "A Clockwork Spiral reward with huge boss payouts, denser spawns, and sharper elite scaling.",
+			"spawn_interval_multiplier": 0.72,
+			"boss_spawn_interval_multiplier": 0.74,
+			"boss_exp_multiplier": 1.7,
+			"exp_value_multiplier": 1.12,
+			"player_fire_interval_multiplier": 0.94,
+			"supply_box_chance_multiplier": 0.7,
+			"enemy_speed_growth_multiplier": 1.12,
+			"enemy_health_growth_multiplier": 1.18,
+			"enemy_damage_growth_multiplier": 1.22,
+		},
 	]

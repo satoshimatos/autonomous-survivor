@@ -188,5 +188,22 @@ static func get_entries() -> Array[Dictionary]:
 			"extra_upgrades": {"ordnance_bay": 1, "munition_printer": 1, "impact_fuse": 1},
 			"passive_powers": {"orbital_cannon": 1, "munition_swarm": 1},
 			"color": Color(0.54, 1.0, 0.58, 1.0),
+		},
+		{
+			"id": "gear_oracle",
+			"name": "Gear Oracle",
+			"summary": "Clockwork postgame tank with slow movement, precision beams, tempo control, and rich boss payouts.",
+			"speed_multiplier": 0.82,
+			"health_bonus": 2,
+			"damage_multiplier": 1.06,
+			"fire_interval_multiplier": 0.96,
+			"piercing_level": 1,
+			"targeting_array_level": 2,
+			"railgun_orbiter_level": 1,
+			"tesla_pylon_level": 1,
+			"chrono_burst_level": 1,
+			"extra_upgrades": {"target_predictor": 1, "weakpoint_scanner": 1, "capacitor_mesh": 1},
+			"passive_powers": {"time_shock": 1, "storm_catalyst": 1, "golden_reactor": 1},
+			"color": Color(0.94, 0.72, 0.28, 1.0),
 		}
 	]

@@ -120,6 +120,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Clockwork Spiral as map 12, unlocked by a 30:00 Singularity Garden victory.
   - Added a generated Clockwork Spiral background, authored gear-lane obstacles, a spiral hazard gimmick, five machine enemies, and two clockwork bosses.
   - Extended map unlocks, scene validation, map layout bounds, spawn weighting, the compendium, and content counts for the new postgame arena.
+- Added postgame reward wave #62:
+  - Added Gear Oracle, a Clockwork Spiral victory tank focused on precision beams, Tesla control, Chrono Burst tempo, and boss payout scaling.
+  - Added Clockwork Dividend, a Clockwork Spiral victory run modifier with denser spawns, faster bosses, richer boss EXP, faster player tempo, scarcer supplies, and sharper enemy growth.
+  - Updated unlock hints, backfill rules, validation, backlog counts, and compendium references for the new postgame rewards.
 - Added branding polish wave #61:
   - Regenerated the Autonomous Survivor app icon, native Windows `.ico`, compact brand mark, full logo, and wordmark with a stronger tank-survivor identity.
   - Added generated Play, Compendium, and Quit action icons under `assets/ui/branding/`.
@@ -363,7 +367,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 24 tanks, 76 enemies, 33 bosses, and 12 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 25 tanks, 76 enemies, 33 bosses, and 12 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

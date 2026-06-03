@@ -80,6 +80,8 @@ func ensure_map_modifier_unlocks() -> void:
 			unlock_id(unlocked_modifiers, String(map_modifier_unlocks[map_id]))
 	if completed_victory_maps.has("map11"):
 		unlock_id(unlocked_modifiers, "singularity_seed")
+	if completed_victory_maps.has("map12"):
+		unlock_id(unlocked_modifiers, "clockwork_dividend")
 
 
 func ensure_map_tank_unlocks() -> void:
@@ -91,6 +93,8 @@ func ensure_map_tank_unlocks() -> void:
 		unlock_id(unlocked_tanks, "void_anchor")
 	if completed_victory_maps.has("map11"):
 		unlock_id(unlocked_tanks, "bloom_artillerist")
+	if completed_victory_maps.has("map12"):
+		unlock_id(unlocked_tanks, "gear_oracle")
 
 
 func record_run_result(result: Dictionary) -> Array[String]:
@@ -165,6 +169,8 @@ func add_unlocks_for_progress(unlocked_messages: Array[String]) -> void:
 		try_unlock("tank", "neon_courier", "Neon Courier tank", unlocked_messages)
 	if completed_victory_maps.has("map11"):
 		try_unlock("tank", "bloom_artillerist", "Bloom Artillerist tank", unlocked_messages)
+	if completed_victory_maps.has("map12"):
+		try_unlock("tank", "gear_oracle", "Gear Oracle tank", unlocked_messages)
 	if best_level >= 10:
 		try_unlock("ability", "freeze_pulse", "Freeze Pulse ability", unlocked_messages)
 		try_unlock("ability", "ion_lance", "Ion Lance power", unlocked_messages)
@@ -246,6 +252,9 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("map", "map12", "Clockwork Spiral map", unlocked_messages)
 			try_unlock("modifier", "singularity_seed", "Singularity Seed modifier", unlocked_messages)
 			try_unlock("tank", "bloom_artillerist", "Bloom Artillerist tank", unlocked_messages)
+		"map12":
+			try_unlock("modifier", "clockwork_dividend", "Clockwork Dividend modifier", unlocked_messages)
+			try_unlock("tank", "gear_oracle", "Gear Oracle tank", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -302,6 +311,8 @@ func get_modifier_reward_name(modifier_id: String) -> String:
 			return "Astral Lottery"
 		"singularity_seed":
 			return "Singularity Seed"
+		"clockwork_dividend":
+			return "Clockwork Dividend"
 	return modifier_id.capitalize()
 
 
@@ -370,6 +381,8 @@ func get_tank_unlock_hint(tank_id: String) -> String:
 			return "Win Neon Grid at 30:00."
 		"bloom_artillerist":
 			return "Win Singularity Garden at 30:00."
+		"gear_oracle":
+			return "Win Clockwork Spiral at 30:00."
 	return "Progress further to reveal this unlock."
 
 
@@ -416,7 +429,9 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Singularity Garden at 30:00 to unlock Clockwork Spiral.")
 	elif not is_modifier_unlocked("singularity_seed"):
 		lines.append("- Modifier: Win Singularity Garden at 30:00 to unlock Singularity Seed.")
-	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor", "neon_courier", "bloom_artillerist"]:
+	elif not is_modifier_unlocked("clockwork_dividend"):
+		lines.append("- Modifier: Win Clockwork Spiral at 30:00 to unlock Clockwork Dividend.")
+	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor", "neon_courier", "bloom_artillerist", "gear_oracle"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
 	for ability_goal in get_ability_goal_catalog():

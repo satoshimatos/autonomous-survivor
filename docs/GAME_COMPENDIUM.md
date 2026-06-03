@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 24 tanks, 76 enemies, 33 bosses, and 12 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 25 tanks, 76 enemies, 33 bosses, and 12 maps.
 
 ## Menu
 
@@ -188,6 +188,7 @@ Each level-up:
 | Void Anchor | Win Void Crucible and defeat 20 total bosses | 0.8 speed, +10 health, 1.12 damage, 1.14 fire interval, starts with Gravity Well 2, Armor 1, Barbed Wire 1, Gravity Anchor, Singularity Lens, Black Hole Mines, and Fortress Protocol | Heavy gravity-control bruiser. |
 | Neon Courier | Win Neon Grid at 30:00 | 1.32 speed, -4 health, 0.92 damage, 0.94 fire interval, starts with Overdrive Core 1, Magnet 2, Vector Thrusters, Kinetic Treads, Salvage Magnet, Phase Magnet, and Supply Beacon | Fast supply and pickup runner. |
 | Bloom Artillerist | Win Singularity Garden at 30:00 | 0.76 speed, +4 health, 1.1 damage, 1.1 fire interval, starts with Artillery 1, Missile Pod 1, Splash 1, Ordnance Bay, Munition Printer, Impact Fuse, Orbital Cannon, and Munition Swarm | Postgame siege platform. |
+| Gear Oracle | Win Clockwork Spiral at 30:00 | 0.82 speed, +2 health, 1.06 damage, 0.96 fire interval, starts with Piercing 1, Targeting Array 2, Railgun Orbiter 1, Tesla Pylon 1, Chrono Burst 1, Target Predictor, Weakpoint Scanner, Capacitor Mesh, Time Shock, Storm Catalyst, and Golden Reactor | Clockwork precision-control reward tank. |
 
 ## Core Upgrades
 
@@ -515,6 +516,7 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 | Ember Bounty | Win Frozen Scar at 30:00 | Boss EXP *1.58, dynamite drops *1.65, enemy damage growth *1.26. |
 | Astral Lottery | Win Ember Rift at 30:00 | EXP value *1.36, boss EXP *1.32, supply chance *0.72, all enemy growth is sharper. |
 | Singularity Seed | Win Singularity Garden at 30:00 | Spawn interval *0.76, boss spawn interval *0.78, EXP value *1.22, boss EXP *1.42, wrench drops *1.25, supply chance *0.62, enemy health growth *1.24, enemy damage growth *1.18. |
+| Clockwork Dividend | Win Clockwork Spiral at 30:00 | Spawn interval *0.72, boss spawn interval *0.74, boss EXP *1.7, EXP value *1.12, player fire interval *0.94, supply chance *0.7, and all enemy growth is sharper. |
 
 ## Unlocks And Meta Progression
 
@@ -550,6 +552,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Void Crucible and total bosses defeated >= 20 | Void Anchor tank |
 | Win Neon Grid at 30:00 | Neon Courier tank |
 | Win Singularity Garden at 30:00 | Bloom Artillerist tank |
+| Win Clockwork Spiral at 30:00 | Gear Oracle tank |
 
 ### Map Unlocks
 
@@ -567,6 +570,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Astral Engine at 30:00 | Singularity Garden |
 | Win Singularity Garden at 30:00 | Clockwork Spiral |
 | Win Singularity Garden at 30:00 | Singularity Seed modifier |
+| Win Clockwork Spiral at 30:00 | Clockwork Dividend modifier |
 
 ### Challenge Goals
 
