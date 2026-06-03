@@ -67,6 +67,20 @@ func ensure_default_unlocks() -> void:
 		unlock_id(unlocked_abilities, ability_id)
 	for modifier_id in ["swarm_opening", "rich_crystals"]:
 		unlock_id(unlocked_modifiers, modifier_id)
+	ensure_map_modifier_unlocks()
+
+
+func ensure_map_modifier_unlocks() -> void:
+	var map_modifier_unlocks: Dictionary = {
+		"map6": "grave_moon",
+		"map7": "neon_overdrive",
+		"map8": "frost_cache",
+		"map9": "ember_bounty",
+		"map10": "astral_lottery",
+	}
+	for map_id in map_modifier_unlocks:
+		if unlocked_maps.has(map_id):
+			unlock_id(unlocked_modifiers, String(map_modifier_unlocks[map_id]))
 
 
 func record_run_result(result: Dictionary) -> Array[String]:
@@ -184,14 +198,19 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 			try_unlock("map", "map5", "Void Crucible map", unlocked_messages)
 		"map5":
 			try_unlock("map", "map6", "Moonlit Graveyard map", unlocked_messages)
+			try_unlock("modifier", "grave_moon", "Grave Moon modifier", unlocked_messages)
 		"map6":
 			try_unlock("map", "map7", "Neon Grid map", unlocked_messages)
+			try_unlock("modifier", "neon_overdrive", "Neon Overdrive modifier", unlocked_messages)
 		"map7":
 			try_unlock("map", "map8", "Frozen Scar map", unlocked_messages)
+			try_unlock("modifier", "frost_cache", "Frost Cache modifier", unlocked_messages)
 		"map8":
 			try_unlock("map", "map9", "Ember Rift map", unlocked_messages)
+			try_unlock("modifier", "ember_bounty", "Ember Bounty modifier", unlocked_messages)
 		"map9":
 			try_unlock("map", "map10", "Astral Engine map", unlocked_messages)
+			try_unlock("modifier", "astral_lottery", "Astral Lottery modifier", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -236,6 +255,16 @@ func get_modifier_reward_name(modifier_id: String) -> String:
 	match modifier_id:
 		"overclock_cache":
 			return "Overclock Cache"
+		"grave_moon":
+			return "Grave Moon"
+		"neon_overdrive":
+			return "Neon Overdrive"
+		"frost_cache":
+			return "Frost Cache"
+		"ember_bounty":
+			return "Ember Bounty"
+		"astral_lottery":
+			return "Astral Lottery"
 	return modifier_id.capitalize()
 
 

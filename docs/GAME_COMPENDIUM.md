@@ -471,6 +471,11 @@ Runs schedule up to 4 seeded events. Active or upcoming events appear in the HUD
 | Unstable Engine | Reach level 10 | Player fire interval *0.88, enemy speed growth *1.25. |
 | Salvage Field | Best enemies defeated >= 250 | Wrench drops *1.75, dynamite drops *2.0, supply chance *0.65. |
 | Overclock Cache | Complete Boss Breaker challenge | Player fire interval *0.9, supply chance *0.8. |
+| Grave Moon | Win Void Crucible at 30:00 | EXP value *1.18, boss spawn interval *0.86, enemy health growth *1.16. |
+| Neon Overdrive | Win Moonlit Graveyard at 30:00 | Player fire interval *0.84, spawn interval *0.82, enemy speed growth *1.28. |
+| Frost Cache | Win Neon Grid at 30:00 | Enemy speed growth *0.92, enemy health growth *1.26, supply chance *1.55. |
+| Ember Bounty | Win Frozen Scar at 30:00 | Boss EXP *1.58, dynamite drops *1.65, enemy damage growth *1.26. |
+| Astral Lottery | Win Ember Rift at 30:00 | EXP value *1.36, boss EXP *1.32, supply chance *0.72, all enemy growth is sharper. |
 
 ## Unlocks And Meta Progression
 

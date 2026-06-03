@@ -41,6 +41,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Extracted the late-map boss roster from `scripts/core/main.gd` into `scripts/core/late_map_boss_catalog.gd`.
   - Kept boss registration, phase thresholds, ability modules, map gates, and spawn behavior unchanged.
   - Revalidated scene catalog and direct gameplay/menu startup after the extraction.
+- Added replayability wave #42:
+  - Added 5 late-chain run modifiers: Grave Moon, Neon Overdrive, Frost Cache, Ember Bounty, and Astral Lottery.
+  - Late map victories now unlock these modifiers alongside the next map, and existing saves backfill them from already unlocked maps.
+  - The new modifiers use existing run-scaling systems for EXP, boss rewards, spawn tempo, supplies, explosives, and enemy growth.
 
 ### 2026-05-30
 
