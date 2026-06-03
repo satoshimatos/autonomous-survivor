@@ -86,5 +86,22 @@ static func get_entries() -> Array[Dictionary]:
 			"gimmick_interval": 8.0,
 			"mood_color": Color(0.88, 0.82, 1.0, 1.0),
 			"background_texture": "res://assets/backgrounds/map10_astral_engine.png",
+		},
+		{
+			"id": "map11",
+			"name": "Singularity Garden",
+			"summary": "Postgame bioluminescent arena with root walls, orbiting seed pods, crushing enemy growth, and singularity bloom waves.",
+			"spawn_interval_multiplier": 0.29,
+			"boss_spawn_interval_multiplier": 0.27,
+			"enemy_speed_growth_multiplier": 1.82,
+			"enemy_health_growth_multiplier": 2.32,
+			"enemy_damage_growth_multiplier": 2.02,
+			"active_enemy_cap_bonus": 250,
+			"active_enemy_cap_limit": 480,
+			"elite_chance_multiplier": 3.35,
+			"map_gimmick": "singularity_bloom",
+			"gimmick_interval": 7.5,
+			"mood_color": Color(0.72, 0.9, 0.82, 1.0),
+			"background_texture": "res://assets/backgrounds/map11_singularity_garden.png",
 		}
 	]

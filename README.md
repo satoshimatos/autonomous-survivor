@@ -87,6 +87,10 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
   - Added Prism Sentinel, a Crystal Expanse victory tank focused on crits, ricochets, piercing, and crystal economy scaling.
   - Added Void Anchor, a Void Crucible plus boss-mastery tank focused on gravity wells, black-hole control, armor, and close pressure.
   - Updated unlock hints, next-goal reporting, backlog counts, and compendium tank references.
+- Added postgame map wave #53:
+  - Added Singularity Garden as map 11, unlocked by a 30:00 Astral Engine victory.
+  - Added a generated Singularity Garden background, authored root/seed-pod obstacles, a Singularity Bloom map gimmick, five map-specific enemies, and two map-specific bosses.
+  - Extended map validation, unlock hints, the compendium, and content counts for the new postgame arena.
 
 ### 2026-05-30
 
@@ -325,7 +329,7 @@ GitHub issue tracker: https://github.com/satoshimatos/autonomous-survivor/issues
 
 ### Content
 
-- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 22 tanks, 66 enemies, 29 bosses, and 10 maps.
+- Requested content and 30-minute progression targets are exceeded: 100 upgrades, 40 powers, 22 tanks, 71 enemies, 31 bosses, and 11 maps.
 - Surviving 30:00 is now a victory condition and unlocks the next map when the current map is cleared.
 - Maps 2-5 have their own enemy/boss rosters and pressure modifiers, so future map work should continue using map-specific catalog data instead of duplicating the main scene.
 

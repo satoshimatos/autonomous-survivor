@@ -2,7 +2,7 @@
 
 This document is the current open-book reference for the game. It describes the playable loop, tank starts, enemies, bosses, upgrades, abilities, evolutions, events, modifiers, unlocks, pickups, scaling, and performance limits implemented in the Godot project.
 
-Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 22 tanks, 66 enemies, 29 bosses, and 10 maps.
+Note: the in-game Compendium is now the primary live reference because it reads the current Godot catalogs directly and shows sprite/icon cards with detail pages. This document remains a readable design reference and may lag behind the fastest content batches. Current implemented catalog counts are 100 upgrades, 40 powers, 22 tanks, 71 enemies, 31 bosses, and 11 maps.
 
 ## Menu
 
@@ -118,6 +118,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Frozen Scar | Win Neon Grid at 30:00 | Long frozen battlefield with ridges and a center ice core. | Heavy health scaling and slower but tougher pressure. | Frost Lock: hazards form a loose ring around the player with icy burst feedback. | Frost Leviathan, Blizzard Matriarch |
 | Ember Rift | Win Frozen Scar at 30:00 | Compact lava arena with side gates and a central ember core. | Brutal damage growth, extreme boss cadence, and funnel pressure. | Ember Eruption: random walkable eruptions detonate across the arena with camera shake. | Magma Tyrant, Cinder Prophet |
 | Astral Engine | Win Ember Rift at 30:00 | Massive final arena with engine-wall blockers on all sides. | Highest pressure cap, extreme elite odds, and fastest boss cadence. | Astral Collapse: hazards and Astral Echo spawns converge near the player. | Astral Archon, Engine Heart |
+| Singularity Garden | Win Astral Engine at 30:00 | Huge bioluminescent postgame arena with root walls, seed pods, and off-center root spires. | New highest pressure cap, extreme health/damage growth, and near-constant boss cadence. | Singularity Bloom: spiraling hazards bloom around the player and can spawn Bloom Echo enemies. | Bloom Crowned, Garden Singularity |
 
 ### Autonomous Content Wave Enemy Rosters
 
@@ -128,6 +129,7 @@ Autonomous Survivor is a top-down tank bullet-heaven prototype.
 | Frozen Scar | Frost Tick, Ice Dasher, Rime Guard, Glacier Beast, Whiteout Wraith | Slower, tougher pressure with burst dashers and late whiteout orbiters layered on heavy blockers. |
 | Ember Rift | Ember Imp, Lava Skimmer, Cinder Knight, Magma Brute, Ash Reaper | High-contact-damage roster with aggressive sprinters, armored knights, magma heavies, and late ash pursuit. |
 | Astral Engine | Astral Mote, Engine Sentinel, Star Lancer, Gravity Bastion, Cosmic Apex | Final-map roster with high baseline speed, heavier rewards, orbiting bastions, and late apex elites. |
+| Singularity Garden | Bloom Mote, Root Guardian, Spore Lancer, Garden Bastion, Singularity Apex | Postgame roster with fast orbiters, heavy root blockers, sprinting spores, and late singularity hunters. |
 
 ## Player Baseline
 
@@ -333,7 +335,7 @@ clamp(base_weight + minutes_since_unlock * growth_per_minute, min_weight, max_we
 
 ### Map-Specific Enemies
 
-These enemies only enter the spawn table on their listed map. The selected map's own enemies are weighted normally, while global enemies are down-weighted on maps 2-10 so each arena keeps its identity.
+These enemies only enter the spawn table on their listed map. The selected map's own enemies are weighted normally, while global enemies are down-weighted on maps 2-11 so each arena keeps its identity.
 
 | Enemy | Map | Unlock | Movement | Health | Speed | Damage | EXP Drops | Weight Profile |
 |---|---|---:|---|---:|---:|---:|---|---|
@@ -383,6 +385,11 @@ These enemies only enter the spawn table on their listed map. The selected map's
 | Star Lancer | Astral Engine | 360s | sprinter | 108 | 178 | 13 | 6 tier 4+ | 42 base, +3.5/min, max 88 |
 | Gravity Bastion | Astral Engine | 720s | orbiter | 420 | 32 | 22 | 13 tier 4+ | 32 base, +2.8/min, max 70 |
 | Cosmic Apex | Astral Engine | 1080s | stalker | 360 | 92 | 20 | 12 tier 4+ | 26 base, +3.2/min, max 72 |
+| Bloom Mote | Singularity Garden | 0s | orbiter | 112 | 156 | 9 | 4 tier 3+ | 136 base, -0.8/min, min 54 |
+| Root Guardian | Singularity Garden | 180s | chase | 340 | 38 | 18 | 10 tier 4+ | 44 base, +3/min, max 86 |
+| Spore Lancer | Singularity Garden | 400s | sprinter | 128 | 188 | 15 | 7 tier 4+ | 44 base, +3.8/min, max 96 |
+| Garden Bastion | Singularity Garden | 760s | drifter | 520 | 30 | 25 | 15 tier 4+ | 34 base, +3/min, max 78 |
+| Singularity Apex | Singularity Garden | 1120s | stalker | 440 | 104 | 24 | 14 tier 4+ | 28 base, +3.6/min, max 82 |
 
 ### Enemy Movement Styles
 
@@ -453,6 +460,8 @@ Only one boss can be alive at a time. Bosses normally spawn every 180s, modified
 | Cinder Prophet | Ember Rift | 520s | sprinter | 7800 | 46 | 22 | 142 tier 4+ | 92 base, +2.7/min, max 136 | Fast boss with frequent targeted hazards and minions. |
 | Astral Archon | Astral Engine | 0s | singularity | 11200 | 38 | 30 | 150 tier 4+ | 124 base, -0.2/min, min 82 | Five phases; dense rings, targeted hazards, and minion calls. |
 | Engine Heart | Astral Engine | 660s | bastion | 14800 | 20 | 34 | 180 tier 4+ | 96 base, +2.8/min, max 144 | Six phases; massive rings and large support waves. |
+| Bloom Crowned | Singularity Garden | 0s | tempest | 13200 | 44 | 32 | 164 tier 4+ | 130 base, -0.1/min, min 88 | Four phases; fast target hazards, bloom rings, and support waves. |
+| Garden Singularity | Singularity Garden | 620s | singularity | 17600 | 24 | 38 | 196 tier 4+ | 98 base, +3/min, max 152 | Six phases; heavy rings, target hazards, and large bloom calls. |
 
 Boss phases increase base speed by 8%, add +1 contact damage, and trigger a burst effect.
 
@@ -536,6 +545,7 @@ Progress is saved in `user://unlock_state.cfg`.
 | Win Neon Grid at 30:00 | Frozen Scar |
 | Win Frozen Scar at 30:00 | Ember Rift |
 | Win Ember Rift at 30:00 | Astral Engine |
+| Win Astral Engine at 30:00 | Singularity Garden |
 
 ### Challenge Goals
 

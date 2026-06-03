@@ -22,6 +22,8 @@ const MAP9_ARENA_SIZE: Vector2 = Vector2(1850, 1120)
 const MAP9_BOUNDS_SIZE: Vector2 = Vector2(2170, 1440)
 const MAP10_ARENA_SIZE: Vector2 = Vector2(3600, 2100)
 const MAP10_BOUNDS_SIZE: Vector2 = Vector2(3920, 2420)
+const MAP11_ARENA_SIZE: Vector2 = Vector2(3900, 1880)
+const MAP11_BOUNDS_SIZE: Vector2 = Vector2(4220, 2200)
 const SEARCH_STEP: float = 28.0
 const SEARCH_DIRECTIONS: int = 18
 
@@ -71,6 +73,8 @@ func get_arena_size() -> Vector2:
 			return MAP9_ARENA_SIZE
 		"map10":
 			return MAP10_ARENA_SIZE
+		"map11":
+			return MAP11_ARENA_SIZE
 	return MAP1_ARENA_SIZE
 
 
@@ -94,6 +98,8 @@ func get_bounds_size() -> Vector2:
 			return MAP9_BOUNDS_SIZE
 		"map10":
 			return MAP10_BOUNDS_SIZE
+		"map11":
+			return MAP11_BOUNDS_SIZE
 	return MAP1_BOUNDS_SIZE
 
 
@@ -189,6 +195,8 @@ func get_obstacle_group_name(map_id: String) -> String:
 			return "Map9Obstacles"
 		"map10":
 			return "Map10Obstacles"
+		"map11":
+			return "Map11Obstacles"
 	return ""
 
 

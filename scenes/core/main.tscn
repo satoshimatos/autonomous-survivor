@@ -486,6 +486,69 @@ polygon = PackedVector2Array(-90, -210, 90, -210, 90, 210, -90, 210)
 [node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map10Obstacles/EngineEast"]
 shape = SubResource("RectangleShape2D_map4_stack")
 
+[node name="Map11Obstacles" type="Node2D" parent="MapLayout"]
+visible = false
+
+[node name="RootWallNorth" type="StaticBody2D" parent="MapLayout/Map11Obstacles" groups=["MapObstacle"]]
+position = Vector2(576, -260)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map11Obstacles/RootWallNorth"]
+color = Color(0.06, 0.22, 0.18, 1)
+polygon = PackedVector2Array(-310, -48, 310, -48, 310, 48, -310, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map11Obstacles/RootWallNorth"]
+shape = SubResource("RectangleShape2D_map4_wall")
+
+[node name="RootWallSouth" type="StaticBody2D" parent="MapLayout/Map11Obstacles" groups=["MapObstacle"]]
+position = Vector2(576, 908)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map11Obstacles/RootWallSouth"]
+color = Color(0.08, 0.24, 0.16, 1)
+polygon = PackedVector2Array(-310, -48, 310, -48, 310, 48, -310, 48)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map11Obstacles/RootWallSouth"]
+shape = SubResource("RectangleShape2D_map4_wall")
+
+[node name="SeedPodWest" type="StaticBody2D" parent="MapLayout/Map11Obstacles" groups=["MapObstacle"]]
+position = Vector2(-128, 112)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map11Obstacles/SeedPodWest"]
+color = Color(0.08, 0.32, 0.24, 1)
+polygon = PackedVector2Array(-125, -65, 125, -65, 125, 65, -125, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map11Obstacles/SeedPodWest"]
+shape = SubResource("RectangleShape2D_map5_core")
+
+[node name="SeedPodEast" type="StaticBody2D" parent="MapLayout/Map11Obstacles" groups=["MapObstacle"]]
+position = Vector2(1280, 536)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map11Obstacles/SeedPodEast"]
+color = Color(0.1, 0.34, 0.22, 1)
+polygon = PackedVector2Array(-125, -65, 125, -65, 125, 65, -125, 65)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map11Obstacles/SeedPodEast"]
+shape = SubResource("RectangleShape2D_map5_core")
+
+[node name="RootSpireWest" type="StaticBody2D" parent="MapLayout/Map11Obstacles" groups=["MapObstacle"]]
+position = Vector2(118, 582)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map11Obstacles/RootSpireWest"]
+color = Color(0.05, 0.18, 0.2, 1)
+polygon = PackedVector2Array(-52, -195, 52, -195, 52, 195, -52, 195)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map11Obstacles/RootSpireWest"]
+shape = SubResource("RectangleShape2D_map5_rib")
+
+[node name="RootSpireEast" type="StaticBody2D" parent="MapLayout/Map11Obstacles" groups=["MapObstacle"]]
+position = Vector2(1034, 66)
+
+[node name="Polygon2D" type="Polygon2D" parent="MapLayout/Map11Obstacles/RootSpireEast"]
+color = Color(0.06, 0.2, 0.22, 1)
+polygon = PackedVector2Array(-52, -195, 52, -195, 52, 195, -52, 195)
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="MapLayout/Map11Obstacles/RootSpireEast"]
+shape = SubResource("RectangleShape2D_map5_rib")
+
 [node name="Player" parent="." unique_id=992026406 instance=ExtResource("1_o5qli")]
 position = Vector2(576, 324)
 

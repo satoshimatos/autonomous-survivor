@@ -1094,6 +1094,8 @@ func process_map_gimmick(delta: float) -> void:
 			trigger_ember_eruption()
 		"astral_collapse":
 			trigger_astral_collapse()
+		"singularity_bloom":
+			trigger_singularity_bloom()
 
 
 func trigger_crystal_storm() -> void:
@@ -1235,6 +1237,37 @@ func trigger_astral_collapse() -> void:
 			spawn_enemy(ENEMY, _on_enemy_defeated, echo_config)
 	spawn_particle_burst(self, player.global_position, 38, Color(0.62, 0.35, 1.0, 1.0), 360.0, 0.42, Vector2(6.0, 12.0), true)
 	shake_camera(0.18, 5.0)
+
+
+func trigger_singularity_bloom() -> void:
+	if player == null:
+		return
+	var bloom_count := clampi(8 + int(run_time / 320.0), 8, 16)
+	var base_angle := randf() * TAU
+	for i in range(bloom_count):
+		var distance := randf_range(130.0, 560.0)
+		var angle := base_angle + TAU * float(i) / float(bloom_count) + randf_range(-0.16, 0.16)
+		spawn_boss_hazard(player.global_position + Vector2.RIGHT.rotated(angle) * distance, 46.0 + float(i % 4) * 8.0, 7 + int(run_time / 560.0))
+	if has_enemy_pressure_room(6):
+		var seed_config := {
+			"id": "bloom_echo",
+			"scene": ENEMY,
+			"health": 86 + int(run_time / 22.0),
+			"speed": 152.0,
+			"contact_damage": 8,
+			"exp_drop_count": 4,
+			"exp_drop_min_tier": VIOLET_ORB_TIER,
+			"color": Color(0.35, 1.0, 0.72, 1.0),
+			"scale": 0.68,
+			"movement_style": "orbiter",
+			"texture": "res://assets/visual/enemies/variants/enemy_orbiter_cartoon.png",
+		}
+		for i in range(6):
+			if not has_enemy_pressure_room(0):
+				break
+			spawn_enemy(ENEMY, _on_enemy_defeated, seed_config)
+	spawn_particle_burst(self, player.global_position, 42, Color(0.28, 1.0, 0.72, 1.0), 390.0, 0.46, Vector2(6.0, 13.0), true)
+	shake_camera(0.2, 5.8)
 
 
 func get_random_arena_position(inset: float = 0.0) -> Vector2:
@@ -1533,6 +1566,8 @@ func get_map_entry_weight_multiplier(config: Dictionary) -> float:
 			return 0.12
 		"map10":
 			return 0.1
+		"map11":
+			return 0.08
 	return 1.0
 
 

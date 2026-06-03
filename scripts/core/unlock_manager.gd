@@ -209,6 +209,8 @@ func add_unlocks_for_victory(result: Dictionary, unlocked_messages: Array[String
 		"map9":
 			try_unlock("map", "map10", "Astral Engine map", unlocked_messages)
 			try_unlock("modifier", "astral_lottery", "Astral Lottery modifier", unlocked_messages)
+		"map10":
+			try_unlock("map", "map11", "Singularity Garden map", unlocked_messages)
 
 
 func add_challenge_rewards_for_result(result: Dictionary, unlocked_messages: Array[String]) -> void:
@@ -367,6 +369,8 @@ func get_next_unlock_goal_lines() -> Array[String]:
 		lines.append("- Map: Win Frozen Scar at 30:00 to unlock Ember Rift.")
 	elif not is_map_unlocked("map10"):
 		lines.append("- Map: Win Ember Rift at 30:00 to unlock Astral Engine.")
+	elif not is_map_unlocked("map11"):
+		lines.append("- Map: Win Astral Engine at 30:00 to unlock Singularity Garden.")
 	for tank_id in ["fortress", "collector", "twin_cannon", "engineer", "storm_chaser", "pyroclast", "medic", "singularity_rig", "glass_rail", "bulldozer", "swarm_broker", "sapper", "chrono_tank", "gold_engine", "rift_skimmer", "fortress_medic", "meteor_twins", "storm_foundry", "prism_sentinel", "void_anchor"]:
 		if not is_tank_unlocked(tank_id):
 			lines.append("- Tank: %s" % get_tank_unlock_hint(tank_id))
@@ -466,6 +470,8 @@ func get_map_unlock_hint(map_id: String) -> String:
 			return "Win Frozen Scar at 30:00."
 		"map10":
 			return "Win Ember Rift at 30:00."
+		"map11":
+			return "Win Astral Engine at 30:00."
 	return "Progress further to reveal this map."
 
 
